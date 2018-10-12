@@ -17,6 +17,7 @@ SynthModulesScene::SynthModulesScene()
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
+    // addAndMakeVisible( Output );
 }
 
 SynthModulesScene::~SynthModulesScene()
@@ -53,7 +54,12 @@ void SynthModulesScene::paint (Graphics& g)
 void SynthModulesScene::resized()
 {
     // This method is where you should set the bounds of any child
-    // components that your component contains..
+    // components that your component contains.
+    float startX = 100.0f,
+          offsetY = 20.0f,
+          x = startX;
+
+    // Output.setBounds (getWidth() - 200.0f, offsetY, getWidth() - 25.0f, getHeight() - 25.0f);
 
 }
 

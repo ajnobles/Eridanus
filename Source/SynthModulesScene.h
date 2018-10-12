@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "CustomComponent.h"
+#include "OutputModule.h"
 
 
 //==============================================================================
@@ -28,5 +29,7 @@ public:
     void resized() override;
 
 private:
+    OutputModule Output;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthModulesScene)
 };

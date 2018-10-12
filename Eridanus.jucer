@@ -3,6 +3,9 @@
 <JUCERPROJECT id="ozX4ok" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="lSU3oo" name="Eridanus">
     <GROUP id="{78192F66-04C3-40B9-960A-05222E25B885}" name="Source">
+      <FILE id="dbibdr" name="OutputModule.cpp" compile="1" resource="0"
+            file="Source/OutputModule.cpp"/>
+      <FILE id="XMKJB4" name="OutputModule.h" compile="0" resource="0" file="Source/OutputModule.h"/>
       <FILE id="DVJj4u" name="CustomComponent.cpp" compile="1" resource="0"
             file="Source/CustomComponent.cpp"/>
       <FILE id="Nf8x3a" name="CustomComponent.h" compile="0" resource="0"

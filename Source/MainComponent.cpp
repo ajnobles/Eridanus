@@ -18,7 +18,7 @@ MainComponent::MainComponent()
     addAndMakeVisible(SynthScene);
 
     // Keyboard
-    addAndMakeVisible(Keyboard);
+    addAndMakeVisible(KeyboardScene);
 }
 
 MainComponent::~MainComponent()
@@ -44,5 +44,5 @@ void MainComponent::resized()
     // update their positions.
 
     SynthScene.setBounds (0, 0, getWidth(), getHeight() / 2.0f);
-    Keyboard.setBounds(0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f);
+    KeyboardScene.setBounds (0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f);
 }

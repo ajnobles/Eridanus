@@ -32,7 +32,30 @@ void SynthModulesScene::paint (Graphics& g)
        drawing code..
     */
 
-    g.fillAll (Colours::lightblue);
+    // g.fillAll (Colours::lightblue);
+    
+
+    // BUILD SYNTH MODULE BORDER
+    g.setColour (Colours::white);
+
+    float cornerSize  = 20.0f,
+          thickness   = 10.0f,
+          offset      = 5.0f;
+/*
+    float rectX = offset + thickness,
+          rectY = offset + thickness,
+          width = getWidth() - (offset + thickness) * 2.0f,
+          height = getHeight() - (offset + thickness) * 2.0f;
+
+    Rectangle<float> border { rectX,
+                              rectY,
+                              width,
+                              height };
+
+    g.drawRoundedRectangle (border, cornerSize, thickness); 
+*/
+    buildBorder (g, cornerSize, thickness, offset);
+
 
     g.setFont (Font (16.0f));
     g.setColour (Colours::red);
@@ -44,4 +67,19 @@ void SynthModulesScene::resized()
     // This method is where you should set the bounds of any child
     // components that your component contains..
 
+}
+
+void SynthModulesScene::buildBorder(Graphics& g, float cornerSize, float thickness, float offset)
+{
+    float rectX = offset + thickness,
+          rectY = offset + thickness,
+          width = getWidth() - (offset + thickness) * 2.0f,
+          height = getHeight() - (offset + thickness) * 2.0f;
+
+    Rectangle<float> border { rectX,
+                              rectY,
+                              width,
+                              height };
+
+    g.drawRoundedRectangle (border, cornerSize, thickness); 
 }

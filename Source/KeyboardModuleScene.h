@@ -15,15 +15,15 @@
 //==============================================================================
 /*
 */
-class KeyboardScene    : public Component
+class KeyboardModuleScene    : public Component
 {
 public:
-    KeyboardScene();
-    ~KeyboardScene();
+    KeyboardModuleScene();
+    ~KeyboardModuleScene();
 
     void paint (Graphics&) override;
     void resized() override;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardScene)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardModuleScene)
 };

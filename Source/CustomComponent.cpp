@@ -1,29 +1,29 @@
 /*
   ==============================================================================
 
-    SynthModulesScene.cpp
-    Created: 12 Oct 2018 11:28:14am
+    CustomComponent.cpp
+    Created: 12 Oct 2018 3:43:03pm
     Author:  allen
 
   ==============================================================================
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SynthModulesScene.h"
+#include "CustomComponent.h"
 
 //==============================================================================
-SynthModulesScene::SynthModulesScene()
+CustomComponent::CustomComponent()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
 }
 
-SynthModulesScene::~SynthModulesScene()
+CustomComponent::~CustomComponent()
 {
 }
 
-void SynthModulesScene::paint (Graphics& g)
+void CustomComponent::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -32,28 +32,26 @@ void SynthModulesScene::paint (Graphics& g)
        drawing code..
     */
 
-    // g.fillAll (Colours::lightblue);
-    
-
-    // BUILD SYNTH MODULE BORDER
-    g.setColour (Colours::white);
-
-    float cornerSize  = 20.0f,
-          thickness   = 10.0f,
-          offset      = 5.0f;
-    
-    CustomComponent::buildRoundedRectangle (g, cornerSize, thickness, offset);
-
-    // TEMP TEXT
-    g.setFont (Font (16.0f));
-    g.setColour (Colours::red);
-    g.drawText ("SYNTH MODULES", getLocalBounds(), Justification::centred, true);
 }
 
-void SynthModulesScene::resized()
+void CustomComponent::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
 
 }
 
+void CustomComponent::buildRoundedRectangle(Graphics& g, float cornerSize, float thickness, float offset)
+{
+    float x = offset + thickness,
+          y = offset + thickness,
+          width = getWidth() - (offset + thickness) * 2.0f,
+          height = getHeight() - (offset + thickness) * 2.0f;
+
+    Rectangle <float> border { x,
+                               y,
+                               width,
+                               height };
+
+    g.drawRoundedRectangle (border, cornerSize, thickness);
+}

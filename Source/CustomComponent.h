@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    KeyboardScene.h
-    Created: 12 Oct 2018 12:38:56pm
+    CustomComponent.h
+    Created: 12 Oct 2018 3:43:03pm
     Author:  allen
 
   ==============================================================================
@@ -12,20 +12,20 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "CustomComponent.h"
-
 //==============================================================================
 /*
 */
-class KeyboardModuleScene    : public CustomComponent
+class CustomComponent    : public Component
 {
 public:
-    KeyboardModuleScene();
-    ~KeyboardModuleScene();
+    CustomComponent();
+    ~CustomComponent();
 
     void paint (Graphics&) override;
     void resized() override;
 
+    void buildRoundedRectangle(Graphics& g, float cornerSize, float thickness, float offset);
+
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardModuleScene)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomComponent)
 };

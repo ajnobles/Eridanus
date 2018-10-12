@@ -3,6 +3,13 @@
 <JUCERPROJECT id="ozX4ok" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="lSU3oo" name="Eridanus">
     <GROUP id="{78192F66-04C3-40B9-960A-05222E25B885}" name="Source">
+      <FILE id="IpBzNn" name="KeyboardScene.cpp" compile="1" resource="0"
+            file="Source/KeyboardScene.cpp"/>
+      <FILE id="RbQ1zm" name="KeyboardScene.h" compile="0" resource="0" file="Source/KeyboardScene.h"/>
+      <FILE id="Jq8YmV" name="SynthModulesScene.cpp" compile="1" resource="0"
+            file="Source/SynthModulesScene.cpp"/>
+      <FILE id="VYzCDD" name="SynthModulesScene.h" compile="0" resource="0"
+            file="Source/SynthModulesScene.h"/>
       <FILE id="hOFm15" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="hbBA7y" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>

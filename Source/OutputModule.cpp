@@ -27,19 +27,17 @@ void OutputModule::paint (Graphics& g)
 {
     g.setColour (Colours::yellow);
 
-    float cornerSize = 0.0f,
-          thickness  = 3.0f,
-          offset     = 2.5f;
+    float x1 = OFFSET + THICKNESS,
+          y1 = OFFSET + THICKNESS,
+          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
+          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
 
-    float sizeX = 50.0f,
-          sizeY = 125.0f;
-
-    Point <float> p1 = { offset, offset };
-    Point <float> p2 = { offset + sizeX, offset + sizeY };
+    Point <float> p1 = { x1, y1 };
+    Point <float> p2 = { x2, y2 };
 
     Rectangle <float> border (p1, p2);
     
-    g.drawRoundedRectangle (border, cornerSize, thickness);
+    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
 
 }
 

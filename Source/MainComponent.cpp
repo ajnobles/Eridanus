@@ -43,6 +43,17 @@ void MainComponent::resized()
     // If you add any child components, this is where you should
     // update their positions.
 
-    SynthScene.setBounds (0, 0, getWidth(), getHeight() / 2.0f);
-    KeyboardScene.setBounds (0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f);
+    // SynthScene.setBounds (0, 0, getWidth(), getHeight() / 2.0f);
+    // KeyboardScene.setBounds (0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f);
+
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (2_fr), Track (1_fr) };
+    grid.templateColumns = { Track (1_fr) };
+
+    grid.items = { GridItem (SynthScene) , GridItem (KeyboardScene) };
+
+    grid.performLayout (getLocalBounds());
 }

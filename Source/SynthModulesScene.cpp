@@ -17,7 +17,7 @@ SynthModulesScene::SynthModulesScene()
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
-    // addAndMakeVisible( Output );
+    addAndMakeVisible( Output );
 }
 
 SynthModulesScene::~SynthModulesScene()
@@ -39,11 +39,7 @@ void SynthModulesScene::paint (Graphics& g)
     // BUILD SYNTH MODULE BORDER
     g.setColour (Colours::white);
 
-    float cornerSize  = 20.0f,
-          thickness   = 10.0f,
-          offset      = 5.0f;
-    
-    CustomComponent::buildRoundedRectangle (g, cornerSize, thickness, offset);
+    CustomComponent::buildRoundedRectangle (g, CORNERSIZE, THICKNESS, OFFSET);
 
     // TEMP TEXT
     g.setFont (Font (16.0f));
@@ -55,11 +51,17 @@ void SynthModulesScene::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains.
-    float startX = 100.0f,
-          offsetY = 20.0f,
-          x = startX;
 
-    // Output.setBounds (getWidth() - 200.0f, offsetY, getWidth() - 25.0f, getHeight() - 25.0f);
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (1_fr) };
+    grid.templateColumns = { Track (10_fr), Track (1_fr)  };
+
+    grid.items = { GridItem (nullptr), GridItem (Output) };
+
+    grid.performLayout ( getLocalBounds() );
 
 }
 

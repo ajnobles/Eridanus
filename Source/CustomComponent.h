@@ -12,6 +12,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#define CORNERSIZE 20.0f
+#define THICKNESS  10.0f
+#define OFFSET      5.0F
+
 //==============================================================================
 /*
 */

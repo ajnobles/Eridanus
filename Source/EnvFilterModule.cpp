@@ -1,31 +1,31 @@
 /*
   ==============================================================================
 
-    OutputModule.cpp
+    EnvFilterModule.cpp
     Created: 12 Oct 2018 4:19:38pm
     Author:  allen
 
   ==============================================================================
 */
 
-#include "OutputModule.h"
+#include "EnvFilterModule.h"
 
 
-OutputModule::OutputModule() 
+EnvFilterModule::EnvFilterModule() 
 {
     //
 }
 
 
-OutputModule::~OutputModule() 
+EnvFilterModule::~EnvFilterModule() 
 {
     //
 }
 
 
-void OutputModule::paint (Graphics& g)
+void EnvFilterModule::paint (Graphics& g)
 {
-    g.setColour (BORDER_COLOR);
+    g.setColour (BORDER_COLOR); 
 
     float x1 = OFFSET + THICKNESS,
           y1 = OFFSET + THICKNESS,
@@ -40,13 +40,13 @@ void OutputModule::paint (Graphics& g)
     g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("EnvFILTER", 0, 0, getWidth(), getHeight(), Justification::centred); 
 
 }
 
 
 
-void OutputModule::resized ()
+void EnvFilterModule::resized ()
 {
     // 
 }

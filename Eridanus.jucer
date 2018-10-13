@@ -3,6 +3,26 @@
 <JUCERPROJECT id="ozX4ok" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="lSU3oo" name="Eridanus">
     <GROUP id="{78192F66-04C3-40B9-960A-05222E25B885}" name="Source">
+      <FILE id="WP3xaZ" name="SaturationModule.cpp" compile="1" resource="0"
+            file="Source/SaturationModule.cpp"/>
+      <FILE id="z23sOA" name="SaturationModule.h" compile="0" resource="0"
+            file="Source/SaturationModule.h"/>
+      <FILE id="ZDBq1E" name="AmpFilterModule.cpp" compile="1" resource="0"
+            file="Source/AmpFilterModule.cpp"/>
+      <FILE id="fGjbzu" name="AmpFilterModule.h" compile="0" resource="0"
+            file="Source/AmpFilterModule.h"/>
+      <FILE id="YHBCqe" name="EnvFilterModule.cpp" compile="1" resource="0"
+            file="Source/EnvFilterModule.cpp"/>
+      <FILE id="FjXmpl" name="EnvFilterModule.h" compile="0" resource="0"
+            file="Source/EnvFilterModule.h"/>
+      <FILE id="P4lBBm" name="OscillatorModule.cpp" compile="1" resource="0"
+            file="Source/OscillatorModule.cpp"/>
+      <FILE id="f1D85n" name="OscillatorModule.h" compile="0" resource="0"
+            file="Source/OscillatorModule.h"/>
+      <FILE id="uvBDyR" name="LFOModule.cpp" compile="1" resource="0" file="Source/LFOModule.cpp"/>
+      <FILE id="K2MOZH" name="LFOModule.h" compile="0" resource="0" file="Source/LFOModule.h"/>
+      <FILE id="WSyUc3" name="InputModule.cpp" compile="1" resource="0" file="Source/InputModule.cpp"/>
+      <FILE id="Vk9bjG" name="InputModule.h" compile="0" resource="0" file="Source/InputModule.h"/>
       <FILE id="dbibdr" name="OutputModule.cpp" compile="1" resource="0"
             file="Source/OutputModule.cpp"/>
       <FILE id="XMKJB4" name="OutputModule.h" compile="0" resource="0" file="Source/OutputModule.h"/>

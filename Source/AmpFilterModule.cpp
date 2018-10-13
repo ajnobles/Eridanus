@@ -1,29 +1,29 @@
 /*
   ==============================================================================
 
-    OutputModule.cpp
+    AmpFilterModule.cpp
     Created: 12 Oct 2018 4:19:38pm
     Author:  allen
 
   ==============================================================================
 */
 
-#include "OutputModule.h"
+#include "AmpFilterModule.h"
 
 
-OutputModule::OutputModule() 
+AmpFilterModule::AmpFilterModule() 
 {
     //
 }
 
 
-OutputModule::~OutputModule() 
+AmpFilterModule::~AmpFilterModule() 
 {
     //
 }
 
 
-void OutputModule::paint (Graphics& g)
+void AmpFilterModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -40,13 +40,13 @@ void OutputModule::paint (Graphics& g)
     g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("AmpFILTER", 0, 0, getWidth(), getHeight(), Justification::centred); 
 
 }
 
 
 
-void OutputModule::resized ()
+void AmpFilterModule::resized ()
 {
     // 
 }

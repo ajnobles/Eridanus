@@ -1,29 +1,29 @@
 /*
   ==============================================================================
 
-    OutputModule.cpp
+    SaturationModule.cpp
     Created: 12 Oct 2018 4:19:38pm
     Author:  allen
 
   ==============================================================================
 */
 
-#include "OutputModule.h"
+#include "SaturationModule.h"
 
 
-OutputModule::OutputModule() 
+SaturationModule::SaturationModule() 
 {
     //
 }
 
 
-OutputModule::~OutputModule() 
+SaturationModule::~SaturationModule() 
 {
     //
 }
 
 
-void OutputModule::paint (Graphics& g)
+void SaturationModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -40,13 +40,13 @@ void OutputModule::paint (Graphics& g)
     g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("SATURATION", 0, 0, getWidth(), getHeight(), Justification::centred); 
 
 }
 
 
 
-void OutputModule::resized ()
+void SaturationModule::resized ()
 {
     // 
 }

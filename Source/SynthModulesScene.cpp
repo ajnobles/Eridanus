@@ -16,8 +16,25 @@ SynthModulesScene::SynthModulesScene()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
+/* 
+    OutputModule Output;
+    InputModule Input;
+    AmpFilterModule AmpFilter;
+    EnvFilterModule EnvFilter;
+    LFOModule LFO_Freq;
+    LFOModule LFO_Amp;
+    OscillatorModule Oscillator;
 
+*/
+
+    addAndMakeVisible( Input );
     addAndMakeVisible( Output );
+    addAndMakeVisible( AmpFilter );
+    addAndMakeVisible( EnvFilter );
+    addAndMakeVisible( LFO_Freq );
+    addAndMakeVisible( LFO_Amp );
+    addAndMakeVisible( Oscillator );
+    addAndMakeVisible( Saturation );
 }
 
 SynthModulesScene::~SynthModulesScene()
@@ -33,18 +50,6 @@ void SynthModulesScene::paint (Graphics& g)
        drawing code..
     */
 
-    // g.fillAll (Colours::lightblue);
-    
-
-    // BUILD SYNTH MODULE BORDER
-    g.setColour (Colours::white);
-
-    CustomComponent::buildRoundedRectangle (g, CORNERSIZE, THICKNESS, OFFSET);
-
-    // TEMP TEXT
-    g.setFont (Font (16.0f));
-    g.setColour (Colours::red);
-    g.drawText ("SYNTH MODULES", getLocalBounds(), Justification::centred, true);
 }
 
 void SynthModulesScene::resized()
@@ -57,9 +62,27 @@ void SynthModulesScene::resized()
     using Track = Grid::TrackInfo;
 
     grid.templateRows = { Track (1_fr) };
-    grid.templateColumns = { Track (10_fr), Track (1_fr)  };
+    grid.templateColumns = {
+        Track (1_fr),
+        Track (1_fr),
+        Track (2_fr),
+        Track (1_fr),
+        Track (2_fr),
+        Track (2_fr),
+        Track (1_fr),
+        Track (1_fr),
+    };
 
-    grid.items = { GridItem (nullptr), GridItem (Output) };
+    grid.items = { 
+        GridItem (Input),
+        GridItem (LFO_Freq), 
+        GridItem (Oscillator),
+        GridItem (LFO_Amp),
+        GridItem (EnvFilter),
+        GridItem (AmpFilter),
+        GridItem (Saturation),
+        GridItem (Output)
+    };
 
     grid.performLayout ( getLocalBounds() );
 

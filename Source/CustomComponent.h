@@ -29,7 +29,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    void buildRoundedRectangle(Graphics& g, float cornerSize, float thickness, float offset);
+    void buildModuleBorder(Graphics& g, float cornerSize, float thickness, float offset);
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomComponent)

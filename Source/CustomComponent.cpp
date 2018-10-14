@@ -41,17 +41,17 @@ void CustomComponent::resized()
 
 }
 
-void CustomComponent::buildRoundedRectangle(Graphics& g, float cornerSize, float thickness, float offset)
+void CustomComponent::buildModuleBorder(Graphics& g, float cornerSize, float thickness, float offset)
 {
-    float x = offset + thickness,
-          y = offset + thickness,
-          width = getWidth() - (offset + thickness) * 2.0f,
-          height = getHeight() - (offset + thickness) * 2.0f;
+    float x1 = offset + thickness,
+          y1 = offset + thickness,
+          x2 = getWidth() - (offset + thickness) * 1.0f,
+          y2 = getHeight() - (offset + thickness) * 1.0f;
 
-    Rectangle <float> border { x,
-                               y,
-                               width,
-                               height };
+    Point <float> p1 = { x1, y1 };
+    Point <float> p2 = { x2, y2 };
+
+    Rectangle <float> border { p1, p2 };
 
     g.drawRoundedRectangle (border, cornerSize, thickness);
 }

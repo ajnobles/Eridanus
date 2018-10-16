@@ -15,7 +15,7 @@ MainComponent::MainComponent()
     setSize (1600, 800);
 
     // SynthModulesScene
-    addAndMakeVisible(SynthScene);
+    addAndMakeVisible(Synth);
 
     // Keyboard
     addAndMakeVisible(KeyboardScene);
@@ -53,7 +53,7 @@ void MainComponent::resized()
     grid.templateRows = { Track (2_fr), Track (1_fr) };
     grid.templateColumns = { Track (1_fr) };
 
-    grid.items = { GridItem (SynthScene) , GridItem (KeyboardScene) };
+    grid.items = { GridItem (Synth) , GridItem (KeyboardScene) };
 
     grid.performLayout (getLocalBounds());
 }

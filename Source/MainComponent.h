@@ -10,7 +10,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "SynthModulesScene.h"
+#include "SynthScene.h"
 #include "KeyboardModuleScene.h"
 
 //==============================================================================
@@ -32,7 +32,7 @@ public:
 private:
     //==============================================================================
     // Your private member variables go here...
-    SynthModulesScene SynthScene;
+    SynthScene Synth;
     KeyboardModuleScene KeyboardScene;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

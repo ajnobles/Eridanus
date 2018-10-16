@@ -3,6 +3,14 @@
 <JUCERPROJECT id="ozX4ok" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="lSU3oo" name="Eridanus">
     <GROUP id="{78192F66-04C3-40B9-960A-05222E25B885}" name="Source">
+      <FILE id="tg8t56" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
+      <FILE id="cwHLAH" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
+      <FILE id="MG8rg2" name="SynthTitleScene.cpp" compile="1" resource="0"
+            file="Source/SynthTitleScene.cpp"/>
+      <FILE id="DynAVk" name="SynthTitleScene.h" compile="0" resource="0"
+            file="Source/SynthTitleScene.h"/>
+      <FILE id="hgmHNj" name="SynthScene.cpp" compile="1" resource="0" file="Source/SynthScene.cpp"/>
+      <FILE id="QJoOAs" name="SynthScene.h" compile="0" resource="0" file="Source/SynthScene.h"/>
       <FILE id="WP3xaZ" name="SaturationModule.cpp" compile="1" resource="0"
             file="Source/SaturationModule.cpp"/>
       <FILE id="z23sOA" name="SaturationModule.h" compile="0" resource="0"

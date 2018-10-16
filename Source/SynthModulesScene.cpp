@@ -16,16 +16,6 @@ SynthModulesScene::SynthModulesScene()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-/* 
-    OutputModule Output;
-    InputModule Input;
-    AmpFilterModule AmpFilter;
-    EnvFilterModule EnvFilter;
-    LFOModule LFO_Freq;
-    LFOModule LFO_Amp;
-    OscillatorModule Oscillator;
-
-*/
 
     addAndMakeVisible( Input );
     addAndMakeVisible( Output );

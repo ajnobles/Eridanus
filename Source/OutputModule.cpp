@@ -19,6 +19,13 @@ OutputModule::OutputModule()
     OutputSlider.setRange ( 0, 100 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
     OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 40, 20);
+
+    OutputFeedbackSlider.setRange ( 0.0, 100.0, 1.0 );
+    OutputFeedbackSlider.setSliderStyle ( Slider::LinearBarVertical );
+    OutputFeedbackSlider.setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
+    OutputFeedbackSlider.setValue (50.0f);
+
+    addAndMakeVisible ( OutputFeedbackSlider );
 }
 
 
@@ -52,7 +59,7 @@ void OutputModule::resized ()
 
     grid.items = {
         GridItem ( OutputSlider ),
-        GridItem ( nullptr )
+        GridItem ( OutputFeedbackSlider )
     };
 
     Rectangle<int> bounds = getLocalBounds();

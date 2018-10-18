@@ -14,6 +14,12 @@
 OutputModule::OutputModule() 
 {
     //
+    
+    addAndMakeVisible ( OutputSlider );
+    OutputSlider.setRange ( 0, 100 );
+    OutputSlider.setSliderStyle (Slider::LinearVertical);
+    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
+
 }
 
 
@@ -27,18 +33,7 @@ void OutputModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
-    
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
-
+    CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
     // TEMP IDENTIFICATION TEXT
     g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
 
@@ -48,5 +43,5 @@ void OutputModule::paint (Graphics& g)
 
 void OutputModule::resized ()
 {
-    // 
+    OutputSlider.setBounds (0, 20, getWidth(), getHeight() - 50 ); 
 }

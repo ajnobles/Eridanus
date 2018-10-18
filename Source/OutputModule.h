@@ -27,5 +27,7 @@ private:
     Slider OutputSlider;
     Label OutputSliderLabel;
 
+    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputModule)
 };

@@ -12,10 +12,12 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define CORNERSIZE   20.0f
+#define CORNERSIZE   10.0f
 #define THICKNESS    2.5f
 #define OFFSET       5.0F
 #define BORDER_COLOR Colours::white
+
+using namespace std;
 
 //==============================================================================
 /*

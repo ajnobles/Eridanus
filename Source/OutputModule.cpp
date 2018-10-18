@@ -18,8 +18,7 @@ OutputModule::OutputModule()
     addAndMakeVisible ( OutputSlider );
     OutputSlider.setRange ( 0, 100 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
-    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
-
+    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 40, 20);
 }
 
 
@@ -43,5 +42,30 @@ void OutputModule::paint (Graphics& g)
 
 void OutputModule::resized ()
 {
-    OutputSlider.setBounds (0, 20, getWidth(), getHeight() - 50 ); 
+
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (1_fr) };
+    grid.templateColumns = { Track (1_fr) , Track (1_fr) };
+
+    grid.items = {
+        GridItem ( OutputSlider ),
+        GridItem ( nullptr )
+    };
+
+    Rectangle<int> bounds = getLocalBounds();
+
+    // printf ( "BEFORE: (%i, %i), (%i, %i)\n", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight() );
+
+    float change = ( THICKNESS + OFFSET ) * 1.75;
+    bounds.setX( bounds.getX() + change );
+    bounds.setY( bounds.getY() + change );
+    bounds.setWidth ( bounds.getWidth()  - ( change * 2.0 ) );
+    bounds.setHeight( bounds.getHeight() - ( change * 2.0 ) );
+
+    // printf ( "AFTER: (%i, %i), (%i, %i)\n", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight() );
+
+    grid.performLayout ( bounds );
 }

@@ -23,11 +23,12 @@ public:
     void paint (Graphics& g) override;
     void resized () override;
 
+
     class LeftSide : public CustomComponent
     {
     public:
-        LeftSide::LeftSide();
-        LeftSide::~LeftSide();
+        LeftSide();
+        ~LeftSide();
 
         void paint (Graphics& g) override;
         void resized () override;
@@ -38,8 +39,9 @@ public:
         TextButton HighPassButton;
         TextButton LowPassButton;
         TextButton BandPassButton;
-
     };
+
+
 
 private:
     Slider AttackSlider;

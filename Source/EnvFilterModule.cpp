@@ -34,6 +34,9 @@ EnvFilterModule::EnvFilterModule()
     ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
     ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
+    addAndMakeVisible ( LeftPanel );
+    
+/*
     addAndMakeVisible ( CutoffKnob );
     CutoffKnob.setRange ( 0, 100 );
     CutoffKnob.setSliderStyle ( Slider::Rotary );
@@ -43,6 +46,7 @@ EnvFilterModule::EnvFilterModule()
     ResonanceKnob.setRange ( 0, 100 );
     ResonanceKnob.setSliderStyle ( Slider::Rotary );
     ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+*/
 }
 
 
@@ -71,7 +75,7 @@ void EnvFilterModule::resized ()
     using Track = Grid::TrackInfo;
 
     grid.templateRows = { Track (1_fr) , Track (10_fr) };
-    grid.templateColumns = { Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr),};
+    grid.templateColumns = { Track (3_fr), Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr),};
 
     grid.items = {
         GridItem (nullptr),
@@ -79,7 +83,7 @@ void EnvFilterModule::resized ()
         GridItem (nullptr),
         GridItem (nullptr),
         GridItem (nullptr),
-        GridItem ( nullptr ),
+        GridItem ( LeftPanel ),
         GridItem (AttackSlider),
         GridItem (DecaySlider),
         GridItem (SustainSlider),
@@ -96,7 +100,7 @@ void EnvFilterModule::resized ()
 
 
 
-LeftSide::LeftSide() 
+EnvFilterModule::LeftSide::LeftSide() 
 {
     //
     addAndMakeVisible ( CutoffKnob );
@@ -110,14 +114,13 @@ LeftSide::LeftSide()
     ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 }
 
-
-LeftSide::~LeftSide() 
+EnvFilterModule::LeftSide::~LeftSide() 
 {
     //
 }
 
 
-void LeftSide::paint (Graphics& g)
+void EnvFilterModule::LeftSide::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR); 
 
@@ -127,24 +130,22 @@ void LeftSide::paint (Graphics& g)
 
 
 
-void LeftSide::resized ()
+void EnvFilterModule::LeftSide::resized ()
 {
     //
     Grid grid;
+
     using Track = Grid::TrackInfo;
 
-    grid.templateRows = { Track (1_fr) , Track (10_fr) };
+    grid.templateRows = { Track (1_fr) ,Track (1_fr) , Track (1_fr), Track (1_fr) , Track (1_fr) };
     grid.templateColumns = { Track (1_fr) };
 
     grid.items = {
         GridItem (nullptr),
         GridItem (nullptr),
-        GridItem (nullptr),
         GridItem ( nullptr ),
-        GridItem (AttackSlider),
-        GridItem (DecaySlider),
-        GridItem (SustainSlider),
-        GridItem (ReleaseSlider)
+        GridItem ( CutoffKnob ),
+        GridItem ( ResonanceKnob )
     };
 
     Rectangle <int> bounds = getLocalBounds();

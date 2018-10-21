@@ -14,6 +14,18 @@
 LFOModule::LFOModule() 
 {
     //
+    
+    addAndMakeVisible ( RateSlider );
+    RateSlider.setRange ( 0, 100 );
+    RateSlider.setSliderStyle ( Slider::LinearVertical );
+    RateSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+   
+
+    addAndMakeVisible ( DepthSlider );
+    DepthSlider.setRange ( 0, 100 );
+    DepthSlider.setSliderStyle ( Slider::LinearVertical );
+    DepthSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
 }
 
 
@@ -27,20 +39,10 @@ void LFOModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
-    
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
+    CustomComponent::buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("LFO", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("LFO", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -49,4 +51,26 @@ void LFOModule::paint (Graphics& g)
 void LFOModule::resized ()
 {
     // 
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows    = { Track (1_fr), Track (10_fr) };
+    grid.templateColumns = { Track (1_fr), Track (1_fr) };
+
+    grid.items = {
+        GridItem ( nullptr ), 
+        GridItem ( nullptr ), 
+        GridItem ( RateSlider ),
+        GridItem ( DepthSlider )
+    };
+
+    Rectangle <int> bounds = getLocalBounds();
+    bounds = moduleInternalsBounds ( bounds, 
+                                     MODULE_INSIDE_OFFSET, 
+                                     OFFSET, 
+                                     THICKNESS);
+
+    grid.performLayout ( bounds );
+
 }

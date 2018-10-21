@@ -24,5 +24,15 @@ public:
     void resized () override;
 
 private:
+    Slider AttackSlider;
+    Slider DecaySlider;
+    Slider SustainSlider;
+    Slider ReleaseSlider;
+
+    Label AttackSliderLabel;
+    Label DecaySliderLabel;
+    Label SustainSliderLabel;
+    Label ReleaseSliderLabel;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AmpFilterModule)
 };

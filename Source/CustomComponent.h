@@ -17,6 +17,8 @@
 #define OFFSET       5.0F
 #define BORDER_COLOR Colours::white
 
+#define MODULE_INSIDE_OFFSET 1.75
+
 using namespace std;
 
 //==============================================================================
@@ -32,6 +34,10 @@ public:
     void resized() override;
 
     void buildModuleBorder(Graphics& g, float cornerSize, float thickness, float offset);
+    Rectangle <int> moduleInternalsBounds (Rectangle <int> bounds, 
+                                           float inside_offset,
+                                           float offset,
+                                           float thickness);
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomComponent)

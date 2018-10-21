@@ -14,6 +14,11 @@
 InputModule::InputModule() 
 {
     //
+    addAndMakeVisible ( InputSlider );
+
+    InputSlider.setRange ( 0, 100 );
+    InputSlider.setSliderStyle ( Slider::LinearVertical );
+    InputSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20);
 }
 
 
@@ -27,20 +32,10 @@ void InputModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
+    buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
     
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
-
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("INPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("INPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -48,5 +43,25 @@ void InputModule::paint (Graphics& g)
 
 void InputModule::resized ()
 {
-    // 
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows    = { Track (1_fr), Track (10_fr) };
+    grid.templateColumns = { Track (1_fr) };
+
+    grid.items = {
+        GridItem ( nullptr ),
+        GridItem ( InputSlider )
+    };
+
+    Rectangle <int> bounds = getLocalBounds();
+
+    bounds = moduleInternalsBounds ( bounds,
+                                     MODULE_INSIDE_OFFSET,
+                                     OFFSET,
+                                     THICKNESS);
+
+    grid.performLayout ( bounds );
+
 }

@@ -14,11 +14,10 @@
 OutputModule::OutputModule() 
 {
     //
-    
     addAndMakeVisible ( OutputSlider );
-    OutputSlider.setRange ( 0, 100 );
+    OutputSlider.setRange ( 0, 100, 0 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
-    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 40, 20);
+    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
 
     OutputFeedbackSlider.setRange ( 0.0, 100.0, 1.0 );
     OutputFeedbackSlider.setSliderStyle ( Slider::LinearBarVertical );
@@ -41,7 +40,7 @@ void OutputModule::paint (Graphics& g)
 
     CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("OUTPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -54,25 +53,19 @@ void OutputModule::resized ()
 
     using Track = Grid::TrackInfo;
 
-    grid.templateRows = { Track (1_fr) };
+    grid.templateRows = { Track (1_fr), Track (10_fr) };
     grid.templateColumns = { Track (1_fr) , Track (1_fr) };
 
     grid.items = {
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
         GridItem ( OutputSlider ),
         GridItem ( OutputFeedbackSlider )
     };
 
     Rectangle<int> bounds = getLocalBounds();
 
-    // printf ( "BEFORE: (%i, %i), (%i, %i)\n", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight() );
-
-    float change = ( THICKNESS + OFFSET ) * 1.75;
-    bounds.setX( bounds.getX() + change );
-    bounds.setY( bounds.getY() + change );
-    bounds.setWidth ( bounds.getWidth()  - ( change * 2.0 ) );
-    bounds.setHeight( bounds.getHeight() - ( change * 2.0 ) );
-
-    // printf ( "AFTER: (%i, %i), (%i, %i)\n", bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight() );
+    bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
 
     grid.performLayout ( bounds );
 }

@@ -24,5 +24,8 @@ public:
     void resized () override;
 
 private:
+    Slider InputSlider;
+    Label InputSliderLabel;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputModule)
 };

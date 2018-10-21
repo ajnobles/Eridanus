@@ -24,5 +24,11 @@ public:
     void resized () override;
 
 private:
+    Slider RateSlider;
+    Slider DepthSlider;
+
+    Label RateSliderLabel;
+    Label DepthSliderLabel;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LFOModule)
 };

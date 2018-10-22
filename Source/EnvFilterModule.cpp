@@ -14,6 +14,39 @@
 EnvFilterModule::EnvFilterModule() 
 {
     //
+    addAndMakeVisible ( AttackSlider );
+    AttackSlider.setRange ( 0 , 100 );
+    AttackSlider.setSliderStyle ( Slider::LinearVertical );
+    AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( DecaySlider );
+    DecaySlider.setRange ( 0 , 100 );
+    DecaySlider.setSliderStyle ( Slider::LinearVertical );
+    DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( SustainSlider );
+    SustainSlider.setRange ( 0 , 100 );
+    SustainSlider.setSliderStyle ( Slider::LinearVertical );
+    SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( ReleaseSlider );
+    ReleaseSlider.setRange ( 0 , 100 );
+    ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
+    ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( LeftPanel );
+    
+/*
+    addAndMakeVisible ( CutoffKnob );
+    CutoffKnob.setRange ( 0, 100 );
+    CutoffKnob.setSliderStyle ( Slider::Rotary );
+    CutoffKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( ResonanceKnob );
+    ResonanceKnob.setRange ( 0, 100 );
+    ResonanceKnob.setSliderStyle ( Slider::Rotary );
+    ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+*/
 }
 
 
@@ -26,21 +59,10 @@ EnvFilterModule::~EnvFilterModule()
 void EnvFilterModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR); 
-
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
-    
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
+    buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("EnvFILTER", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("EnvFILTER", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -48,5 +70,86 @@ void EnvFilterModule::paint (Graphics& g)
 
 void EnvFilterModule::resized ()
 {
-    // 
+    //
+    Grid grid;
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (1_fr) , Track (10_fr) };
+    grid.templateColumns = { Track (3_fr), Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr),};
+
+    grid.items = {
+        GridItem (nullptr),
+        GridItem (nullptr),
+        GridItem (nullptr),
+        GridItem (nullptr),
+        GridItem (nullptr),
+        GridItem ( LeftPanel ),
+        GridItem (AttackSlider),
+        GridItem (DecaySlider),
+        GridItem (SustainSlider),
+        GridItem (ReleaseSlider)
+    };
+
+    Rectangle <int> bounds = getLocalBounds();
+    bounds = moduleInternalsBounds (bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS);
+
+    grid.performLayout ( bounds );
+}
+
+
+
+
+
+EnvFilterModule::LeftSide::LeftSide() 
+{
+    //
+    addAndMakeVisible ( CutoffKnob );
+    CutoffKnob.setRange ( 0, 100 );
+    CutoffKnob.setSliderStyle ( Slider::Rotary );
+    CutoffKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( ResonanceKnob );
+    ResonanceKnob.setRange ( 0, 100 );
+    ResonanceKnob.setSliderStyle ( Slider::Rotary );
+    ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+}
+
+EnvFilterModule::LeftSide::~LeftSide() 
+{
+    //
+}
+
+
+void EnvFilterModule::LeftSide::paint (Graphics& g)
+{
+    g.setColour (BORDER_COLOR); 
+
+    // TEMP IDENTIFICATION TEXT
+
+}
+
+
+
+void EnvFilterModule::LeftSide::resized ()
+{
+    //
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (1_fr) ,Track (1_fr) , Track (1_fr), Track (1_fr) , Track (1_fr) };
+    grid.templateColumns = { Track (1_fr) };
+
+    grid.items = {
+        GridItem (nullptr),
+        GridItem (nullptr),
+        GridItem ( nullptr ),
+        GridItem ( CutoffKnob ),
+        GridItem ( ResonanceKnob )
+    };
+
+    Rectangle <int> bounds = getLocalBounds();
+    bounds = moduleInternalsBounds (bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS);
+
+    grid.performLayout ( bounds );
 }

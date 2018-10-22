@@ -24,5 +24,12 @@ public:
     void resized () override;
 
 private:
+    Slider OutputSlider;
+    Label OutputSliderLabel;
+
+    Slider OutputFeedbackSlider;
+    Label OutputFeedbackLabel;
+    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputModule)
 };

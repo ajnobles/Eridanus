@@ -23,6 +23,33 @@ public:
     void paint (Graphics& g) override;
     void resized () override;
 
+
+    class LeftSide : public CustomComponent
+    {
+    public:
+        LeftSide();
+        ~LeftSide();
+
+        void paint (Graphics& g) override;
+        void resized () override;
+    private:
+        Slider CutoffKnob;
+        Slider ResonanceKnob;
+
+        TextButton HighPassButton;
+        TextButton LowPassButton;
+        TextButton BandPassButton;
+    };
+
+
+
 private:
+    Slider AttackSlider;
+    Slider DecaySlider;
+    Slider SustainSlider;
+    Slider ReleaseSlider;
+
+    LeftSide LeftPanel;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvFilterModule)
 };

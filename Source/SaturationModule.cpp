@@ -14,7 +14,18 @@
 SaturationModule::SaturationModule() 
 {
     //
+    addAndMakeVisible ( DriveKnob );
+    DriveKnob.setRange ( 0, 100 );
+    DriveKnob.setSliderStyle ( Slider::Rotary );
+    DriveKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( TapeButton );
+    TapeButton.setButtonText ( "TB" );
+
+    addAndMakeVisible ( TubeButton );
+    TubeButton.setButtonText ( "TB" );
 }
+
 
 
 SaturationModule::~SaturationModule() 
@@ -27,20 +38,9 @@ void SaturationModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
-    
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
-
+    buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("SATURATION", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("SATURATION", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -49,4 +49,33 @@ void SaturationModule::paint (Graphics& g)
 void SaturationModule::resized ()
 {
     // 
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = {
+        Track (1_fr),
+        Track (1_fr),
+        Track (1_fr),
+        Track (2_fr),
+    };
+    
+    grid.templateColumns = { Track (1_fr) };
+
+    grid.items = {
+        GridItem (nullptr),
+        GridItem ( TapeButton ),
+        GridItem ( TubeButton ),
+        GridItem ( DriveKnob )
+    };
+
+    Rectangle <int> bounds = getLocalBounds();
+
+    bounds = moduleInternalsBounds ( bounds,
+                                     MODULE_INSIDE_OFFSET,
+                                     OFFSET,
+                                     THICKNESS);
+
+
+    grid.performLayout ( bounds );
 }

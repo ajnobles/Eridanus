@@ -14,6 +14,17 @@
 OutputModule::OutputModule() 
 {
     //
+    addAndMakeVisible ( OutputSlider );
+    OutputSlider.setRange ( 0, 100, 0 );
+    OutputSlider.setSliderStyle (Slider::LinearVertical);
+    OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
+
+    OutputFeedbackSlider.setRange ( 0.0, 100.0, 1.0 );
+    OutputFeedbackSlider.setSliderStyle ( Slider::LinearBarVertical );
+    OutputFeedbackSlider.setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
+    OutputFeedbackSlider.setValue (50.0f);
+
+    addAndMakeVisible ( OutputFeedbackSlider );
 }
 
 
@@ -27,20 +38,9 @@ void OutputModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
-    float x1 = OFFSET + THICKNESS,
-          y1 = OFFSET + THICKNESS,
-          x2 = this->getWidth() - (OFFSET + THICKNESS) * 1.0f,
-          y2 = this->getHeight() - (OFFSET + THICKNESS) * 1.0f;
-
-    Point <float> p1 = { x1, y1 };
-    Point <float> p2 = { x2, y2 };
-
-    Rectangle <float> border (p1, p2);
-    
-    g.drawRoundedRectangle (border, CORNERSIZE, THICKNESS);
-
+    CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 0, getWidth(), getHeight(), Justification::centred); 
+    g.drawText ("OUTPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -48,5 +48,24 @@ void OutputModule::paint (Graphics& g)
 
 void OutputModule::resized ()
 {
-    // 
+
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = { Track (1_fr), Track (10_fr) };
+    grid.templateColumns = { Track (1_fr) , Track (1_fr) };
+
+    grid.items = {
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
+        GridItem ( OutputSlider ),
+        GridItem ( OutputFeedbackSlider )
+    };
+
+    Rectangle<int> bounds = getLocalBounds();
+
+    bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
+
+    grid.performLayout ( bounds );
 }

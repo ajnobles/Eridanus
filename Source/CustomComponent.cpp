@@ -45,7 +45,7 @@ void CustomComponent::buildModuleBorder(Graphics& g, float cornerSize, float thi
 {
     float x1 = offset + thickness,
           y1 = offset + thickness,
-          x2 = getWidth() - (offset + thickness) * 1.0f,
+          x2 = getWidth()  - (offset + thickness) * 1.0f,
           y2 = getHeight() - (offset + thickness) * 1.0f;
 
     Point <float> p1 = { x1, y1 };
@@ -55,3 +55,21 @@ void CustomComponent::buildModuleBorder(Graphics& g, float cornerSize, float thi
 
     g.drawRoundedRectangle (border, cornerSize, thickness);
 }
+
+
+Rectangle <int> CustomComponent::moduleInternalsBounds (Rectangle <int> bounds,
+                                       float inside_offset,
+                                       float offset,
+                                       float thickness)
+{
+    float change = ( thickness + offset ) * inside_offset;
+
+    bounds.setX ( bounds.getX() + change );
+    bounds.setY ( bounds.getY() + change );
+    bounds.setWidth  ( bounds.getWidth() - ( change * 2.0 ) );
+    bounds.setHeight ( bounds.getHeight() - ( change * 2.0 ) - 10 );
+
+    return bounds;
+}
+
+

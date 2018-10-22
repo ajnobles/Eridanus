@@ -24,5 +24,9 @@ public:
     void resized () override;
 
 private:
+    Slider DriveKnob;
+    TextButton TapeButton;
+    TextButton TubeButton;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SaturationModule)
 };

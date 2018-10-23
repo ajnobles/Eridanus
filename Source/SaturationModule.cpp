@@ -8,10 +8,10 @@
   ==============================================================================
 */
 
-#include "SaturationModule.h"
+#include "SynthScene.h"
 
 
-SaturationModule::SaturationModule() 
+SynthScene::SynthModulesScene::SaturationModule::SaturationModule() 
 {
     //
     addAndMakeVisible ( DriveKnob );
@@ -28,13 +28,13 @@ SaturationModule::SaturationModule()
 
 
 
-SaturationModule::~SaturationModule() 
+SynthScene::SynthModulesScene::SaturationModule::~SaturationModule() 
 {
     //
 }
 
 
-void SaturationModule::paint (Graphics& g)
+void SynthScene::SynthModulesScene::SaturationModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -46,7 +46,7 @@ void SaturationModule::paint (Graphics& g)
 
 
 
-void SaturationModule::resized ()
+void SynthScene::SynthModulesScene::SaturationModule::resized ()
 {
     // 
     Grid grid;

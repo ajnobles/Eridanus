@@ -13,10 +13,16 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 // #include "SynthModulesScene.h"
 // #include "SynthTitleScene.h"
-#include "Utilities.h"
+// #include "Utilities.h"
 
 #include "CustomComponent.h"
-
+#include "OutputModule.h"
+#include "InputModule.h"
+#include "AmpFilterModule.h"
+#include "EnvFilterModule.h"
+#include "LFOModule.h"
+#include "OscillatorModule.h"
+// #include "SaturationModule.h"
 
 //==============================================================================
 /*
@@ -30,7 +36,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    
+    //==============================================================================
     class SynthTitleScene    : public CustomComponent
     {
     public:
@@ -44,7 +50,7 @@ public:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthTitleScene)
     };
     
-
+    //==============================================================================
     class SynthModulesScene    : public CustomComponent
     {
     public:
@@ -53,22 +59,88 @@ public:
 
         void paint (Graphics&) override;
         void resized() override;
+        
+        //==============================================================================
+        class SaturationModule : public CustomComponent
+        {
+        public:
+            SaturationModule();
+            ~SaturationModule();
+
+            void paint (Graphics& g) override;
+            void resized () override;
+
+        private:
+            Slider DriveKnob;
+            TextButton TapeButton;
+            TextButton TubeButton;
+
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SaturationModule)
+        };    
+
 
     private:
         OutputModule Output;
+        
         InputModule Input;
+        
         AmpFilterModule AmpFilter;
+        
         EnvFilterModule EnvFilter;
+        
         LFOModule LFO_Freq;
+        
         LFOModule LFO_Amp;
+        
         OscillatorModule Oscillator;
+        
         SaturationModule Saturation;
 
+        
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthModulesScene)
     };    
+
+    //==============================================================================
+    class GUIUtilities    : public CustomComponent
+    {
+    public:
+        GUIUtilities();
+        ~GUIUtilities();
+
+        void paint (Graphics&) override;
+        void resized() override;
+
+
+        class Selectors : public CustomComponent
+        {
+        public:
+            Selectors();
+            ~Selectors();
+            void paint (Graphics&) override;
+            void resized () override;
+        private:
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Selectors);
+        };
+
+        
+
+    
+    
+    //==============================================================================
+
     
     
     
+    //==============================================================================
+        
+        
+private:
+
+    Selectors Presets;
+    Selectors MidiChannel;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GUIUtilities)
+};
     
     
 

@@ -6,6 +6,8 @@
       <GROUP id="{91069A29-F55D-41B3-FC7A-E69D31E7E11A}" name="GUI">
         <GROUP id="{729022F1-E087-3D32-1877-F14CF65472EB}" name="Components"/>
         <GROUP id="{86FF422D-04D6-BB73-54C3-0654C514D5FA}" name="Scenes">
+          <FILE id="tg8t56" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
+          <FILE id="cwHLAH" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
           <FILE id="MG8rg2" name="SynthTitleScene.cpp" compile="1" resource="0"
                 file="Source/SynthTitleScene.cpp"/>
           <FILE id="hgmHNj" name="SynthScene.cpp" compile="1" resource="0" file="Source/SynthScene.cpp"/>
@@ -16,16 +18,10 @@
                 file="Source/KeyboardModuleScene.h"/>
           <FILE id="Jq8YmV" name="SynthModulesScene.cpp" compile="1" resource="0"
                 file="Source/SynthModulesScene.cpp"/>
-          <FILE id="VYzCDD" name="SynthModulesScene.h" compile="0" resource="0"
-                file="Source/SynthModulesScene.h"/>
         </GROUP>
-        <FILE id="tg8t56" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
-        <FILE id="cwHLAH" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
         <GROUP id="{9D107AEC-85C3-0EF4-D9BF-82787F14529D}" name="SynthModules">
           <FILE id="WP3xaZ" name="SaturationModule.cpp" compile="1" resource="0"
                 file="Source/SaturationModule.cpp"/>
-          <FILE id="z23sOA" name="SaturationModule.h" compile="0" resource="0"
-                file="Source/SaturationModule.h"/>
           <FILE id="ZDBq1E" name="AmpFilterModule.cpp" compile="1" resource="0"
                 file="Source/AmpFilterModule.cpp"/>
           <FILE id="fGjbzu" name="AmpFilterModule.h" compile="0" resource="0"

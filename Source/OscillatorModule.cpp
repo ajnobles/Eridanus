@@ -8,22 +8,22 @@
   ==============================================================================
 */
 
-#include "OscillatorModule.h"
+#include "SynthScene.h"
 
 
-OscillatorModule::OscillatorModule() 
+SynthScene::SynthModulesScene::OscillatorModule::OscillatorModule() 
 {
     //
 }
 
 
-OscillatorModule::~OscillatorModule() 
+SynthScene::SynthModulesScene::OscillatorModule::~OscillatorModule() 
 {
     //
 }
 
 
-void OscillatorModule::paint (Graphics& g)
+void SynthScene::SynthModulesScene::OscillatorModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -46,7 +46,7 @@ void OscillatorModule::paint (Graphics& g)
 
 
 
-void OscillatorModule::resized ()
+void SynthScene::SynthModulesScene::OscillatorModule::resized ()
 {
     // 
 }

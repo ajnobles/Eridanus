@@ -20,8 +20,8 @@
 #include "InputModule.h"
 #include "AmpFilterModule.h"
 #include "EnvFilterModule.h"
-#include "LFOModule.h"
-#include "OscillatorModule.h"
+// #include "LFOModule.h"
+// #include "OscillatorModule.h"
 // #include "SaturationModule.h"
 
 //==============================================================================
@@ -76,9 +76,43 @@ public:
             TextButton TubeButton;
 
             JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SaturationModule)
-        };    
+        };
+        
+        //==============================================================================
+        class OscillatorModule : public CustomComponent
+        {
+        public:
+            OscillatorModule();
+            ~OscillatorModule();
 
+            void paint (Graphics& g) override;
+            void resized () override;
 
+        private:
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscillatorModule)
+        };
+
+        //==============================================================================
+        class LFOModule : public CustomComponent
+        {
+        public:
+            LFOModule();
+            ~LFOModule();
+
+            void paint (Graphics& g) override;
+            void resized () override;
+
+        private:
+        Slider RateSlider;
+        Slider DepthSlider;
+        Label RateSliderLabel;
+        Label DepthSliderLabel;
+ 
+
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LFOModule)
+        };            
+        //==============================================================================
+    
     private:
         OutputModule Output;
         
@@ -91,7 +125,7 @@ public:
         LFOModule LFO_Freq;
         
         LFOModule LFO_Amp;
-        
+       
         OscillatorModule Oscillator;
         
         SaturationModule Saturation;

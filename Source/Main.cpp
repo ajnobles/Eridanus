@@ -20,7 +20,7 @@ public:
 
     const String getApplicationName() override       { return ProjectInfo::projectName; }
     const String getApplicationVersion() override    { return ProjectInfo::versionString; }
-    // bool moreThanOneInstanceAllowed() override       { return true; }
+    // versionString moreThanOneInstanceAllowed() override       { return true; }
 
 
     //==============================================================================
@@ -62,11 +62,11 @@ public:
     {
     public:
         MainWindow (String name, Component *c, JUCEApplication& a) 
-            : DocumentWindow (name,
-                              Desktop::getInstance().getDefaultLookAndFeel()
-                                                    .findColour (ResizableWindow::backgroundColourId),
-                              DocumentWindow::allButtons),
-              app (a)
+                   : DocumentWindow (name,
+                       Desktop::getInstance().getDefaultLookAndFeel()
+                         .findColour (ResizableWindow::backgroundColourId),
+                     DocumentWindow::allButtons),
+                     app (a)
         {
             setUsingNativeTitleBar (true);
             setContentOwned (c, true);

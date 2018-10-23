@@ -8,10 +8,10 @@
   ==============================================================================
 */
 
-#include "LFOModule.h"
+#include "SynthScene.h"
 
 
-LFOModule::LFOModule() 
+SynthScene::SynthModulesScene::LFOModule::LFOModule() 
 {
     //
     
@@ -29,13 +29,13 @@ LFOModule::LFOModule()
 }
 
 
-LFOModule::~LFOModule() 
+SynthScene::SynthModulesScene::LFOModule::~LFOModule() 
 {
     //
 }
 
 
-void LFOModule::paint (Graphics& g)
+void SynthScene::SynthModulesScene::LFOModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -48,7 +48,7 @@ void LFOModule::paint (Graphics& g)
 
 
 
-void LFOModule::resized ()
+void SynthScene::SynthModulesScene::LFOModule::resized ()
 {
     // 
     Grid grid;

@@ -8,21 +8,21 @@
   ==============================================================================
 */
 
-#include "SynthTitleScene.h"
+#include "SynthScene.h"
 
 //==============================================================================
 
-SynthTitleScene::SynthTitleScene()
+SynthScene::SynthTitleScene::SynthTitleScene()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 }
 
-SynthTitleScene::~SynthTitleScene()
+SynthScene::SynthTitleScene::~SynthTitleScene()
 {
 }
 
-void SynthTitleScene::paint (Graphics& g)
+void SynthScene::SynthTitleScene::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -36,7 +36,7 @@ void SynthTitleScene::paint (Graphics& g)
     g.drawText ("ERIDANUS", getLocalBounds(), Justification::centred, true);
 }
 
-void SynthTitleScene::resized()
+void SynthScene::SynthTitleScene::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains.

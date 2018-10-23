@@ -8,8 +8,6 @@
         <GROUP id="{86FF422D-04D6-BB73-54C3-0654C514D5FA}" name="Scenes">
           <FILE id="MG8rg2" name="SynthTitleScene.cpp" compile="1" resource="0"
                 file="Source/SynthTitleScene.cpp"/>
-          <FILE id="DynAVk" name="SynthTitleScene.h" compile="0" resource="0"
-                file="Source/SynthTitleScene.h"/>
           <FILE id="hgmHNj" name="SynthScene.cpp" compile="1" resource="0" file="Source/SynthScene.cpp"/>
           <FILE id="QJoOAs" name="SynthScene.h" compile="0" resource="0" file="Source/SynthScene.h"/>
           <FILE id="IpBzNn" name="KeyboardModuleScene.cpp" compile="1" resource="0"

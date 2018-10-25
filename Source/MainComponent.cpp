@@ -13,9 +13,22 @@ MainComponent::MainComponent()
 {
 
     // INPUT
+    modules.add (new InputModule (
+        &InputLevelSlider,
+        &InputLevelSliderLabel
+    )
+    );
     
-    // OSCILLATOR 1
-   modules.add (new OscillatorModule ( 
+    // LFO FREQ
+    modules.add (new LfoModule (
+        &lfoFreqRateSlider,
+        &lfoFreqDepthSlider,
+        &lfoFreqRateLabel,
+        &lfoFreqRateLabel
+    ) );
+    
+    // OSCILLATORS
+    modules.add (new OscillatorModule ( 
         &oscLevelSlider, 
         &oscLevelLabel, 
         &freqSlider, 
@@ -24,22 +37,64 @@ MainComponent::MainComponent()
     )
     );
     
-    // OSCILLATOR 2
-    
-    // AMP FILTER
+    // LFO AMP
+    modules.add (new LfoModule (
+        &lfoAmpRateSlider,
+        &lfoAmpDepthSlider,
+        &lfoAmpRateLabel,
+        &lfoAmpRateLabel
+    ) );
     
     // ENV FILTER
+    modules.add (new AmpFilterModule ( 
+        &envAttackSlider, 
+        &envDecaySlider, 
+        &envSustainSlider, 
+        &envReleaseSlider,
+        &envAttackLabel,
+        &envDecayLabel,
+        &envSustainLabel,
+        &envReleaseLabel
+    ) );
     
-    // LFO FREQ
-    
-    // LOG AMP
+    // AMP FILTER
+    modules.add (new EnvFilterModule ( 
+        &ampAttackSlider, 
+        &ampDecaySlider, 
+        &ampSustainSlider, 
+        &ampReleaseSlider,
+        &ampCutoffKnob,
+        &ampResonanceKnob,
+        &ampHighPassButton,
+        &ampLowPassButton,        
+        &ampBandPassButton,
+        &ampAttackLabel,
+        &ampDecayLabel,
+        &ampSustainLabel,
+        &ampReleaseLabel
+    ) );
     
     // SATURATION
+    modules.add ( new SaturationModule (
+        &satDriveKnob,  // DRIVE KNOB
+        &satTapeButton, // TAPE BUTTON
+        &satTubeButton  // TUBE BUTTON
+    ) );
     
     // OUTPUT
+    modules.add ( new OutputModule (
+        &outputLevelSlider, 
+        &outputFeedbackSlider,
+        &outputLevelLabel,  
+        &outputFeedbackLabel 
+    ) );
     
 
-    addAndMakeVisible ( modules[0] );
+    int numModules = modules.size();
+    for (int i = 0; i < numModules; i++) {
+        addAndMakeVisible ( modules[i] );
+    }
+
     
     // COMPONENT LISTENERS
     freqSlider.addListener(this);
@@ -47,51 +102,51 @@ MainComponent::MainComponent()
     oscBox.addListener(this);
 
     //add filter combo box, set selections w/ text, and listener
-    addAndMakeVisible(filterBox);
+//    addAndMakeVisible(filterBox);
     filterBox.addItem("Low Pass", 1);
     filterBox.addItem("Band Pass", 2);
     filterBox.addItem("High Pass", 3);
     filterBox.addListener(this);
     
     //add filter cutoff slider, slider display attributes, and listener 
-    addAndMakeVisible(cutoffSlider);
+//    addAndMakeVisible(cutoffSlider);
     cutoffSlider.setRange(20, 2000);
     cutoffSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     cutoffSlider.addListener(this);
     
     //add cutoff slider label and set text
-    addAndMakeVisible(cutoffLabel);
+//    addAndMakeVisible(cutoffLabel);
     cutoffLabel.setText("Cutoff", dontSendNotification);
 
     //add resonance slider, slider display attributes, and listener 
-    addAndMakeVisible(resonanceSlider);
+//    addAndMakeVisible(resonanceSlider);
     resonanceSlider.setRange(1, 5);
     resonanceSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     resonanceSlider.addListener(this);
     
     //add resonance slider label and set text
-    addAndMakeVisible(resonanceLabel);
+//    addAndMakeVisible(resonanceLabel);
     resonanceLabel.setText("Resonance", dontSendNotification);
 
     //add noise level slider, slider display attributes, and listener 
-    addAndMakeVisible(lfoAmpRateSlider);
-    lfoAmpRateSlider.setRange(0.0, 5.0);
-    lfoAmpRateSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-    lfoAmpRateSlider.addListener(this);
+//    addAndMakeVisible(lfoAmpRateSlider);
+//    lfoAmpRateSlider.setRange(0.0, 5.0);
+//    lfoAmpRateSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+//    lfoAmpRateSlider.addListener(this);
     
     //add noise level slider label and set text
-    addAndMakeVisible(lfoAmpRateLabel);
-    lfoAmpRateLabel.setText("LFO Amp Rate", dontSendNotification); 
+//    addAndMakeVisible(lfoAmpRateLabel);
+//    lfoAmpRateLabel.setText("LFO Amp Rate", dontSendNotification); 
     
     //add noise level slider, slider display attributes, and listener 
-    addAndMakeVisible(lfoAmpDepthSlider);
-    lfoAmpDepthSlider.setRange(0.0, 1.0);
-    lfoAmpDepthSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-    lfoAmpDepthSlider.addListener(this);
+//    addAndMakeVisible(lfoAmpDepthSlider);
+//    lfoAmpDepthSlider.setRange(0.0, 1.0);
+//    lfoAmpDepthSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+//    lfoAmpDepthSlider.addListener(this);
     
     //add noise level slider label and set text
-    addAndMakeVisible(lfoAmpDepthLabel);
-    lfoAmpDepthLabel.setText("LFO Amp Depth", dontSendNotification);
+//    addAndMakeVisible(lfoAmpDepthLabel);
+//    lfoAmpDepthLabel.setText("LFO Amp Depth", dontSendNotification);
     
     //set window size
     setSize (1600, 800);
@@ -294,11 +349,11 @@ void MainComponent::resized()
     using Track = Grid::TrackInfo;
         
     grid.templateRows    = {
+        Track (1_fr),
         Track (1_fr)
     };
     
     grid.templateColumns = {
-        // INTPUT
         Track (1_fr),
         Track (1_fr),
         Track (2_fr),
@@ -308,24 +363,33 @@ void MainComponent::resized()
         Track (1_fr),
         Track (1_fr),
     };
-
+/*
     grid.autoRows = Track (1_fr);
     grid.autoColumns = Track (1_fr);
 
     grid.autoFlow = Grid::AutoFlow::column;
-
+*/
     /* 
     grid.templateAreas = {
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output",
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
     };
-    */
+
     
     grid.items = {
-        GridItem ( modules[0] ).withArea ( 2, 2, 4, 4 ) 
+        GridItem ( modules[0] ),
+        GridItem ( modules[1] ),
+        GridItem ( modules[2] ),
     };
+     */
     
+    int numModules = modules.size();
+    
+    for (int i = 0; i < numModules; i++) {
+        grid.items.add ( modules[i] );
+    }
+        
     Rectangle<int> bounds = getLocalBounds();
     
     grid.performLayout ( bounds );

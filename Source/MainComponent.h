@@ -77,16 +77,60 @@ public:
     //updates changes within filter settings
     void updateFilterSettings();
 
-    // INPUT
+    
+    // INPUT MODULE
     struct InputModule : public CustomComponent
     {
-        InputModule ();
-        void paint (Graphics& g) override;
-        void resized () override;
+        InputModule (Slider* IS, Label* IL)
+                    : InputSlider (IS), InputLabel (IL)
+        {
+            addAndMakeVisible ( InputSlider );  
 
+            InputSlider->setRange ( 0, 100 );
+            InputSlider->setSliderStyle ( Slider::LinearVertical );
+            InputSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20);      
+        }
+        
+        void paint (Graphics& g) override
+        {
+            g.setColour (BORDER_COLOR);
+
+            buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
+            
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("INPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+        }
+        
+        void resized () override
+        {
+            Grid grid;
+
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows    = { Track (1_fr), Track (10_fr) };
+            grid.templateColumns = { Track (1_fr) };
+
+            grid.items = {
+                GridItem ( nullptr ),
+                GridItem ( InputSlider )
+            };
+
+            Rectangle <int> bounds = getLocalBounds();
+
+            bounds = moduleInternalsBounds ( bounds,
+                                             MODULE_INSIDE_OFFSET,
+                                             OFFSET,
+                                             THICKNESS);
+
+            grid.performLayout ( bounds );
+
+        }
+
+        Slider* InputSlider;
+        Label*  InputLabel;
     };
 
-    
     // OscillatorModule
     struct OscillatorModule : public Component
     {
@@ -159,6 +203,460 @@ public:
         Label*  freqLabel;
         ComboBox* oscBox;
     };
+
+    // AMP FILTER
+    struct AmpFilterModule : public CustomComponent
+    {
+        AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs,
+                          Label*  al, Label*  dl, Label*  sl, Label*  rl)
+                        : AttackSlider (as), DecaySlider (ds), 
+                          SustainSlider (ss), ReleaseSlider (rs),
+                          AttackSliderLabel (al), DecaySliderLabel (dl),
+                          SustainSliderLabel (sl), ReleaseSliderLabel (rl)
+        {
+	    addAndMakeVisible ( AttackSlider );
+	    AttackSlider->setRange ( 0, 100 );
+	    AttackSlider->setSliderStyle ( Slider::LinearVertical );
+	    AttackSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+	    addAndMakeVisible ( DecaySlider );
+	    DecaySlider->setRange ( 0, 100 );
+	    DecaySlider->setSliderStyle ( Slider::LinearVertical );
+	    DecaySlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+	    addAndMakeVisible ( SustainSlider );
+	    SustainSlider->setRange ( 0, 100 );
+	    SustainSlider->setSliderStyle ( Slider::LinearVertical );
+	    SustainSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+	    addAndMakeVisible ( ReleaseSlider );
+	    ReleaseSlider->setRange ( 0, 100 );
+	    ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
+	    ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+        }
+
+        void paint (Graphics& g) override
+        {
+            g.setColour (BORDER_COLOR);
+            buildModuleBorder (g, CORNERSIZE, THICKNESS, OFFSET);
+
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("AmpFILTER", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+        }
+
+        void resized () override
+        {
+            // 
+            Grid grid;
+
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows = { Track (1_fr), Track (10_fr) };
+            grid.templateColumns = { Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr) };
+
+            grid.items = {
+                GridItem ( nullptr ),
+                GridItem ( nullptr ),
+                GridItem ( nullptr ),
+                GridItem ( nullptr ),
+                GridItem ( AttackSlider  ),
+                GridItem ( DecaySlider   ),
+                GridItem ( SustainSlider ),
+                GridItem ( ReleaseSlider )
+            };
+
+            Rectangle <int> bounds = getLocalBounds();
+            bounds = moduleInternalsBounds ( bounds,
+                                             MODULE_INSIDE_OFFSET,
+                                             OFFSET,
+                                             THICKNESS);
+
+            grid.performLayout ( bounds );
+        }
+
+        Slider* AttackSlider;
+        Slider* DecaySlider;
+        Slider* SustainSlider;
+        Slider* ReleaseSlider;
+ 
+        Label* AttackSliderLabel;
+        Label* DecaySliderLabel;
+        Label* SustainSliderLabel;
+        Label* ReleaseSliderLabel;
+    };
+
+  
+    // ENV FILTER
+    struct EnvFilterModule : public CustomComponent
+    {
+        EnvFilterModule ( Slider* as, Slider* ds, 
+                          Slider* ss, Slider* rs,
+                          Slider* ck, Slider* rk,
+                          TextButton* hpb,
+                          TextButton* lpb,
+                          TextButton* bpb,
+                          Label*  al, Label*  dl, 
+                          Label*  sl, Label*  rl )                 
+                        : AttackSlider (as), DecaySlider (ds), 
+                          SustainSlider (ss), ReleaseSlider (rs),
+                          AttackSliderLabel (al), DecaySliderLabel (dl),
+                          SustainSliderLabel (sl), ReleaseSliderLabel (rl)
+                          
+        {
+            //
+            addAndMakeVisible ( AttackSlider );
+            AttackSlider->setRange ( 0 , 100 );
+            AttackSlider->setSliderStyle ( Slider::LinearVertical );
+            AttackSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+            addAndMakeVisible ( DecaySlider );
+            DecaySlider->setRange ( 0 , 100 );
+            DecaySlider->setSliderStyle ( Slider::LinearVertical );
+            DecaySlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+            addAndMakeVisible ( SustainSlider );
+            SustainSlider->setRange ( 0 , 100 );
+            SustainSlider->setSliderStyle ( Slider::LinearVertical );
+            SustainSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+            addAndMakeVisible ( ReleaseSlider );
+            ReleaseSlider->setRange ( 0 , 100 );
+            ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
+            ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+            LeftPanel = new LeftSide (ck, rk, hpb, lpb, bpb);
+            addAndMakeVisible ( LeftPanel );
+            
+        }
+        
+        void paint (Graphics& g) override
+        {
+            g.setColour (BORDER_COLOR); 
+            buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
+
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("EnvFILTER", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+        }
+        
+        void resized () override
+        {
+            //
+            Grid grid;
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows = { 
+                Track (1_fr) , 
+                Track (10_fr) 
+            };
+            
+            grid.templateColumns = { 
+                Track (3_fr), 
+                Track (1_fr), 
+                Track (1_fr), 
+                Track (1_fr), 
+                Track (1_fr)
+            };
+
+            grid.items = {
+                GridItem (nullptr),
+                GridItem (nullptr),
+                GridItem (nullptr),
+                GridItem (nullptr),
+                GridItem (nullptr),
+                GridItem ( LeftPanel ),
+                GridItem (AttackSlider),
+                GridItem (DecaySlider),
+                GridItem (SustainSlider),
+                GridItem (ReleaseSlider)
+            };
+
+            Rectangle <int> bounds = getLocalBounds();
+            bounds = moduleInternalsBounds (bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS);
+
+            grid.performLayout ( bounds );
+        }
+        
+        
+        struct LeftSide : public CustomComponent
+        {
+            LeftSide( Slider* ck, Slider* rk, TextButton* hpb, TextButton* lpb, TextButton* bpb)
+                    : CutoffKnob (ck), ResonanceKnob (rk), 
+                      HighPassButton (hpb), LowPassButton (lpb), BandPassButton (bpb)
+            {
+                //
+                addAndMakeVisible ( CutoffKnob );
+                CutoffKnob->setRange ( 0, 100 );
+                CutoffKnob->setSliderStyle ( Slider::Rotary );
+                CutoffKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+                addAndMakeVisible ( ResonanceKnob );
+                ResonanceKnob->setRange ( 0, 100 );
+                ResonanceKnob->setSliderStyle ( Slider::Rotary );
+                ResonanceKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );            
+            }
+
+            void paint (Graphics& g) override
+            {
+            }
+            
+            void resized () override
+            {
+                //
+                Grid grid;
+
+                using Track = Grid::TrackInfo;
+
+                grid.templateRows = { 
+                    Track (1_fr) ,
+                    Track (1_fr) , 
+                    Track (1_fr), 
+                    Track (1_fr) , 
+                    Track (1_fr)
+                };
+                
+                grid.templateColumns = { 
+                    Track (1_fr) 
+                };
+
+                grid.items = {
+                    GridItem ( nullptr ),
+                    GridItem ( nullptr ),
+                    GridItem ( nullptr ),
+                    GridItem ( CutoffKnob ),
+                    GridItem ( ResonanceKnob )
+                };
+
+                Rectangle <int> bounds = getLocalBounds();
+                bounds = moduleInternalsBounds (bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS);
+
+                grid.performLayout ( bounds );
+            }
+
+            Slider* CutoffKnob;
+            Slider* ResonanceKnob;
+
+            TextButton* HighPassButton;
+            TextButton* LowPassButton;
+            TextButton* BandPassButton;
+        };
+                
+        Slider* AttackSlider;
+        Slider* DecaySlider;
+        Slider* SustainSlider;
+        Slider* ReleaseSlider;
+ 
+        Label* AttackSliderLabel;
+        Label* DecaySliderLabel;
+        Label* SustainSliderLabel;
+        Label* ReleaseSliderLabel;
+
+        LeftSide* LeftPanel;
+    };
+   
+    // LFO
+    struct LfoModule : public CustomComponent
+    {
+        LfoModule (Slider* rs, Slider* ds, Label* rl, Label* dl)
+            : RateSlider (rs), DepthSlider (ds), RateLabel (rl), DepthLabel (dl)
+        {
+            
+            addAndMakeVisible ( RateSlider );
+            RateSlider->setRange ( 0, 100 );
+            RateSlider->setSliderStyle ( Slider::LinearVertical );
+            RateSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+           
+
+            addAndMakeVisible ( DepthSlider );
+            DepthSlider->setRange ( 0, 100 );
+            DepthSlider->setSliderStyle ( Slider::LinearVertical );
+            DepthSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );        
+        
+        }    
+            
+        void paint (Graphics& g) override
+        {
+            g.setColour (BORDER_COLOR);
+
+            CustomComponent::buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
+
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("LFO", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+        }
+        
+        void resized () override
+        {
+            // 
+            Grid grid;
+
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows    = { Track (1_fr), Track (10_fr) };
+            grid.templateColumns = { Track (1_fr), Track (1_fr) };
+
+            grid.items = {
+                GridItem ( nullptr ), 
+                GridItem ( nullptr ), 
+                GridItem ( RateSlider ),
+                GridItem ( DepthSlider )
+            };
+
+            Rectangle <int> bounds = getLocalBounds();
+            bounds = moduleInternalsBounds ( bounds, 
+                                             MODULE_INSIDE_OFFSET, 
+                                             OFFSET, 
+                                             THICKNESS);
+
+            grid.performLayout ( bounds );
+        }
+
+        Slider* RateSlider;
+        Slider* DepthSlider;
+        
+        Label*  RateLabel;
+        Label*  DepthLabel;
+    };
+    
+    // SATURATION
+    struct SaturationModule : public CustomComponent
+    {
+        SaturationModule ( Slider* dk,
+                           TextButton* tapeB,
+                           TextButton* tubeB )
+                         : DriveKnob (dk), TapeButton (tapeB), TubeButton (tubeB)
+        {
+            //
+            addAndMakeVisible ( DriveKnob );
+            DriveKnob->setRange ( 0, 100 );
+            DriveKnob->setSliderStyle ( Slider::Rotary );
+            DriveKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+            addAndMakeVisible ( TapeButton );
+            TapeButton->setButtonText ( "TB" );
+
+            addAndMakeVisible ( TubeButton );
+            TubeButton->setButtonText ( "TB" );
+        }
+
+                      
+        void paint (Graphics& g) override 
+        {
+            g.setColour (BORDER_COLOR);
+
+            buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("SATURATION", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+        }
+
+        void resized () override
+        {
+            // 
+            Grid grid;
+
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows = {
+                Track (1_fr),
+                Track (1_fr),
+                Track (1_fr),
+                Track (2_fr),
+            };
+            
+            grid.templateColumns = { Track (1_fr) };
+
+            grid.items = {
+                GridItem (nullptr),
+                GridItem ( TapeButton ),
+                GridItem ( TubeButton ),
+                GridItem ( DriveKnob )
+            };
+
+            Rectangle <int> bounds = getLocalBounds();
+
+            bounds = moduleInternalsBounds ( bounds,
+                                             MODULE_INSIDE_OFFSET,
+                                             OFFSET,
+                                             THICKNESS);
+
+
+            grid.performLayout ( bounds );
+        }
+        
+        Slider* DriveKnob;
+        
+        TextButton* TapeButton;
+        TextButton* TubeButton;
+    };
+   
+    // OUTPUT
+    struct OutputModule : public CustomComponent
+    {
+        OutputModule (Slider* os, Slider* ofs,
+                      Label* ol,  Label* ofl)
+                    : OutputSlider ( os ),
+                      OutputFeedbackSlider ( ofs ),
+                      OutputSliderLabel (ol),
+                      OutputFeedbackLabel (ofl)
+        {
+            //
+            addAndMakeVisible ( OutputSlider );
+            OutputSlider->setRange ( 0, 100, 0 );
+            OutputSlider->setSliderStyle (Slider::LinearVertical);
+            OutputSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
+
+            addAndMakeVisible ( OutputFeedbackSlider );
+            OutputFeedbackSlider->setRange ( 0.0, 100.0, 1.0 );
+            OutputFeedbackSlider->setSliderStyle ( Slider::LinearBarVertical );
+            OutputFeedbackSlider->setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
+            OutputFeedbackSlider->setValue (50.0f);
+
+
+        }
+        
+        void paint (Graphics& g) override
+        {
+            g.setColour (BORDER_COLOR);
+
+            CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
+            // TEMP IDENTIFICATION TEXT
+            g.drawText ("OUTPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+        }
+        
+        void resized () override
+        {
+
+            Grid grid;
+
+            using Track = Grid::TrackInfo;
+
+            grid.templateRows = { Track (1_fr), Track (10_fr) };
+            grid.templateColumns = { Track (1_fr) , Track (1_fr) };
+
+            grid.items = {
+                GridItem ( nullptr ),
+                GridItem ( nullptr ),
+                GridItem ( OutputSlider ),
+                GridItem ( OutputFeedbackSlider )
+            };
+
+            Rectangle<int> bounds = getLocalBounds();
+
+            bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
+
+            grid.performLayout ( bounds );
+        }
+
+        Slider* OutputSlider;
+        Label* OutputSliderLabel;
+
+        Slider* OutputFeedbackSlider;
+        Label* OutputFeedbackLabel;
+
+    };
+ 
     
 
         
@@ -170,32 +668,90 @@ private:
 
     OwnedArray<Component> modules;
     
+    // INPUT MODULE
+    Slider InputLevelSlider;
+    Label  InputLevelSliderLabel;
+    
+    // LFO FREQ MODULE
+    Slider lfoFreqRateSlider;
+    Slider lfoFreqDepthSlider;
+    
+    Label  lfoFreqRateLabel;
+    Label  lfoFreqDepthLabel;
+    
     
     //sliders for osc and filter controls
     Slider oscLevelSlider;
-
     Slider freqSlider;
-    Slider cutoffSlider;
-    Slider resonanceSlider;
+    
+    Label oscLevelLabel;
+    Label freqLabel;
+    
+    ComboBox oscBox;  
+    
+    String oscType;
+           
+    // LFO AMP
     Slider lfoAmpRateSlider;
     Slider lfoAmpDepthSlider;
-    
-    //labels for osc and filter
-    Label oscLevelLabel;
-
-    Label freqLabel;
-    Label cutoffLabel;
-    Label resonanceLabel;
     Label lfoAmpRateLabel;
     Label lfoAmpDepthLabel;
+    
+    // ENV FILTER
+    Slider envAttackSlider;
+    Slider envDecaySlider;
+    Slider envSustainSlider;
+    Slider envReleaseSlider;
+    
+    Label envAttackLabel;
+    Label envDecayLabel;
+    Label envSustainLabel;
+    Label envReleaseLabel;
+    
+    // AMP FILTER
+    Slider ampAttackSlider;
+    Slider ampDecaySlider;
+    Slider ampSustainSlider;
+    Slider ampReleaseSlider;
+    Slider ampCutoffKnob;
+    Slider ampResonanceKnob;
+    
+    TextButton ampHighPassButton;
+    TextButton ampLowPassButton;
+    TextButton ampBandPassButton;    
+    
+    Label ampAttackLabel;
+    Label ampDecayLabel;
+    Label ampSustainLabel;
+    Label ampReleaseLabel;
+    
+    // SATURATION MODULE
+    Slider satDriveKnob;
+    
+    TextButton satTubeButton;
+    TextButton satTapeButton; 
+    
+    // OUTPUT MODULE
+    Slider outputLevelSlider;
+    Slider outputFeedbackSlider;
+    
+    Label outputLevelLabel;
+    Label outputFeedbackLabel;
+    
 
     //combo boxes osc and filter types
     ComboBox filterBox;     
-    ComboBox oscBox;     
+
 
     //strings hold osc and filter selections
     String filterType;      
-    String oscType;
+
+    
+    Slider cutoffSlider;
+    Slider resonanceSlider;
+    
+    Label cutoffLabel;
+    Label resonanceLabel;
     
     //holds audio device's sample rate for osc, lfo, and filter settings
     float globalSampleRate;  

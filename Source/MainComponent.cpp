@@ -12,14 +12,33 @@
 MainComponent::MainComponent()
 {
 
-    modules.add ( new OSC ( 
+    // INPUT
+    
+    // OSCILLATOR 1
+   modules.add (new OscillatorModule ( 
         &oscLevelSlider, 
         &oscLevelLabel, 
         &freqSlider, 
         &freqLabel,
-        &oscBox 
-    ) );
+        &oscBox
+    )
+    );
     
+    // OSCILLATOR 2
+    
+    // AMP FILTER
+    
+    // ENV FILTER
+    
+    // LFO FREQ
+    
+    // LOG AMP
+    
+    // SATURATION
+    
+    // OUTPUT
+    
+
     addAndMakeVisible ( modules[0] );
     
     // COMPONENT LISTENERS
@@ -275,14 +294,17 @@ void MainComponent::resized()
     using Track = Grid::TrackInfo;
         
     grid.templateRows    = {
-        Track (1_fr),
-        Track (1_fr),
-        Track (1_fr),
+        Track (1_fr)
     };
     
     grid.templateColumns = {
         // INTPUT
         Track (1_fr),
+        Track (1_fr),
+        Track (2_fr),
+        Track (1_fr),
+        Track (2_fr),
+        Track (2_fr),
         Track (1_fr),
         Track (1_fr),
     };
@@ -291,14 +313,14 @@ void MainComponent::resized()
     grid.autoColumns = Track (1_fr);
 
     grid.autoFlow = Grid::AutoFlow::column;
-   /* 
+
+    /* 
     grid.templateAreas = {
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output",
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
     };
     */
-    
     
     grid.items = {
         GridItem ( modules[0] ).withArea ( 2, 2, 4, 4 ) 

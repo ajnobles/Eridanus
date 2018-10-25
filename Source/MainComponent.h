@@ -9,13 +9,15 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+#include "CustomComponent.h"
 
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
+
+
 class MainComponent   : // public Component,
                         // public AudioSource,
                         public AudioAppComponent,
@@ -35,11 +37,6 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-
-    void OSC_Test () 
-    {
-        //
-    }
 
     //==============================================================================
     //handles value changes in sliders
@@ -80,56 +77,61 @@ public:
     //updates changes within filter settings
     void updateFilterSettings();
 
-
-    // OSC
-    struct OSC : public Component
+    // INPUT
+    struct InputModule : public CustomComponent
     {
-        OSC (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB) 
-            : levelSlider (ls), levelLabel (ll),
-              freqSlider (fs) , freqLabel (fl),
-              oscBox (oB)
-        {
+        InputModule ();
+        void paint (Graphics& g) override;
+        void resized () override;
 
+    };
+
+    
+    // OscillatorModule
+    struct OscillatorModule : public Component
+    {
+        OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB) 
+        : levelSlider (ls), levelLabel (ll), freqSlider (fs) , freqLabel (fl), oscBox (oB)
+        {
             // LEVEL
             addAndMakeVisible ( levelSlider );
             levelSlider->setRange ( 0.0f, 0.5f );
             levelSlider->setTextBoxStyle ( Slider::TextBoxBelow, false, 100, 20 );
             levelSlider->setValue(0.240);
             // levelSlider->setSliderStyle ( Slider::LinearVertical );
-            
+                    
             addAndMakeVisible(levelLabel);
             levelLabel->setText("Osc Level", dontSendNotification);   
             
             // FREQ
-			//add frequency slider, slider display attributes
-			addAndMakeVisible(freqSlider);
-			freqSlider->setRange(200.0, 1000.0);
-			freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+            // frequency slider, slider display attributes
+	        addAndMakeVisible(freqSlider);
+	        freqSlider->setRange(200.0, 1000.0);
+	        freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
             freqSlider->setValue(400);
 
-			//add frequency slider label and set text
-			addAndMakeVisible(freqLabel);
-			freqLabel->setText("Frequency", dontSendNotification);
-			
+	        //add frequency slider label and set text
+	        addAndMakeVisible(freqLabel);
+	        freqLabel->setText("Frequency", dontSendNotification);
+			        
             // COMBO BOX
-			addAndMakeVisible(oscBox);
-			oscBox->addItem("Sine", 1);
-			oscBox->addItem("Saw", 2);
-			oscBox->addItem("Square", 3);
-			oscBox->addItem("Triangle", 4);        
+	        addAndMakeVisible(oscBox);
+	        oscBox->addItem("Sine", 1);
+	        oscBox->addItem("Saw", 2);
+	        oscBox->addItem("Square", 3);
+	        oscBox->addItem("Triangle", 4);        
         }
 
         void paint (Graphics& g) override
         {
             Colour colour = Colours::lightblue;
-            String text = "OSC ITEM";
+            String text = "OscillatorModule ITEM";
             g.fillAll (colour.withAlpha (0.5f));
 
             g.setColour (Colours::black);
             g.drawText (text, getLocalBounds().withSizeKeepingCentre (100, 100),
-                    Justification::centred, false);
+                            Justification::centred, false);
         }
-
         void resized () override
         {
             Grid grid;
@@ -148,6 +150,7 @@ public:
             };
 
             grid.performLayout ( getLocalBounds() );
+
         }
 
         Slider* levelSlider;
@@ -156,6 +159,8 @@ public:
         Label*  freqLabel;
         ComboBox* oscBox;
     };
+    
+
         
 private:
     //==============================================================================

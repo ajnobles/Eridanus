@@ -2,7 +2,7 @@
   ==============================================================================
 
     SaturationModule.h
-    Created: 12 Oct 2018 4:19:38pm
+    Created: 26 Oct 2018 8:35:48am
     Author:  allen
 
   ==============================================================================
@@ -10,23 +10,23 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
 
-
+// SATURATION
 class SaturationModule : public CustomComponent
 {
 public:
-    SaturationModule();
-    ~SaturationModule();
-
+    SaturationModule ( Slider* dk,
+                       TextButton* tapeB,
+                       TextButton* tubeB );                       
+    ~SaturationModule() {};
+                  
     void paint (Graphics& g) override;
     void resized () override;
-
-private:
-    Slider DriveKnob;
-    TextButton TapeButton;
-    TextButton TubeButton;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SaturationModule)
+    
+private:    
+    Slider* DriveKnob;
+    
+    TextButton* TapeButton;
+    TextButton* TubeButton;
 };

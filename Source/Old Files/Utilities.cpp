@@ -8,11 +8,11 @@
   ==============================================================================
 */
 
-#include "Utilities.h"
+#include "SynthScene.h"
 
 //==============================================================================
 
-GUIUtilities::GUIUtilities()
+SynthScene::GUIUtilities::GUIUtilities()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -21,11 +21,11 @@ GUIUtilities::GUIUtilities()
     addAndMakeVisible ( MidiChannel );
 }
 
-GUIUtilities::~GUIUtilities()
+SynthScene::GUIUtilities::~GUIUtilities()
 {
 }
 
-void GUIUtilities::paint (Graphics& g)
+void SynthScene::GUIUtilities::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -38,7 +38,7 @@ void GUIUtilities::paint (Graphics& g)
 
 }
 
-void GUIUtilities::resized()
+void SynthScene::GUIUtilities::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains.
@@ -59,11 +59,11 @@ void GUIUtilities::resized()
     grid.performLayout (getLocalBounds());
 }
 
-GUIUtilities::Selectors::Selectors () {}
+SynthScene::GUIUtilities::Selectors::Selectors () {}
 
-GUIUtilities::Selectors::~Selectors () {}
+SynthScene::GUIUtilities::Selectors::~Selectors () {}
 
-void GUIUtilities::Selectors::paint (Graphics& g)
+void SynthScene::GUIUtilities::Selectors::paint (Graphics& g)
 {
     g.setColour(Colours::white);
 
@@ -71,5 +71,5 @@ void GUIUtilities::Selectors::paint (Graphics& g)
     g.drawText ("Selector", getLocalBounds(),  Justification::centred, true);
 }    
 
-void GUIUtilities::Selectors::resized () {}
+void SynthScene::GUIUtilities::Selectors::resized () {}
 

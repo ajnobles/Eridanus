@@ -9,10 +9,10 @@
 */
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SynthModulesScene.h"
+#include "SynthScene.h"
 
 //==============================================================================
-SynthModulesScene::SynthModulesScene()
+SynthScene::SynthModulesScene::SynthModulesScene()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -27,11 +27,11 @@ SynthModulesScene::SynthModulesScene()
     addAndMakeVisible( Saturation );
 }
 
-SynthModulesScene::~SynthModulesScene()
+SynthScene::SynthModulesScene::~SynthModulesScene()
 {
 }
 
-void SynthModulesScene::paint (Graphics& g)
+void SynthScene::SynthModulesScene::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -42,7 +42,7 @@ void SynthModulesScene::paint (Graphics& g)
 
 }
 
-void SynthModulesScene::resized()
+void SynthScene::SynthModulesScene::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains.

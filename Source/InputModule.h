@@ -10,22 +10,21 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
 
 
 class InputModule : public CustomComponent
 {
 public:
-    InputModule();
+    InputModule(Slider* IS, Label* IL);
     ~InputModule();
 
     void paint (Graphics& g) override;
     void resized () override;
 
 private:
-    Slider InputSlider;
-    Label InputSliderLabel;
+    Slider* InputSlider;
+    Label*  InputLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputModule)
 };

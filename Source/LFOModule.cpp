@@ -10,32 +10,24 @@
 
 #include "LFOModule.h"
 
-
-LFOModule::LFOModule() 
+LfoModule::LfoModule (Slider* rs, Slider* ds, Label* rl, Label* dl)
+    : RateSlider (rs), DepthSlider (ds), RateLabel (rl), DepthLabel (dl)
 {
-    //
     
     addAndMakeVisible ( RateSlider );
-    RateSlider.setRange ( 0, 100 );
-    RateSlider.setSliderStyle ( Slider::LinearVertical );
-    RateSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    RateSlider->setRange ( 0, 100 );
+    RateSlider->setSliderStyle ( Slider::LinearVertical );
+    RateSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
    
 
     addAndMakeVisible ( DepthSlider );
-    DepthSlider.setRange ( 0, 100 );
-    DepthSlider.setSliderStyle ( Slider::LinearVertical );
-    DepthSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DepthSlider->setRange ( 0, 100 );
+    DepthSlider->setSliderStyle ( Slider::LinearVertical );
+    DepthSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );        
 
-}
-
-
-LFOModule::~LFOModule() 
-{
-    //
-}
-
-
-void LFOModule::paint (Graphics& g)
+}    
+    
+void LfoModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -46,9 +38,7 @@ void LFOModule::paint (Graphics& g)
 
 }
 
-
-
-void LFOModule::resized ()
+void LfoModule::resized ()
 {
     // 
     Grid grid;
@@ -72,5 +62,4 @@ void LFOModule::resized ()
                                      THICKNESS);
 
     grid.performLayout ( bounds );
-
 }

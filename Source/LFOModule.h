@@ -2,7 +2,7 @@
   ==============================================================================
 
     LFOModule.h
-    Created: 12 Oct 2018 4:19:38pm
+    Created: 26 Oct 2018 8:29:19am
     Author:  allen
 
   ==============================================================================
@@ -10,25 +10,22 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
 
-
-class LFOModule : public CustomComponent
+// LFO
+class LfoModule : public CustomComponent
 {
 public:
-    LFOModule();
-    ~LFOModule();
-
-    void paint (Graphics& g) override;
+    LfoModule (Slider* rs, Slider* ds, Label* rl, Label* dl); 
+    ~LfoModule () {};
+    void paint (Graphics& g) override;    
     void resized () override;
-
+    
 private:
-    Slider RateSlider;
-    Slider DepthSlider;
-
-    Label RateSliderLabel;
-    Label DepthSliderLabel;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LFOModule)
+    Slider* RateSlider;
+    Slider* DepthSlider;
+    
+    Label*  RateLabel;
+    Label*  DepthLabel;
 };
+ 

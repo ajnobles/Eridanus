@@ -10,26 +10,73 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
-
-
+   
+// OUTPUT
 class OutputModule : public CustomComponent
 {
 public:
-    OutputModule();
-    ~OutputModule();
+    OutputModule (Slider* os, Slider* ofs,
+                  Label* ol,  Label* ofl)
+                : OutputSlider ( os ),
+                  OutputFeedbackSlider ( ofs ),
+                  OutputSliderLabel (ol),
+                  OutputFeedbackLabel (ofl)
+    {
+        //
+        addAndMakeVisible ( OutputSlider );
+        OutputSlider->setRange ( 0, 100, 0 );
+        OutputSlider->setSliderStyle (Slider::LinearVertical);
+        OutputSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
 
-    void paint (Graphics& g) override;
-    void resized () override;
+        addAndMakeVisible ( OutputFeedbackSlider );
+        OutputFeedbackSlider->setRange ( 0.0, 100.0, 1.0 );
+        OutputFeedbackSlider->setSliderStyle ( Slider::LinearBarVertical );
+        OutputFeedbackSlider->setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
+        OutputFeedbackSlider->setValue (50.0f);
+
+
+    }
+    
+    void paint (Graphics& g) override
+    {
+        g.setColour (BORDER_COLOR);
+
+        CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
+        // TEMP IDENTIFICATION TEXT
+        g.drawText ("OUTPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+
+    }
+    
+    void resized () override
+    {
+
+        Grid grid;
+
+        using Track = Grid::TrackInfo;
+
+        grid.templateRows = { Track (1_fr), Track (10_fr) };
+        grid.templateColumns = { Track (1_fr) , Track (1_fr) };
+
+        grid.items = {
+            GridItem ( nullptr ),
+            GridItem ( nullptr ),
+            GridItem ( OutputSlider ),
+            GridItem ( OutputFeedbackSlider )
+        };
+
+        Rectangle<int> bounds = getLocalBounds();
+
+        bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
+
+        grid.performLayout ( bounds );
+    }
 
 private:
-    Slider OutputSlider;
-    Label OutputSliderLabel;
+    Slider* OutputSlider;
+    Label* OutputSliderLabel;
 
-    Slider OutputFeedbackSlider;
-    Label OutputFeedbackLabel;
-    
+    Slider* OutputFeedbackSlider;
+    Label* OutputFeedbackLabel;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputModule)
 };

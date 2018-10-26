@@ -16,9 +16,9 @@ OscillatorModule::OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl
     // LEVEL
     addAndMakeVisible ( levelSlider );
     levelSlider->setRange ( 0.0f, 0.5f );
-    levelSlider->setTextBoxStyle ( Slider::TextBoxBelow, false, 50, 20 );
+    levelSlider->setTextBoxStyle ( Slider::TextBoxLeft, false, 50, 20 );
     levelSlider->setValue(0.0);
-    levelSlider->setSliderStyle ( Slider::LinearVertical );
+    levelSlider->setSliderStyle ( Slider::LinearHorizontal );
             
     addAndMakeVisible(levelLabel);
     levelLabel->setText("Osc Level", dontSendNotification);   
@@ -27,19 +27,21 @@ OscillatorModule::OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl
     // frequency slider, slider display attributes
     addAndMakeVisible(freqSlider);
     freqSlider->setRange(200.0, 1000.0);
-    freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
+    freqSlider->setTextBoxStyle(Slider::TextBoxLeft, false, 50, 20);
     freqSlider->setValue(440);
-
+    freqSlider->setSliderStyle ( Slider::LinearHorizontal );
+    
     //add frequency slider label and set text
     addAndMakeVisible(freqLabel);
-    freqLabel->setText("Frequency", dontSendNotification);
+    freqLabel->setText("Freq", dontSendNotification);
 	        
     // COMBO BOX
     addAndMakeVisible(oscBox);
     oscBox->addItem("Sine", 1);
     oscBox->addItem("Saw", 2);
     oscBox->addItem("Square", 3);
-    oscBox->addItem("Triangle", 4);        
+    oscBox->addItem("Triangle", 4);
+    oscBox->setSelectedId( 1 );    
 }
 
 
@@ -55,24 +57,26 @@ void OscillatorModule::paint (Graphics& g)
 
 void OscillatorModule::resized ()
 {
-    Grid grid;
-    using Track = Grid::TrackInfo;
-
-    grid.templateRows = { Track (1_fr) };
-    grid.templateColumns = { Track (1_fr) };
-  
-    grid.autoRows = Track (1_fr);
-    grid.autoColumns = Track (1_fr);
-
-    grid.items = {
-        GridItem ( oscBox      ),
-        GridItem ( levelSlider ),
-        GridItem ( freqSlider  )
-    };
 
     Rectangle <int> bounds = getLocalBounds();
 
     bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
-
-    grid.performLayout ( getLocalBounds() );
+    
+    int x = bounds.getX(),
+        y = bounds.getY(),
+        width = bounds.getWidth(),
+        height = bounds.getHeight();
+    
+    oscBox->setBounds ( x, y, width, height / 4 );
+    
+    levelSlider->setBounds ( x + 50, height * 0.75 / 2 * 1 + 10.0, width - 50, height / 4 );
+    levelLabel ->setBounds ( x,      height * 0.75 / 2 * 1 + 10.0, 50,         height / 4 );
+    
+    freqSlider->setBounds  ( x + 50, height * 0.75 / 2 * 2 + 10.0, width - 50, height / 4 );
+    freqLabel ->setBounds  ( x,      height * 0.75 / 2 * 2 + 10.0, 50,         height / 4 );    
 }
+
+
+
+
+

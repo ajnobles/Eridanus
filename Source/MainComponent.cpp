@@ -73,7 +73,6 @@ MainComponent::MainComponent()
         &ampReleaseLabel
     ) );
     
-/*
     // SATURATION
     modules.add ( new SaturationModule (
         &satDriveKnob,  // DRIVE KNOB
@@ -89,7 +88,6 @@ MainComponent::MainComponent()
         &outputFeedbackLabel 
     ) );
    
-*/
 
     int numModules = modules.size();
     for (int i = 0; i < numModules; i++) {
@@ -357,7 +355,8 @@ void MainComponent::resized()
         
     grid.templateRows    = {
         Track (1_fr),
-        Track (1_fr)
+        Track (1_fr),
+        Track (2_fr)
     };
     
     grid.templateColumns = {
@@ -382,15 +381,21 @@ void MainComponent::resized()
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output",
         "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
     };
-
-    
-    grid.items = {
-        GridItem ( modules[0] ),
-        GridItem ( modules[1] ),
-        GridItem ( modules[2] ),
-    };
      */
     
+    grid.items = {
+        GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),
+        GridItem ( modules[1] ).withArea( 1, 2, 3, 2 ),
+        GridItem ( modules[2] ).withArea( 1, 3, 2, 3 ),
+        GridItem ( modules[3] ).withArea( 1, 4, 3, 4 ),
+        GridItem ( modules[4] ).withArea( 1, 5, 3, 5 ),
+        GridItem ( modules[5] ).withArea( 1, 6, 3, 6 ),
+        GridItem ( modules[6] ).withArea( 1, 7, 3, 7 ),
+        GridItem ( modules[7] ).withArea( 1, 8, 3, 8 ),
+        GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
+    };
+
+    /*
     int numModules = modules.size();
     
     for (int i = 0; i < numModules; i++) {
@@ -398,7 +403,8 @@ void MainComponent::resized()
     }
 
     grid.items.add ( scenes[0] );
-        
+    */
+      
     Rectangle<int> bounds = getLocalBounds();
     
     grid.performLayout ( bounds );

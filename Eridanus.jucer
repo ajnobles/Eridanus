@@ -3,11 +3,35 @@
 <JUCERPROJECT id="F2Bzt7" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="jt5MDY" name="Eridanus">
     <GROUP id="{6E9F95A2-4251-AEC8-D63B-9022AB105C8C}" name="Source">
+      <FILE id="sRniJX" name="OutputModule.cpp" compile="1" resource="0"
+            file="Source/OutputModule.cpp"/>
+      <FILE id="Zf5g5X" name="OutputModule.h" compile="0" resource="0" file="Source/OutputModule.h"/>
+      <FILE id="mD2c1U" name="SaturationModule.h" compile="0" resource="0"
+            file="Source/SaturationModule.h"/>
+      <FILE id="YGBbW7" name="SaturationModule.cpp" compile="1" resource="0"
+            file="Source/SaturationModule.cpp"/>
+      <FILE id="nZH8Tn" name="LFOModule.h" compile="0" resource="0" file="Source/LFOModule.h"/>
+      <FILE id="nou7Fe" name="LFOModule.cpp" compile="1" resource="0" file="Source/LFOModule.cpp"/>
+      <FILE id="JPFgB9" name="EnvFilterModule.cpp" compile="1" resource="0"
+            file="Source/EnvFilterModule.cpp"/>
+      <FILE id="xXkldR" name="EnvFilterModule.h" compile="0" resource="0"
+            file="Source/EnvFilterModule.h"/>
+      <FILE id="Puck2K" name="AmpFilterModule.cpp" compile="1" resource="0"
+            file="Source/AmpFilterModule.cpp"/>
+      <FILE id="a5HHwD" name="AmpFilterModule.h" compile="0" resource="0"
+            file="Source/AmpFilterModule.h"/>
+      <FILE id="UXmfGW" name="InputModule.cpp" compile="1" resource="0" file="Source/InputModule.cpp"/>
+      <FILE id="BHNJZk" name="InputModule.h" compile="0" resource="0" file="Source/InputModule.h"/>
+      <FILE id="GU1ROD" name="OscillatorModule.h" compile="0" resource="0"
+            file="Source/OscillatorModule.h"/>
+      <FILE id="NEPRp0" name="KeyboardScene.h" compile="0" resource="0" file="Source/KeyboardScene.h"/>
+      <FILE id="jn7UGn" name="KeyboardScene.cpp" compile="1" resource="0"
+            file="Source/KeyboardScene.cpp"/>
       <FILE id="hsCJ4s" name="CustomComponent.cpp" compile="1" resource="0"
             file="Source/CustomComponent.cpp"/>
       <FILE id="P7hChg" name="CustomComponent.h" compile="0" resource="0"
             file="Source/CustomComponent.h"/>
-      <FILE id="XPmFP2" name="OscillatorModule.cpp" compile="0" resource="0"
+      <FILE id="XPmFP2" name="OscillatorModule.cpp" compile="1" resource="0"
             file="Source/OscillatorModule.cpp"/>
       <FILE id="FSbDuq" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="yaO6P5" name="MainComponent.cpp" compile="1" resource="0"

@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    OutputModule.h
-    Created: 12 Oct 2018 4:19:38pm
+    OscillatorModule.h
+    Created: 26 Oct 2018 7:59:28am
     Author:  allen
 
   ==============================================================================
@@ -10,22 +10,22 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
 
-
-class InputModule : public CustomComponent
+class OscillatorModule : public CustomComponent
 {
 public:
-    InputModule();
-    ~InputModule();
+	OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB);
+	~OscillatorModule ();
 
     void paint (Graphics& g) override;
     void resized () override;
-
+    
 private:
-    Slider InputSlider;
-    Label InputSliderLabel;
+    Slider* levelSlider;
+    Slider* freqSlider;
+    Label*  levelLabel;
+    Label*  freqLabel;
+    ComboBox* oscBox;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputModule)
 };

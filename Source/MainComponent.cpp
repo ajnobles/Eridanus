@@ -11,7 +11,6 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-
     // INPUT
     modules.add (new InputModule (
         &InputLevelSlider,
@@ -88,12 +87,18 @@ MainComponent::MainComponent()
         &outputLevelLabel,  
         &outputFeedbackLabel 
     ) );
-    
+/*
+   
+*/
 
     int numModules = modules.size();
     for (int i = 0; i < numModules; i++) {
         addAndMakeVisible ( modules[i] );
     }
+
+    // SCENES
+    scenes.add ( new KeyboardScene );
+    addAndMakeVisible ( scenes[0] );
 
     
     // COMPONENT LISTENERS
@@ -389,6 +394,8 @@ void MainComponent::resized()
     for (int i = 0; i < numModules; i++) {
         grid.items.add ( modules[i] );
     }
+
+    grid.items.add ( scenes[0] );
         
     Rectangle<int> bounds = getLocalBounds();
     

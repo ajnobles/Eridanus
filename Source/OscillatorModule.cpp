@@ -8,28 +8,11 @@
   ==============================================================================
 */
 
-#include "MainComponent.h"
+#include "OscillatorModule.h"
 
-struct OscillatorModule : public CustomComponent
+OscillatorModule::OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB) 
+    : levelSlider (ls), levelLabel (ll), freqSlider (fs) , freqLabel (fl), oscBox (oB)
 {
-    OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB);
-    void paint (Graphics& g) override;
-    void resized () override;
-
-    Slider* levelSlider;
-    Slider* freqslider;
-    Label*  levelLabel;
-    Label*  freqLabel;
-    ComboBox oscBox;
-
-}
-
-OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB) 
-    : levelSlider (ls), levelLabel (ll),
-      freqSlider (fs) , freqLabel (fl),
-      oscBox (oB)
-{
-
     // LEVEL
     addAndMakeVisible ( levelSlider );
     levelSlider->setRange ( 0.0f, 0.5f );
@@ -41,23 +24,25 @@ OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB)
     levelLabel->setText("Osc Level", dontSendNotification);   
     
     // FREQ
-    frequency slider, slider display attributes
-	addAndMakeVisible(freqSlider);
-	freqSlider->setRange(200.0, 1000.0);
-	freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+    // frequency slider, slider display attributes
+    addAndMakeVisible(freqSlider);
+    freqSlider->setRange(200.0, 1000.0);
+    freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
     freqSlider->setValue(400);
 
-	//add frequency slider label and set text
-	addAndMakeVisible(freqLabel);
-	freqLabel->setText("Frequency", dontSendNotification);
-			
+    //add frequency slider label and set text
+    addAndMakeVisible(freqLabel);
+    freqLabel->setText("Frequency", dontSendNotification);
+	        
     // COMBO BOX
-	addAndMakeVisible(oscBox);
-	oscBox->addItem("Sine", 1);
-	oscBox->addItem("Saw", 2);
-	oscBox->addItem("Square", 3);
-	oscBox->addItem("Triangle", 4);        
+    addAndMakeVisible(oscBox);
+    oscBox->addItem("Sine", 1);
+    oscBox->addItem("Saw", 2);
+    oscBox->addItem("Square", 3);
+    oscBox->addItem("Triangle", 4);        
 }
+
+OscillatorModule::~OscillatorModule() {}
 
 void OscillatorModule::paint (Graphics& g)
 {
@@ -69,7 +54,6 @@ void OscillatorModule::paint (Graphics& g)
     g.drawText (text, getLocalBounds().withSizeKeepingCentre (100, 100),
                     Justification::centred, false);
 }
-
 void OscillatorModule::resized ()
 {
     Grid grid;
@@ -88,5 +72,4 @@ void OscillatorModule::resized ()
     };
 
     grid.performLayout ( getLocalBounds() );
-
 }

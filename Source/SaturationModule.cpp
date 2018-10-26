@@ -8,33 +8,28 @@
   ==============================================================================
 */
 
-#include "SynthScene.h"
+#include "SaturationModule.h"
 
-
-SynthScene::SynthModulesScene::SaturationModule::SaturationModule() 
+SaturationModule::SaturationModule ( Slider* dk,
+                   TextButton* tapeB,
+                   TextButton* tubeB )
+                 : DriveKnob (dk), TapeButton (tapeB), TubeButton (tubeB)
 {
     //
     addAndMakeVisible ( DriveKnob );
-    DriveKnob.setRange ( 0, 100 );
-    DriveKnob.setSliderStyle ( Slider::Rotary );
-    DriveKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DriveKnob->setRange ( 0, 100 );
+    DriveKnob->setSliderStyle ( Slider::Rotary );
+    DriveKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( TapeButton );
-    TapeButton.setButtonText ( "TB" );
+    TapeButton->setButtonText ( "TB" );
 
     addAndMakeVisible ( TubeButton );
-    TubeButton.setButtonText ( "TB" );
+    TubeButton->setButtonText ( "TB" );
 }
 
-
-
-SynthScene::SynthModulesScene::SaturationModule::~SaturationModule() 
-{
-    //
-}
-
-
-void SynthScene::SynthModulesScene::SaturationModule::paint (Graphics& g)
+              
+void SaturationModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
 
@@ -44,9 +39,7 @@ void SynthScene::SynthModulesScene::SaturationModule::paint (Graphics& g)
 
 }
 
-
-
-void SynthScene::SynthModulesScene::SaturationModule::resized ()
+void SaturationModule::resized ()
 {
     // 
     Grid grid;

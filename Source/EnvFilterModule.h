@@ -57,6 +57,11 @@ public:
         addAndMakeVisible ( LeftPanel );
         
     }
+
+    ~EnvFilterModule ()
+    {
+        delete LeftPanel;
+    }
     
     void paint (Graphics& g) override
     {

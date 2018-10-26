@@ -44,7 +44,7 @@ MainComponent::MainComponent()
         &lfoAmpRateLabel
     ) );
     
-    // ENV FILTER
+    // AMP FILTER
     modules.add (new AmpFilterModule ( 
         &envAttackSlider, 
         &envDecaySlider, 
@@ -56,7 +56,7 @@ MainComponent::MainComponent()
         &envReleaseLabel
     ) );
     
-    // AMP FILTER
+    // ENV FILTER
     modules.add (new EnvFilterModule ( 
         &ampAttackSlider, 
         &ampDecaySlider, 
@@ -73,6 +73,7 @@ MainComponent::MainComponent()
         &ampReleaseLabel
     ) );
     
+/*
     // SATURATION
     modules.add ( new SaturationModule (
         &satDriveKnob,  // DRIVE KNOB
@@ -87,7 +88,6 @@ MainComponent::MainComponent()
         &outputLevelLabel,  
         &outputFeedbackLabel 
     ) );
-/*
    
 */
 
@@ -175,6 +175,8 @@ MainComponent::MainComponent()
 MainComponent::~MainComponent()
 {
     // This shuts down the audio device and clears the audio source.
+
+
     shutdownAudio();
 }
 

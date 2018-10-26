@@ -43,6 +43,11 @@ public:
 		ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 	}
 
+    ~AmpFilterModule ()
+    {
+
+    }
+
 	void paint (Graphics& g) override
 	{
 		g.setColour (BORDER_COLOR);

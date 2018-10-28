@@ -66,13 +66,13 @@ public:
         }
         
         //lfo rate (freq)
-        else if ( // (slider == &lfoAmpRateSlider)
+        else if ( LfoAmp->isRateSlider( slider ) ) // (slider == &lfoAmpRateSlider)
         {
             lfoAmpRateSlider.setValue(lfoAmpRateSlider.getValue());
         }
         
         //lfo depth
-        else if (slider == &lfoAmpDepthSlider)
+        else if ( LfoAmp->isDepthSlider( slider ) ) // (slider == &lfoAmpDepthSlider)
         {
             lfoAmpDepthSlider.setValue(lfoAmpDepthSlider.getValue());
         }
@@ -105,11 +105,12 @@ private:
     // Label  InputLevelSliderLabel;
     
     // LFO FREQ MODULE
+    LfoModule* LfoAmp;
     Slider lfoFreqRateSlider;
     Slider lfoFreqDepthSlider;
     
-    Label  lfoFreqRateLabel;
-    Label  lfoFreqDepthLabel;
+    // Label  lfoFreqRateLabel;
+    // Label  lfoFreqDepthLabel;
     
     
     //sliders for osc and filter controls

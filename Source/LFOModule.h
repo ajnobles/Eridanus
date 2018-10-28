@@ -16,7 +16,7 @@
 class LfoModule : public CustomComponent
 {
 public:
-    LfoModule (Slider* rs, Slider* ds, Label* rl, Label* dl); 
+    LfoModule (Slider* rs, Slider* ds); 
     ~LfoModule () {};
     void paint (Graphics& g) override;    
     void resized () override;
@@ -35,7 +35,7 @@ private:
     Slider* RateSlider;
     Slider* DepthSlider;
     
-    Label*  RateLabel;
-    Label*  DepthLabel;
+    Label  RateLabel;
+    Label  DepthLabel;
 };
  

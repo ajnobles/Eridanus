@@ -10,8 +10,8 @@
 
 #include "LFOModule.h"
 
-LfoModule::LfoModule (Slider* rs, Slider* ds, Label* rl, Label* dl)
-    : RateSlider (rs), DepthSlider (ds), RateLabel (rl), DepthLabel (dl)
+LfoModule::LfoModule (Slider* rs, Slider* ds)
+    : RateSlider (rs), DepthSlider (ds)
 {
     
     addAndMakeVisible ( RateSlider );
@@ -70,7 +70,7 @@ bool LfoModule::isRateSlider ( Slider* slider )
     return slider == RateSlider;
 }
 
-bool LfoModule::isRateSlider( Slider* slider )
+bool LfoModule::isDepthSlider( Slider* slider )
 {
     return slider == DepthSlider;
 }

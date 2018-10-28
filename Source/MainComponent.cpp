@@ -18,9 +18,9 @@ MainComponent::MainComponent()
     // LFO FREQ
     modules.add (new LfoModule (
         &lfoFreqRateSlider,
-        &lfoFreqDepthSlider,
-        &lfoFreqRateLabel,
-        &lfoFreqRateLabel
+        &lfoFreqDepthSlider// ,
+        // &lfoFreqRateLabel,
+        // &lfoFreqRateLabel
     ) );
     
     // OSCILLATORS
@@ -34,12 +34,14 @@ MainComponent::MainComponent()
     );
     
     // LFO AMP
-    modules.add (new LfoModule (
+    LfoAmp = new LfoModule(
+    // modules.add (new LfoModule (
         &lfoAmpRateSlider,
-        &lfoAmpDepthSlider,
-        &lfoAmpRateLabel,
-        &lfoAmpRateLabel
-    ) );
+        &lfoAmpDepthSlider// ,
+        // &lfoAmpRateLabel,
+        // &lfoAmpRateLabel
+    ); 
+    modules.add ( LfoAmp );
     
     // AMP FILTER
     modules.add (new AmpFilterModule ( 

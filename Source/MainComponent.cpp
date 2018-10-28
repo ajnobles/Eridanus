@@ -17,8 +17,8 @@ MainComponent::MainComponent()
     
     // LFO FREQ
     modules.add (new LfoModule (
-        &lfoFreqRateSlider,
-        &lfoFreqDepthSlider// ,
+        &lfoFreqRateSlider// ,
+        // &lfoFreqDepthSlider// ,
         // &lfoFreqRateLabel,
         // &lfoFreqRateLabel
     ) );
@@ -36,8 +36,8 @@ MainComponent::MainComponent()
     // LFO AMP
     LfoAmp = new LfoModule(
     // modules.add (new LfoModule (
-        &lfoAmpRateSlider,
-        &lfoAmpDepthSlider// ,
+        &lfoAmpRateSlider// ,
+        // &lfoAmpDepthSlider// ,
         // &lfoAmpRateLabel,
         // &lfoAmpRateLabel
     ); 

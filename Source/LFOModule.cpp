@@ -10,8 +10,8 @@
 
 #include "LFOModule.h"
 
-LfoModule::LfoModule (Slider* rs, Slider* ds)
-    : RateSlider (rs), DepthSlider (ds)
+LfoModule::LfoModule (Slider* rs)
+    : RateSlider (rs)
 {
     
     addAndMakeVisible ( RateSlider );
@@ -21,9 +21,9 @@ LfoModule::LfoModule (Slider* rs, Slider* ds)
    
 
     addAndMakeVisible ( DepthSlider );
-    DepthSlider->setRange ( 0, 100 );
-    DepthSlider->setSliderStyle ( Slider::LinearVertical );
-    DepthSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );        
+    DepthSlider.setRange ( 0, 100 );
+    DepthSlider.setSliderStyle ( Slider::LinearVertical );
+    DepthSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );        
 
 }    
     
@@ -72,6 +72,13 @@ bool LfoModule::isRateSlider ( Slider* slider )
 
 bool LfoModule::isDepthSlider( Slider* slider )
 {
-    return slider == DepthSlider;
+    return slider == &DepthSlider;
+}
+
+
+
+float LfoModule::getDepthSliderValue ()
+{
+    return DepthSlider.getValue();
 }
 

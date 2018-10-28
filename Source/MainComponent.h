@@ -107,7 +107,7 @@ private:
     // LFO FREQ MODULE
     LfoModule* LfoAmp;
     Slider lfoFreqRateSlider;
-    Slider lfoFreqDepthSlider;
+    // Slider lfoFreqDepthSlider;
     
     // Label  lfoFreqRateLabel;
     // Label  lfoFreqDepthLabel;

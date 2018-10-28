@@ -16,15 +16,16 @@
 class InputModule : public CustomComponent
 {
 public:
-    InputModule(Slider* IS, Label* IL);
+    InputModule();
     ~InputModule();
 
     void paint (Graphics& g) override;
     void resized () override;
 
+
 private:
-    Slider* InputSlider;
-    Label*  InputLabel;
+    Slider InputSlider;
+    Label  InputLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputModule)
 };

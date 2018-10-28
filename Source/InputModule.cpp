@@ -11,15 +11,14 @@
 #include "InputModule.h"
 
 
-InputModule::InputModule(Slider* IS, Label* IL)
-                    : InputSlider (IS), InputLabel (IL) 
+InputModule::InputModule() 
 {
     //
     addAndMakeVisible ( InputSlider );  
 
-    InputSlider->setRange ( 0, 100 );
-    InputSlider->setSliderStyle ( Slider::LinearVertical );
-    InputSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20);   
+    InputSlider.setRange ( 0, 100 );
+    InputSlider.setSliderStyle ( Slider::LinearVertical );
+    InputSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20);   
 }
 
 

@@ -100,8 +100,9 @@ private:
     OwnedArray<Component> scenes;
     
     // INPUT MODULE
-    Slider InputLevelSlider;
-    Label  InputLevelSliderLabel;
+    InputModule* Input;
+    // Slider InputLevelSlider;
+    // Label  InputLevelSliderLabel;
     
     // LFO FREQ MODULE
     Slider lfoFreqRateSlider;

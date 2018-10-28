@@ -12,11 +12,8 @@
 MainComponent::MainComponent()
 {
     // INPUT
-    modules.add (new InputModule (
-        &InputLevelSlider,
-        &InputLevelSliderLabel
-    )
-    );
+    Input = new InputModule();
+    modules.add ( Input );
     
     // LFO FREQ
     modules.add (new LfoModule (

@@ -16,12 +16,8 @@ MainComponent::MainComponent()
     modules.add ( Input );
     
     // LFO FREQ
-    modules.add (new LfoModule (
-        &lfoFreqRateSlider// ,
-        // &lfoFreqDepthSlider// ,
-        // &lfoFreqRateLabel,
-        // &lfoFreqRateLabel
-    ) );
+    LfoFreq = new LfoModule ( );
+    modules.add ( LfoFreq );
     
     // OSCILLATORS
     modules.add (new OscillatorModule ( 
@@ -32,17 +28,13 @@ MainComponent::MainComponent()
         &oscBox
     )
     );
+
     
     // LFO AMP
-    LfoAmp = new LfoModule(
-    // modules.add (new LfoModule (
-        &lfoAmpRateSlider// ,
-        // &lfoAmpDepthSlider// ,
-        // &lfoAmpRateLabel,
-        // &lfoAmpRateLabel
-    ); 
+    LfoAmp = new LfoModule( ); 
     modules.add ( LfoAmp );
-    
+   
+
     // AMP FILTER
     modules.add (new AmpFilterModule ( 
         &envAttackSlider, 
@@ -54,7 +46,8 @@ MainComponent::MainComponent()
         &envSustainLabel,
         &envReleaseLabel
     ) );
-    
+   
+
     // ENV FILTER
     modules.add (new EnvFilterModule ( 
         &ampAttackSlider, 
@@ -130,25 +123,6 @@ MainComponent::MainComponent()
 //    addAndMakeVisible(resonanceLabel);
     resonanceLabel.setText("Resonance", dontSendNotification);
 
-    //add noise level slider, slider display attributes, and listener 
-//    addAndMakeVisible(lfoAmpRateSlider);
-//    lfoAmpRateSlider.setRange(0.0, 5.0);
-//    lfoAmpRateSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-//    lfoAmpRateSlider.addListener(this);
-    
-    //add noise level slider label and set text
-//    addAndMakeVisible(lfoAmpRateLabel);
-//    lfoAmpRateLabel.setText("LFO Amp Rate", dontSendNotification); 
-    
-    //add noise level slider, slider display attributes, and listener 
-//    addAndMakeVisible(lfoAmpDepthSlider);
-//    lfoAmpDepthSlider.setRange(0.0, 1.0);
-//    lfoAmpDepthSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-//    lfoAmpDepthSlider.addListener(this);
-    
-    //add noise level slider label and set text
-//    addAndMakeVisible(lfoAmpDepthLabel);
-//    lfoAmpDepthLabel.setText("LFO Amp Depth", dontSendNotification);
     
     //set window size
     setSize (1600, 800);
@@ -164,8 +138,8 @@ MainComponent::MainComponent()
     
     //set sliders for osc and filter controls
     cutoffSlider.setValue(1000);
-    lfoAmpRateSlider.setValue(1.0);
-    lfoAmpDepthSlider.setValue(0.0);
+    LfoAmp->setRateSliderValue( 1.0 ); 
+    LfoAmp->setDepthSliderValue( 0.0 );
 
 }
 
@@ -192,8 +166,8 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     
     //grab osc and lfo slider frequency values 
     oscFrequency = freqSlider.getValue();
-    lfoFrequency = lfoAmpRateSlider.getValue();
-    
+    lfoFrequency = LfoAmp->getRateSliderValue(); 
+
     //set for starting at beginning of osc and lfo wavetables
     oscPhase = 0;
     lfoPhase = 0;
@@ -258,7 +232,7 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
 {
     //grab osc and lfo depth slider values
     auto oscLevel = (float) oscLevelSlider.getValue();
-    auto lfoDepth = (float) lfoAmpDepthSlider.getValue();
+    auto lfoDepth = (float) LfoAmp->getDepthSliderValue(); 
         
     //create pointers to beginning of both channels' buffer (for writing)
     auto* channelOne = bufferToFill.buffer->getWritePointer (0, bufferToFill.startSample);
@@ -306,8 +280,8 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
        }
        
        //update osc and lfo frequencies
-       updateOscFrequency();
-       updateLFOAmpFrequency();
+       updateOscFrequency( );
+       updateLFOAmpFrequency( );
     }
      
     //grab filled buffer and store in sample block (so we can use with the filter)
@@ -343,10 +317,6 @@ void MainComponent::resized()
     // This is called when the MainComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-
-    // SynthScene.setBounds (0, 0, getWidth(), getHeight() / 2.0f);
-    // KeyboardScene.setBounds (0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f);
-
 
     Grid grid;
     
@@ -408,37 +378,7 @@ void MainComponent::resized()
     
     grid.performLayout ( bounds );
 
-/*
-    //Set size and location of filter combo box 
-    oscBox.setBounds((getWidth()/2)-50, 10, 100, 20);
-    
-    //Set size and location of level slider and label 
-    oscLevelSlider.setBounds (100, 40, getWidth() - 110, 20);
-    oscLevelLabel.setBounds (10, 40, 90, 20);
 
-    //Set size and location of level slider and label 
-    freqSlider.setBounds (100, 70, getWidth() - 110, 20);
-    freqLabel.setBounds (10, 70, 90, 20);
-
-    //Set size and location of cutoff slider and label 
-    lfoAmpRateSlider.setBounds (100, 100, getWidth() - 110, 20);
-    lfoAmpRateLabel.setBounds (10, 100, 90, 20);
-    
-    //Set size and location of cutoff slider and label 
-    lfoAmpDepthSlider.setBounds (100, 130, getWidth() - 110, 20);
-    lfoAmpDepthLabel.setBounds (10, 130, 90, 20);
-    
-    //Set size and location of filter combo box 
-    filterBox.setBounds((getWidth()/2)-50, 160, 100, 20);
-    
-    //Set size and location of cutoff slider and label 
-    cutoffSlider.setBounds (100, 190, getWidth() - 110, 20);
-    cutoffLabel.setBounds (10, 190, 90, 20);
-    
-    //Set size and location of cutoff slider and label 
-    resonanceSlider.setBounds (100, 220, getWidth() - 110, 20);
-    resonanceLabel.setBounds (10, 220, 90, 20);
-*/
 }
 
 //Handles combo box changes - grab selection's text
@@ -505,7 +445,7 @@ void MainComponent::updateLFOAmpFrequency()
 {
     //Determine next point in the lfo wavetable for grabbing values
     //Multiply the current lfo frequency (slider) by the wavetable size, then divide by the sample rate
-    lfoIncrement = lfoAmpRateSlider.getValue() * lfoTableSize / globalSampleRate;
+    lfoIncrement = LfoAmp->getRateSliderValue() * lfoTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of lfo table for grabbing values
     //"fmod" handles reaching past the lfo table, and wrapping around to the appropriate phase from the beginning

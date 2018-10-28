@@ -66,15 +66,15 @@ public:
         }
         
         //lfo rate (freq)
-        else if ( LfoAmp->isRateSlider( slider ) ) // (slider == &lfoAmpRateSlider)
+        else if ( LfoAmp->isRateSlider( slider ) ) 
         {
-            lfoAmpRateSlider.setValue(lfoAmpRateSlider.getValue());
+            LfoAmp->setRateSliderValue( LfoAmp->getRateSliderValue() );
         }
         
         //lfo depth
-        else if ( LfoAmp->isDepthSlider( slider ) ) // (slider == &lfoAmpDepthSlider)
+        else if ( LfoAmp->isDepthSlider( slider ) )
         {
-            lfoAmpDepthSlider.setValue(lfoAmpDepthSlider.getValue());
+            LfoAmp->setDepthSliderValue( LfoAmp->getDepthSliderValue() );
         }
     }
   
@@ -99,20 +99,15 @@ private:
     OwnedArray<Component> modules;
     OwnedArray<Component> scenes;
     
+
     // INPUT MODULE
     InputModule* Input;
-    // Slider InputLevelSlider;
-    // Label  InputLevelSliderLabel;
     
+
     // LFO FREQ MODULE
-    LfoModule* LfoAmp;
-    Slider lfoFreqRateSlider;
-    // Slider lfoFreqDepthSlider;
+    LfoModule* LfoFreq;
     
-    // Label  lfoFreqRateLabel;
-    // Label  lfoFreqDepthLabel;
-    
-    
+
     //sliders for osc and filter controls
     Slider oscLevelSlider;
     Slider freqSlider;
@@ -123,14 +118,11 @@ private:
     ComboBox oscBox;  
     
     String oscType;
-           
+   
+
     // LFO AMP
-    
-    Slider lfoAmpRateSlider;
-    Slider lfoAmpDepthSlider;
-    Label lfoAmpRateLabel;
-    Label lfoAmpDepthLabel;
-    
+    LfoModule* LfoAmp;
+       
     // ENV FILTER
     Slider envAttackSlider;
     Slider envDecaySlider;
@@ -179,7 +171,6 @@ private:
 
     //strings hold osc and filter selections
     String filterType;      
-
     
     Slider cutoffSlider;
     Slider resonanceSlider;

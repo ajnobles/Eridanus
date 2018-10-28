@@ -66,7 +66,7 @@ public:
         }
         
         //lfo rate (freq)
-        else if (slider == &lfoAmpRateSlider)
+        else if ( // (slider == &lfoAmpRateSlider)
         {
             lfoAmpRateSlider.setValue(lfoAmpRateSlider.getValue());
         }
@@ -124,6 +124,7 @@ private:
     String oscType;
            
     // LFO AMP
+    
     Slider lfoAmpRateSlider;
     Slider lfoAmpDepthSlider;
     Label lfoAmpRateLabel;

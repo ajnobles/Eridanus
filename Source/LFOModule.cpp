@@ -63,3 +63,15 @@ void LfoModule::resized ()
 
     grid.performLayout ( bounds );
 }
+
+
+bool LfoModule::isRateSlider ( Slider* slider )
+{
+    return slider == RateSlider;
+}
+
+bool LfoModule::isRateSlider( Slider* slider )
+{
+    return slider == DepthSlider;
+}
+

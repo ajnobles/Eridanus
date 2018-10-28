@@ -20,7 +20,17 @@ public:
     ~LfoModule () {};
     void paint (Graphics& g) override;    
     void resized () override;
+
+    bool isRateSlider(Slider* slider);
+    bool isDepthSlider(Slider* slider);
     
+    // GET
+    // Slider* getRateSlider();
+    // Slider* getDepthSlider();
+    
+    // SET
+    
+
 private:
     Slider* RateSlider;
     Slider* DepthSlider;

@@ -15,12 +15,9 @@
 class AmpFilterModule : public CustomComponent
 {
 public:
-	AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs,
-		              Label*  al, Label*  dl, Label*  sl, Label*  rl)
+	AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs)
 		            : AttackSlider (as), DecaySlider (ds), 
-		              SustainSlider (ss), ReleaseSlider (rs),
-		              AttackSliderLabel (al), DecaySliderLabel (dl),
-		              SustainSliderLabel (sl), ReleaseSliderLabel (rl)
+		              SustainSlider (ss), ReleaseSlider (rs)
 	{
 		addAndMakeVisible ( AttackSlider );
 		AttackSlider->setRange ( 0, 100 );
@@ -41,6 +38,18 @@ public:
 		ReleaseSlider->setRange ( 0, 100 );
 		ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
 		ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+		
+		addAndMakeVisible ( AttackSliderLabel );
+        AttackSliderLabel.setText("A", dontSendNotification);
+
+        addAndMakeVisible ( DecaySliderLabel );
+        DecaySliderLabel.setText("D", dontSendNotification);
+
+        addAndMakeVisible ( SustainSliderLabel );
+        SustainSliderLabel.setText("S", dontSendNotification);
+                
+        addAndMakeVisible ( ReleaseSliderLabel );
+        ReleaseSliderLabel.setText("R", dontSendNotification);
 	}
 
 	void paint (Graphics& g) override
@@ -49,7 +58,7 @@ public:
 		buildModuleBorder (g, CORNERSIZE, THICKNESS, OFFSET);
 
 		// TEMP IDENTIFICATION TEXT
-		g.drawText ("AmpFILTER", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+		g.drawText ("AMP ENVELOPE", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 	}
 
 	void resized () override
@@ -59,7 +68,7 @@ public:
 
 		using Track = Grid::TrackInfo;
 
-		grid.templateRows = { Track (1_fr), Track (10_fr) };
+		grid.templateRows = { Track (1_fr), Track (10_fr), Track (1_fr) };
 		grid.templateColumns = { Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr) };
 
 		grid.items = {
@@ -70,7 +79,11 @@ public:
 		    GridItem ( AttackSlider  ),
 		    GridItem ( DecaySlider   ),
 		    GridItem ( SustainSlider ),
-		    GridItem ( ReleaseSlider )
+		    GridItem ( ReleaseSlider ),
+		    GridItem (AttackSliderLabel),
+            GridItem (DecaySliderLabel),
+            GridItem (SustainSliderLabel),
+            GridItem (ReleaseSliderLabel)
 		};
 
 		Rectangle <int> bounds = getLocalBounds();
@@ -88,8 +101,8 @@ private:
 	Slider* SustainSlider;
 	Slider* ReleaseSlider;
 
-	Label* AttackSliderLabel;
-	Label* DecaySliderLabel;
-	Label* SustainSliderLabel;
-	Label* ReleaseSliderLabel;
+	Label AttackSliderLabel;
+	Label DecaySliderLabel;
+	Label SustainSliderLabel;
+	Label ReleaseSliderLabel;
 };

@@ -65,23 +65,45 @@ public:
             freqSlider.setValue(freqSlider.getValue());
         }
         
-        //lfo rate (freq)
+        //osc frequency fine tune
+        else if (slider == &fineTuneSlider)
+        {
+            fineTuneSlider.setValue(fineTuneSlider.getValue());
+        }
+        
+        //amp lfo rate (freq)
         else if (slider == &lfoAmpRateSlider)
         {
             lfoAmpRateSlider.setValue(lfoAmpRateSlider.getValue());
         }
         
-        //lfo depth
+        //amp lfo depth
         else if (slider == &lfoAmpDepthSlider)
         {
             lfoAmpDepthSlider.setValue(lfoAmpDepthSlider.getValue());
+        }
+        
+        //fm lfo rate (freq)
+        else if (slider == &lfoFreqRateSlider)
+        {
+            lfoFreqRateSlider.setValue(lfoFreqRateSlider.getValue());
+        }
+        
+        //fm lfo depth
+        else if (slider == &lfoFreqDepthSlider)
+        {
+            lfoFreqDepthSlider.setValue(lfoFreqDepthSlider.getValue());
         }
     }
   
     //function handles slider changes to osc and lfo frequencies
     void updateOscFrequency();
     void updateLFOAmpFrequency();
+    void updateLFOFreqFrequency();
 
+    //create wavetables for osc and lfo's
+    void createWavetables();
+    
     //function handles user selected filter type adjustments
     void comboBoxChanged(ComboBox*) override;
     
@@ -99,10 +121,6 @@ private:
     OwnedArray<Component> modules;
     OwnedArray<Component> scenes;
     
-    // INPUT MODULE
-    Slider InputLevelSlider;
-    Label  InputLevelSliderLabel;
-    
     // LFO FREQ MODULE
     Slider lfoFreqRateSlider;
     Slider lfoFreqDepthSlider;
@@ -110,51 +128,45 @@ private:
     Label  lfoFreqRateLabel;
     Label  lfoFreqDepthLabel;
     
-    
-    //sliders for osc and filter controls
+    String lfoFM = "FM LFO";
+      
+    // OSC MODULE
     Slider oscLevelSlider;
     Slider freqSlider;
+    Slider fineTuneSlider;
     
-    Label oscLevelLabel;
-    Label freqLabel;
-    
-    ComboBox oscBox;  
-    
+    ComboBox oscBox;   
     String oscType;
+    
+    ComboBox lengthBox;
+    String lengthType;
+    double oscMult;
            
     // LFO AMP
     Slider lfoAmpRateSlider;
     Slider lfoAmpDepthSlider;
+    
     Label lfoAmpRateLabel;
     Label lfoAmpDepthLabel;
     
-    // ENV FILTER
+    String lfoAmp = "AMP LFO";
+    
+    // ENV AMP
     Slider envAttackSlider;
     Slider envDecaySlider;
     Slider envSustainSlider;
     Slider envReleaseSlider;
     
-    Label envAttackLabel;
-    Label envDecayLabel;
-    Label envSustainLabel;
-    Label envReleaseLabel;
-    
-    // AMP FILTER
+    // ENV FILTER
     Slider ampAttackSlider;
     Slider ampDecaySlider;
     Slider ampSustainSlider;
     Slider ampReleaseSlider;
-    Slider ampCutoffKnob;
-    Slider ampResonanceKnob;
+    Slider cutoffSlider;
+    Slider resonanceSlider;
     
-    TextButton ampHighPassButton;
-    TextButton ampLowPassButton;
-    TextButton ampBandPassButton;    
-    
-    Label ampAttackLabel;
-    Label ampDecayLabel;
-    Label ampSustainLabel;
-    Label ampReleaseLabel;
+    ComboBox filterBox;
+    String filterType;      
     
     // SATURATION MODULE
     Slider satDriveKnob;
@@ -167,22 +179,7 @@ private:
     Slider outputFeedbackSlider;
     
     Label outputLevelLabel;
-    Label outputFeedbackLabel;
-    
-
-    //combo boxes osc and filter types
-    ComboBox filterBox;     
-
-
-    //strings hold osc and filter selections
-    String filterType;      
-
-    
-    Slider cutoffSlider;
-    Slider resonanceSlider;
-    
-    Label cutoffLabel;
-    Label resonanceLabel;
+    Label outputFeedbackLabel;      
     
     //holds audio device's sample rate for osc, lfo, and filter settings
     float globalSampleRate;  
@@ -197,12 +194,18 @@ private:
     double lfoPhase;        //position within the lfo wavetable cycle
     double lfoIncrement;    //position within the lfo wavetable cycle
     
+    double lfoFreqTableSize;    //size of wavetable (lfo FM Array)
+    double lfoFreqFrequency;    //lfo FM frequency 
+    double lfoFreqPhase;        //position within the lfo FM wavetable cycle
+    double lfoFreqIncrement;    //position within the lfo FM wavetable cycle
+    
     //data structure (JUCE's array class, similar to vector) holds osc wavetables
     Array<float> sineTable;
     Array<float> squareTable;
     Array<float> sawTable;
     Array<float> triangleTable;
     Array<float> lfoAmpTable;
+    Array<float> lfoFreqTable;
     
     //Filter creation...
     //Converts mono processor into multi-channels (2), as opposed to processing independently (L and R)

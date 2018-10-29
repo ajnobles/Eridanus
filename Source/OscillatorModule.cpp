@@ -10,36 +10,55 @@
 
 #include "OscillatorModule.h"
 
-OscillatorModule::OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB) 
-    : levelSlider (ls), levelLabel (ll), freqSlider (fs) , freqLabel (fl), oscBox (oB)
+OscillatorModule::OscillatorModule (Slider* ls, ComboBox *lB, Slider* fts, Slider* fs, ComboBox *oB) 
+    : levelSlider (ls), lengthBox (lB), fineTuneSlider (fts),  freqSlider (fs),  oscBox (oB)
 {
     // LEVEL
     addAndMakeVisible ( levelSlider );
-    levelSlider->setRange ( 0.0f, 0.5f );
-    levelSlider->setTextBoxStyle ( Slider::TextBoxBelow, false, 100, 20 );
-    levelSlider->setValue(0.240);
-    // levelSlider->setSliderStyle ( Slider::LinearVertical );
+    levelSlider->setRange ( 0.0f, 0.3f );
+    levelSlider->setTextBoxStyle ( Slider::TextBoxRight, false, 50, 20 );
+    levelSlider->setValue(0.0);
             
     addAndMakeVisible(levelLabel);
-    levelLabel->setText("Osc Level", dontSendNotification);   
+    levelLabel.setText("Osc Output", dontSendNotification);   
     
     // FREQ
     // frequency slider, slider display attributes
     addAndMakeVisible(freqSlider);
     freqSlider->setRange(200.0, 1000.0);
-    freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
+    freqSlider->setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
     freqSlider->setValue(400);
-
-    //add frequency slider label and set text
+    
     addAndMakeVisible(freqLabel);
-    freqLabel->setText("Frequency", dontSendNotification);
-	        
-    // COMBO BOX
+    freqLabel.setText("Osc Freq", dontSendNotification);
+    
+    // FINE TUNE
+    addAndMakeVisible(fineTuneSlider);
+    fineTuneSlider->setRange(-1.0, 1.0);
+    fineTuneSlider->setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
+    fineTuneSlider->setValue(0.0);
+    
+    addAndMakeVisible(fineTune);
+    fineTune.setText("Fine Tune", dontSendNotification);
+    
+    // OSC COMBO BOX
     addAndMakeVisible(oscBox);
     oscBox->addItem("Sine", 1);
     oscBox->addItem("Saw", 2);
     oscBox->addItem("Square", 3);
-    oscBox->addItem("Triangle", 4);        
+    oscBox->addItem("Triangle", 4);
+    
+    addAndMakeVisible(oscType);
+    oscType.setText("Osc Type", dontSendNotification);
+    
+    // LENGTH COMBO BOX
+    addAndMakeVisible(lengthBox);
+    lengthBox->addItem("4", 1);
+    lengthBox->addItem("8", 2);
+    lengthBox->addItem("16", 3);
+    
+    addAndMakeVisible(oscLength);
+    oscLength.setText("Osc Length", dontSendNotification);
 }
 
 OscillatorModule::~OscillatorModule() {}
@@ -47,7 +66,8 @@ OscillatorModule::~OscillatorModule() {}
 void OscillatorModule::paint (Graphics& g)
 {
     Colour colour = Colours::lightblue;
-    String text = "OscillatorModule ITEM";
+    //String text = "OscillatorModule ITEM";
+    String text = " ";
     g.fillAll (colour.withAlpha (0.5f));
 
     g.setColour (Colours::black);
@@ -60,15 +80,22 @@ void OscillatorModule::resized ()
     using Track = Grid::TrackInfo;
 
     grid.templateRows = { Track (1_fr) };
-    grid.templateColumns = { Track (1_fr) };
+    grid.templateColumns = { Track (1_fr), Track (3_fr) };
   
     grid.autoRows = Track (1_fr);
     grid.autoColumns = Track (1_fr);
 
     grid.items = {
-        GridItem ( oscBox      ),
-        GridItem ( levelSlider ),
-        GridItem ( freqSlider  )
+        GridItem ( oscType      ),
+        GridItem ( oscBox       ),
+        GridItem ( oscLength    ),
+        GridItem ( lengthBox    ),
+        GridItem ( fineTune     ),
+        GridItem ( fineTuneSlider),
+        GridItem ( levelLabel   ),
+        GridItem ( levelSlider  ),
+        GridItem ( freqLabel    ),
+        GridItem ( freqSlider   )
     };
 
     grid.performLayout ( getLocalBounds() );

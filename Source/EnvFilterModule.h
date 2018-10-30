@@ -63,6 +63,11 @@ public:
         addAndMakeVisible ( LeftPanel );
         
     }
+
+    ~EnvFilterModule()
+    {
+        delete LeftPanel;
+    }
     
     void paint (Graphics& g) override
     {
@@ -130,6 +135,7 @@ public:
     
     class LeftSide : public CustomComponent
     {
+    public:
         LeftSide( Slider* ck, Slider* rk, ComboBox *fB)
                 : CutoffKnob (ck), ResonanceKnob (rk), 
                   FilterBox (fB)
@@ -202,7 +208,7 @@ public:
 //        LeftSide( Slider* ck, Slider* rk, TextButton* hpb, TextButton* lpb, TextButton* bpb);
 //        void paint (Graphics& g) override;
 //        void resized () override;
-//    private:
+    private:
         Slider* CutoffKnob;
         Slider* ResonanceKnob;
         ComboBox *FilterBox;

@@ -36,17 +36,22 @@ LfoModule::LfoModule (Slider* rs, Slider* ds, String* lfoName)
 
 LfoModule::LfoModule ()
 {
-    lfoFM = "FM LFO";
+    lfoType = "FM LFO";
   
     addAndMakeVisible ( RateSlider );
-    RateSlider.setRange ( 0, 100 );
+    RateSlider.setRange ( 0, 10.0 );
     RateSlider.setSliderStyle ( Slider::LinearVertical );
     RateSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    RateSlider.setValue( 1.0 );
 
     addAndMakeVisible ( DepthSlider );
-    DepthSlider.setRange ( 0, 100 );
+    DepthSlider.setRange ( 0, 1.0 );
     DepthSlider.setSliderStyle ( Slider::LinearVertical );
     DepthSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DepthSlider.setValue( 0.0 );
+
+    addAndMakeVisible( DepthLabel );
+    DepthLabel.setText( "Depth", dontSendNotification );
 }    
     
 void LfoModule::paint (Graphics& g)

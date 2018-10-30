@@ -94,6 +94,7 @@ public:
         }
         
         //fm lfo rate (freq)
+        /*
         else if (slider == &lfoFreqRateSlider)
         {
             lfoFreqRateSlider.setValue(lfoFreqRateSlider.getValue());
@@ -104,6 +105,7 @@ public:
         {
             lfoFreqDepthSlider.setValue(lfoFreqDepthSlider.getValue());
         }
+        */
     }
   
     //function handles slider changes to osc and lfo frequencies
@@ -190,6 +192,11 @@ private:
     Slider envDecaySlider;
     Slider envSustainSlider;
     Slider envReleaseSlider;
+ 
+    Label envAttackLabel;
+    Label envDecayLabel;
+    Label envSustainLabel;
+    Label envReleaseLabel;
     
     // ENV FILTER
     Slider ampAttackSlider;
@@ -220,14 +227,14 @@ private:
     
 
     //combo boxes osc and filter types
-    ComboBox filterBox;     
+    // ComboBox filterBox;     
 
 
     //strings hold osc and filter selections
-    String filterType;      
+    // String filterType;      
     
-    Slider cutoffSlider;
-    Slider resonanceSlider;
+    // Slider cutoffSlider;
+    // Slider resonanceSlider;
     
     Label cutoffLabel;
     Label resonanceLabel;

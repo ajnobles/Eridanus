@@ -11,18 +11,9 @@
 //==============================================================================
 MainComponent::MainComponent()
 {    
-    // LFO FREQ
-/*    
-    modules.add (new LfoModule (
-        &lfoFreqRateSlider,
-        &lfoFreqDepthSlider,
-        &lfoFM
-    ) ); 
-*/
 
-{
     // INPUT
-    Input = new InputModule();
+    Input = new InputModule( );
     modules.add ( Input );
     
     // LFO FREQ
@@ -38,15 +29,7 @@ MainComponent::MainComponent()
         &oscBox
     ) );
     
-    // LFO AMP
-  /*
-    modules.add (new LfoModule (
-        &lfoAmpRateSlider,
-        &lfoAmpDepthSlider,
-        &lfoAmp
-    ) );
- */
-    
+   
     // LFO AMP
     LfoAmp = new LfoModule( ); 
     modules.add ( LfoAmp );
@@ -57,11 +40,7 @@ MainComponent::MainComponent()
         &envAttackSlider, 
         &envDecaySlider, 
         &envSustainSlider, 
-        &envReleaseSlider,
-        &envAttackLabel,
-        &envDecayLabel,
-        &envSustainLabel,
-        &envReleaseLabel
+        &envReleaseSlider
     ) );
    
     // ENV FILTER
@@ -159,7 +138,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 // <<<<<<< Integration_10_29_18
     // lfoFrequency = lfoAmpRateSlider.getValue();
-    lfoFreqFrequency = lfoFreqRateSlider.getValue();
+    lfoFreqFrequency = LfoFreq->getRateSliderValue(); // lfoFreqRateSlider.getValue();
         
 // =======
     lfoFrequency = LfoAmp->getRateSliderValue(); 
@@ -303,10 +282,12 @@ void MainComponent::resized()
     
     grid.templateColumns = {
         Track (1_fr),
+        Track (1_fr),
         Track (2_fr),
         Track (1_fr),
-        Track (3_fr),
         Track (2_fr),
+        Track (2_fr),
+        Track (1_fr),
         Track (1_fr),
         Track (1_fr),
     };
@@ -427,7 +408,7 @@ void MainComponent::updateOscFrequency()
     auto fineTune = (((freqSlider.getValue() * oscMult) / 2) / 12) * fineTuneSlider.getValue();
     
     //Determine frequency addition/subtraction based on FM lfo phase and set depth value
-    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (lfoFreqDepthSlider.getValue()*100);
+    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (/*lfoFreqDepthSlider.getValue()*/LfoFreq->getDepthSliderValue()*100);
     
     //Determine next point in the osc wavetable for grabbing values
     //Multiply the current osc frequency (slider) by the wavetable size, then divide by the sample rate
@@ -455,7 +436,7 @@ void MainComponent::updateLFOFreqFrequency()
 {
     //Determine next point in the lfo FM wavetable for grabbing values
     //Multiply the current lfo FM frequency (slider) by the wavetable size, then divide by the sample rate
-    lfoFreqIncrement = (lfoFreqRateSlider.getValue()* 2) * lfoFreqTableSize / globalSampleRate;
+    lfoFreqIncrement = (LfoFreq->getRateSliderValue()/*lfoFreqRateSlider.getValue()*/* 2) * lfoFreqTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of lfo FM table for grabbing values
     //"fmod" handles reaching past the lfo FM table, and wrapping around to the appropriate phase from the beginning

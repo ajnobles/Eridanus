@@ -10,7 +10,7 @@
 
 #include "EnvFilterModule.h"
 
-
+/*
 EnvFilterModule::EnvFilterModule ( Slider* as, Slider* ds, 
                   Slider* ss, Slider* rs,
                   Slider* ck, Slider* rk,
@@ -161,4 +161,4 @@ void EnvFilterModule::LeftSide::resized ()
 
 
 
-
+*/

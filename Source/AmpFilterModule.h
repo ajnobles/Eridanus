@@ -23,11 +23,10 @@ public:
 		AttackSlider->setRange ( 0, 100 );
 		AttackSlider->setSliderStyle ( Slider::LinearVertical );
 		AttackSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+	// AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs,
+	//	              Label*  al, Label*  dl, Label*  sl, Label*  rl);
 
-		addAndMakeVisible ( DecaySlider );
-		DecaySlider->setRange ( 0, 100 );
-		DecaySlider->setSliderStyle ( Slider::LinearVertical );
-		DecaySlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    ~AmpFilterModule ();
 
 		addAndMakeVisible ( SustainSlider );
 		SustainSlider->setRange ( 0, 100 );
@@ -94,7 +93,9 @@ public:
 
 		grid.performLayout ( bounds );
 	}
-
+	// void paint (Graphics& g) override;
+	// void resized () override;
+  
 private:
 	Slider* AttackSlider;
 	Slider* DecaySlider;

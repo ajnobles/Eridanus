@@ -117,9 +117,18 @@ public:
 
         grid.performLayout ( bounds );
     }
+//                      TextButton* hpb,
+//                      TextButton* lpb,
+//                      TextButton* bpb,
+//                      Label*  al, Label*  dl, 
+//                     Label*  sl, Label*  rl );
+
+//    ~EnvFilterModule ();
+//    void paint (Graphics& g) override;
+//    void resized () override;
     
     
-    struct LeftSide : public CustomComponent
+    class LeftSide : public CustomComponent
     {
         LeftSide( Slider* ck, Slider* rk, ComboBox *fB)
                 : CutoffKnob (ck), ResonanceKnob (rk), 
@@ -189,6 +198,11 @@ public:
             grid.performLayout ( bounds );
         }
 
+//    public:
+//        LeftSide( Slider* ck, Slider* rk, TextButton* hpb, TextButton* lpb, TextButton* bpb);
+//        void paint (Graphics& g) override;
+//        void resized () override;
+//    private:
         Slider* CutoffKnob;
         Slider* ResonanceKnob;
         ComboBox *FilterBox;

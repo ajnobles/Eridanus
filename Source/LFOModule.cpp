@@ -10,6 +10,7 @@
 
 #include "LFOModule.h"
 
+/*
 LfoModule::LfoModule (Slider* rs, Slider* ds, String* lfoName)
     : RateSlider (rs), DepthSlider (ds), lfoType (lfoName)
 {
@@ -31,7 +32,21 @@ LfoModule::LfoModule (Slider* rs, Slider* ds, String* lfoName)
     
     addAndMakeVisible(DepthLabel);
     DepthLabel.setText("Depth", dontSendNotification);
+*/
 
+LfoModule::LfoModule ()
+{
+    lfoFM = "FM LFO";
+  
+    addAndMakeVisible ( RateSlider );
+    RateSlider.setRange ( 0, 100 );
+    RateSlider.setSliderStyle ( Slider::LinearVertical );
+    RateSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( DepthSlider );
+    DepthSlider.setRange ( 0, 100 );
+    DepthSlider.setSliderStyle ( Slider::LinearVertical );
+    DepthSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 }    
     
 void LfoModule::paint (Graphics& g)
@@ -41,7 +56,7 @@ void LfoModule::paint (Graphics& g)
     CustomComponent::buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText (*lfoType, 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+    g.drawText (lfoType, 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -72,3 +87,36 @@ void LfoModule::resized ()
 
     grid.performLayout ( bounds );
 }
+
+
+bool LfoModule::isRateSlider ( Slider* slider )
+{
+    return slider == &RateSlider;
+}
+
+bool LfoModule::isDepthSlider( Slider* slider )
+{
+    return slider == &DepthSlider;
+}
+
+
+float LfoModule::getRateSliderValue ()
+{
+    return RateSlider.getValue();
+}
+
+float LfoModule::getDepthSliderValue ()
+{
+    return DepthSlider.getValue();
+}
+
+void LfoModule::setRateSliderValue ( float v )
+{
+    RateSlider.setValue( v );
+}
+
+void LfoModule::setDepthSliderValue ( float v )
+{
+    DepthSlider.setValue( v );
+}
+

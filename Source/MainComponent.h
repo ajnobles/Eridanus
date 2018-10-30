@@ -65,6 +65,7 @@ public:
             freqSlider.setValue(freqSlider.getValue());
         }
         
+// <<<<<<< Integration_10_29_18
         //osc frequency fine tune
         else if (slider == &fineTuneSlider)
         {
@@ -72,15 +73,24 @@ public:
         }
         
         //amp lfo rate (freq)
-        else if (slider == &lfoAmpRateSlider)
+        // else if (slider == &lfoAmpRateSlider)
+// =======
+        //lfo rate (freq)
+        else if ( LfoAmp->isRateSlider( slider ) ) 
+// >>>>>>> Allen_Gui_Main
         {
-            lfoAmpRateSlider.setValue(lfoAmpRateSlider.getValue());
+            LfoAmp->setRateSliderValue( LfoAmp->getRateSliderValue() );
         }
         
+// <<<<<<< Integration_10_29_18
         //amp lfo depth
-        else if (slider == &lfoAmpDepthSlider)
+        // else if (slider == &lfoAmpDepthSlider)
+// =======
+        //lfo depth
+        else if ( LfoAmp->isDepthSlider( slider ) )
+// >>>>>>> Allen_Gui_Main
         {
-            lfoAmpDepthSlider.setValue(lfoAmpDepthSlider.getValue());
+            LfoAmp->setDepthSliderValue( LfoAmp->getDepthSliderValue() );
         }
         
         //fm lfo rate (freq)
@@ -121,37 +131,61 @@ private:
     OwnedArray<Component> modules;
     OwnedArray<Component> scenes;
     
+// <<<<<<< Integration_10_29_18
     // LFO FREQ MODULE
+    /*
     Slider lfoFreqRateSlider;
     Slider lfoFreqDepthSlider;
     
     Label  lfoFreqRateLabel;
     Label  lfoFreqDepthLabel;
-    
+    */  
+
     String lfoFM = "FM LFO";
-      
     // OSC MODULE
+// =======
+
+    // INPUT MODULE
+    InputModule* Input;
+    
+
+    // LFO FREQ MODULE
+    LfoModule* LfoFreq;
+    
+
+    //sliders for osc and filter controls
+// >>>>>>> Allen_Gui_Main
     Slider oscLevelSlider;
     Slider freqSlider;
     Slider fineTuneSlider;
     
     ComboBox oscBox;   
     String oscType;
+// <<<<<<< Integration_10_29_18
     
     ComboBox lengthBox;
     String lengthType;
     double oscMult;
            
     // LFO AMP
+    /*  
     Slider lfoAmpRateSlider;
     Slider lfoAmpDepthSlider;
     
     Label lfoAmpRateLabel;
     Label lfoAmpDepthLabel;
-    
+    */
     String lfoAmp = "AMP LFO";
     
     // ENV AMP
+// =======
+   
+
+    // LFO AMP
+    LfoModule* LfoAmp;
+       
+    // ENV FILTER
+// >>>>>>> Allen_Gui_Main
     Slider envAttackSlider;
     Slider envDecaySlider;
     Slider envSustainSlider;
@@ -179,7 +213,25 @@ private:
     Slider outputFeedbackSlider;
     
     Label outputLevelLabel;
-    Label outputFeedbackLabel;      
+// <<<<<<< Integration_10_29_18
+    // Label outputFeedbackLabel;      
+// =======
+    Label outputFeedbackLabel;
+    
+
+    //combo boxes osc and filter types
+    ComboBox filterBox;     
+
+
+    //strings hold osc and filter selections
+    String filterType;      
+    
+    Slider cutoffSlider;
+    Slider resonanceSlider;
+    
+    Label cutoffLabel;
+    Label resonanceLabel;
+// >>>>>>> Allen_Gui_Main
     
     //holds audio device's sample rate for osc, lfo, and filter settings
     float globalSampleRate;  

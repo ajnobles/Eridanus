@@ -72,7 +72,7 @@ public:
             setContentOwned (c, true);
 
             setResizable (true, true);
-            setResizeLimits (1, 1, 10000, 10000);
+            setResizeLimits (1000, 800, 10000, 10000);
 
             centreWithSize (getWidth(), getHeight());
             setVisible (true);

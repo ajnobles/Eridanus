@@ -10,6 +10,16 @@
 
 //==============================================================================
 MainComponent::MainComponent()
+{    
+    // LFO FREQ
+/*    
+    modules.add (new LfoModule (
+        &lfoFreqRateSlider,
+        &lfoFreqDepthSlider,
+        &lfoFM
+    ) ); 
+*/
+
 {
     // INPUT
     Input = new InputModule();
@@ -21,14 +31,21 @@ MainComponent::MainComponent()
     
     // OSCILLATORS
     modules.add (new OscillatorModule ( 
-        &oscLevelSlider, 
-        &oscLevelLabel, 
+        &oscLevelSlider,
+        &lengthBox,
+        &fineTuneSlider,
         &freqSlider, 
-        &freqLabel,
         &oscBox
-    )
-    );
-
+    ) );
+    
+    // LFO AMP
+  /*
+    modules.add (new LfoModule (
+        &lfoAmpRateSlider,
+        &lfoAmpDepthSlider,
+        &lfoAmp
+    ) );
+ */
     
     // LFO AMP
     LfoAmp = new LfoModule( ); 
@@ -47,22 +64,23 @@ MainComponent::MainComponent()
         &envReleaseLabel
     ) );
    
-
     // ENV FILTER
     modules.add (new EnvFilterModule ( 
         &ampAttackSlider, 
         &ampDecaySlider, 
         &ampSustainSlider, 
         &ampReleaseSlider,
-        &ampCutoffKnob,
-        &ampResonanceKnob,
-        &ampHighPassButton,
-        &ampLowPassButton,        
-        &ampBandPassButton,
-        &ampAttackLabel,
-        &ampDecayLabel,
-        &ampSustainLabel,
-        &ampReleaseLabel
+        &cutoffSlider,
+        &resonanceSlider,
+        &filterBox
+    ) );
+    
+    // AMP FILTER
+    modules.add (new AmpFilterModule ( 
+        &envAttackSlider, 
+        &envDecaySlider, 
+        &envSustainSlider, 
+        &envReleaseSlider
     ) );
     
     // SATURATION
@@ -79,7 +97,6 @@ MainComponent::MainComponent()
         &outputLevelLabel,  
         &outputFeedbackLabel 
     ) );
-   
 
     int numModules = modules.size();
     for (int i = 0; i < numModules; i++) {
@@ -89,47 +106,25 @@ MainComponent::MainComponent()
     // SCENES
     scenes.add ( new KeyboardScene );
     addAndMakeVisible ( scenes[0] );
-
     
     // COMPONENT LISTENERS
-    freqSlider.addListener(this);
-    oscLevelSlider.addListener(this);
     oscBox.addListener(this);
-
-    //add filter combo box, set selections w/ text, and listener
-//    addAndMakeVisible(filterBox);
-    filterBox.addItem("Low Pass", 1);
-    filterBox.addItem("Band Pass", 2);
-    filterBox.addItem("High Pass", 3);
     filterBox.addListener(this);
-    
-    //add filter cutoff slider, slider display attributes, and listener 
-//    addAndMakeVisible(cutoffSlider);
-    cutoffSlider.setRange(20, 2000);
-    cutoffSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-    cutoffSlider.addListener(this);
-    
-    //add cutoff slider label and set text
-//    addAndMakeVisible(cutoffLabel);
-    cutoffLabel.setText("Cutoff", dontSendNotification);
+    lengthBox.addListener(this);
 
-    //add resonance slider, slider display attributes, and listener 
-//    addAndMakeVisible(resonanceSlider);
-    resonanceSlider.setRange(1, 5);
-    resonanceSlider.setTextBoxStyle(Slider::TextBoxRight, false, 100, 20);
-    resonanceSlider.addListener(this);
-    
-    //add resonance slider label and set text
-//    addAndMakeVisible(resonanceLabel);
-    resonanceLabel.setText("Resonance", dontSendNotification);
 
-    
     //set window size
     setSize (1600, 800);
     
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
     
+// <<<<<<< Integration_10_29_18
+    //set combo box selections ("8", sine, low pass)     
+    lengthBox.setSelectedId(2);
+    oscBox.setSelectedId(1);    
+    filterBox.setSelectedId(1);  
+// =======
     //set filter combo box to low pass filter
     filterBox.setSelectedId(1);
     
@@ -141,6 +136,7 @@ MainComponent::MainComponent()
     LfoAmp->setRateSliderValue( 1.0 ); 
     LfoAmp->setDepthSliderValue( 0.0 );
 
+// >>>>>>> Allen_Gui_Main
 }
 
 MainComponent::~MainComponent()
@@ -154,65 +150,40 @@ MainComponent::~MainComponent()
 //prepareToPlay happens once when application is launched 
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate) 
-{    
-    //output audio device's information to console
-    String messageToConsole;
-    messageToConsole << "Samples per Block: " << samplesPerBlockExpected << newLine;
-    messageToConsole << "Sample Rate: " << sampleRate;
-    Logger::getCurrentLogger()->writeToLog (messageToConsole);
-    
+{        
     //grab sampleRate for filter settings
     globalSampleRate = sampleRate;   
     
     //grab osc and lfo slider frequency values 
     oscFrequency = freqSlider.getValue();
+
+// <<<<<<< Integration_10_29_18
+    // lfoFrequency = lfoAmpRateSlider.getValue();
+    lfoFreqFrequency = lfoFreqRateSlider.getValue();
+        
+// =======
     lfoFrequency = LfoAmp->getRateSliderValue(); 
 
+// >>>>>>> Allen_Gui_Main
     //set for starting at beginning of osc and lfo wavetables
     oscPhase = 0;
     lfoPhase = 0;
+    lfoFreqPhase = 0;
     
     //set wavetable size
     oscTableSize = 1024;
     lfoTableSize = 1024;
+    lfoFreqTableSize = 1024;
 
     //Determine increment size to find the next point in the osc wavetable for grabbing values 
     //Multiply the current osc frequency by the wavetable size, then divide by the sample rate
     //Note: initialized here, but modifiable via functions 
     oscIncrement = oscFrequency * oscTableSize / globalSampleRate;
     lfoIncrement = lfoFrequency * lfoTableSize / globalSampleRate;
+    lfoFreqIncrement = lfoFreqFrequency * lfoFreqTableSize / globalSampleRate;
     
-    //create wavetables for sine, sawtooth, square, and triangle
-    //for loop handles calculations for inserting appropriate values into the table, sample to sample
-    for (int i = 0; i < oscTableSize; i++)
-    {
-        //sine wave table for osc and amp lfo
-        sineTable.insert(i , sin(2.0 * double_Pi * i / oscTableSize));   
-        lfoAmpTable.insert(i , sin(2.0 * double_Pi * i / lfoTableSize));   
-        
-        //saw wave table for osc (ramp up)
-        sawTable.insert(i , ((i / oscTableSize) - 0.5) * 2);   
-        
-        //square wave table for osc
-        if (i / oscTableSize < 0.5)     //first half of table (-1)
-        {
-            squareTable.insert(i, -1);
-        }
-        else                            //second half of table (1)
-        {
-            squareTable.insert(i, 1);
-        }
-        
-        //triangle wave table for osc
-        if (i / oscTableSize < 0.5)     //first half of table (ramp up)
-        {
-            triangleTable.insert(i , ((i / (oscTableSize/2)) - 0.5) * 2); 
-        }
-        else                            //second half ot table (ramp down)
-        {
-            triangleTable.insert(i, (0.5 - ((i - oscTableSize/2) / (oscTableSize/2))) * 2);
-        }
-    }
+    //generate wavetables for osc and lfo's
+    createWavetables();
     
     //relay settings (sample rate and block size) to dsp object (filter) 
     dsp::ProcessSpec spec;
@@ -279,9 +250,16 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
                                 ((sineTable[(int)oscPhase] * oscLevel) * (1.0 - lfoDepth));
        }
        
+// <<<<<<< Integration_10_29_18
+       //update osc and lfo frequencies/phases
+       // updateOscFrequency();
+       // updateLFOAmpFrequency();
+       updateLFOFreqFrequency();
+// =======
        //update osc and lfo frequencies
        updateOscFrequency( );
        updateLFOAmpFrequency( );
+// >>>>>>> Allen_Gui_Main
     }
      
     //grab filled buffer and store in sample block (so we can use with the filter)
@@ -305,11 +283,6 @@ void MainComponent::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-/*
-    g.setFont (Font (16.0f));
-    g.setColour (Colours::white);
-    g.drawText ("Hello World!", getLocalBounds(), Justification::centred, true);
-*/
 }
 
 void MainComponent::resized()
@@ -330,14 +303,14 @@ void MainComponent::resized()
     
     grid.templateColumns = {
         Track (1_fr),
-        Track (1_fr),
         Track (2_fr),
         Track (1_fr),
-        Track (2_fr),
+        Track (3_fr),
         Track (2_fr),
         Track (1_fr),
         Track (1_fr),
     };
+    
 /*
     grid.autoRows = Track (1_fr);
     grid.autoColumns = Track (1_fr);
@@ -378,7 +351,6 @@ void MainComponent::resized()
     
     grid.performLayout ( bounds );
 
-
 }
 
 //Handles combo box changes - grab selection's text
@@ -388,6 +360,26 @@ void MainComponent::comboBoxChanged(ComboBox* box)
     if (box->getText() == "Low Pass" || box->getText() == "Band Pass" || box->getText() == "High Pass")
     {
         filterType = box->getText();
+    }
+
+    //handles changes to osc length type
+    if (box->getText() == "4" || box->getText() == "8" || box->getText() == "16")
+    {
+        //set osc length multiplier to appropriate value
+        if (box->getText() == "4")
+        {
+          oscMult = 0.5;   
+        }
+        
+        else if (box->getText() == "8")
+        {
+          oscMult = 1;   
+        }
+        
+        else if (box->getText() == "16")
+        {
+          oscMult = 2;   
+        }
     }
     
     //handles changes to osc type
@@ -431,23 +423,78 @@ void MainComponent::updateFilterSettings()
 //Handles user changes in osc frequency from slider
 void MainComponent::updateOscFrequency()
 {
+    //Determines even temperement tuning amount (one twelth movement based on octave below frequency) 
+    auto fineTune = (((freqSlider.getValue() * oscMult) / 2) / 12) * fineTuneSlider.getValue();
+    
+    //Determine frequency addition/subtraction based on FM lfo phase and set depth value
+    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (lfoFreqDepthSlider.getValue()*100);
+    
     //Determine next point in the osc wavetable for grabbing values
     //Multiply the current osc frequency (slider) by the wavetable size, then divide by the sample rate
-    oscIncrement = freqSlider.getValue() * oscTableSize / globalSampleRate;
+    oscIncrement = ((freqSlider.getValue() * oscMult) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of osc table for grabbing values
     //"fmod" handles reaching past the osc table, and wrapping around to the appropriate phase from the beginning
     oscPhase = fmod((oscPhase + oscIncrement), oscTableSize);
 }
 
-//Handles user changes in lfo frequency from slider
+//Handles user changes in lfo Amp frequency from slider
 void MainComponent::updateLFOAmpFrequency()
 {
-    //Determine next point in the lfo wavetable for grabbing values
+    //Determine next point in the lfo Amp wavetable for grabbing values
     //Multiply the current lfo frequency (slider) by the wavetable size, then divide by the sample rate
     lfoIncrement = LfoAmp->getRateSliderValue() * lfoTableSize / globalSampleRate;
     
-    //"phase + increment" determines next part (phase) of lfo table for grabbing values
+    //"phase + increment" determines next part (phase) of lfo Amp table for grabbing values
     //"fmod" handles reaching past the lfo table, and wrapping around to the appropriate phase from the beginning
     lfoPhase = fmod((lfoPhase + lfoIncrement), lfoTableSize);
 }
+
+//Handles user changes in lfo FM frequency from slider
+void MainComponent::updateLFOFreqFrequency()
+{
+    //Determine next point in the lfo FM wavetable for grabbing values
+    //Multiply the current lfo FM frequency (slider) by the wavetable size, then divide by the sample rate
+    lfoFreqIncrement = (lfoFreqRateSlider.getValue()* 2) * lfoFreqTableSize / globalSampleRate;
+    
+    //"phase + increment" determines next part (phase) of lfo FM table for grabbing values
+    //"fmod" handles reaching past the lfo FM table, and wrapping around to the appropriate phase from the beginning
+    lfoFreqPhase = fmod((lfoFreqPhase + lfoFreqIncrement), lfoFreqTableSize);
+}
+
+//create wavetables for sine, sawtooth, square, and triangle
+void MainComponent::createWavetables()
+{
+    //for loop handles calculations for inserting appropriate values into the table, sample to sample
+    for (int i = 0; i < oscTableSize; i++)
+    {
+        //sine wave table for osc and amp lfo
+        sineTable.insert(i , sin(2.0 * double_Pi * i / oscTableSize));   
+        lfoAmpTable.insert(i , sin(2.0 * double_Pi * i / lfoTableSize));
+        lfoFreqTable.insert(i , sin(2.0 * double_Pi * i / lfoFreqTableSize));   
+        
+        //saw wave table for osc (ramp up)
+        sawTable.insert(i , ((i / oscTableSize) - 0.5) * 2);   
+        
+        //square wave table for osc
+        if (i / oscTableSize < 0.5)     //first half of table (-1)
+        {
+            squareTable.insert(i, -1);
+        }
+        else                            //second half of table (1)
+        {
+            squareTable.insert(i, 1);
+        }
+        
+        //triangle wave table for osc
+        if (i / oscTableSize < 0.5)     //first half of table (ramp up)
+        {
+            triangleTable.insert(i , ((i / (oscTableSize/2)) - 0.5) * 2); 
+        }
+        else                            //second half ot table (ramp down)
+        {
+            triangleTable.insert(i, (0.5 - ((i - oscTableSize/2) / (oscTableSize/2))) * 2);
+        }
+    }
+}
+

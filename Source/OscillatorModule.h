@@ -15,7 +15,7 @@
 class OscillatorModule : public CustomComponent
 {
 public:
-	OscillatorModule (Slider* ls, Label* ll, Slider* fs, Label* fl, ComboBox *oB);
+	OscillatorModule (Slider* ls, ComboBox *lB, Slider* fts,  Slider* fs, ComboBox *oB);
 	~OscillatorModule ();
 
     void paint (Graphics& g) override;
@@ -24,8 +24,12 @@ public:
 private:
     Slider* levelSlider;
     Slider* freqSlider;
-    Label*  levelLabel;
-    Label*  freqLabel;
+    Slider* fineTuneSlider;
+    Label levelLabel;
+    Label freqLabel;
+    Label fineTune;
+    Label oscType;
+    Label oscLength;
     ComboBox* oscBox;
-
+    ComboBox* lengthBox;
 };

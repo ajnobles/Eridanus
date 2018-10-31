@@ -11,25 +11,52 @@
 #pragma once
 
 #include "CustomComponent.h"
+// #include "MainComponent.h"
 
-class OscillatorModule : public CustomComponent
+class OscillatorModule : public CustomComponent// ,
+                         // public ComboBox::Listener
 {
 public:
-	OscillatorModule (Slider* ls, ComboBox *lB, Slider* fts,  Slider* fs, ComboBox *oB);
+	OscillatorModule ( );
 	~OscillatorModule ();
 
     void paint (Graphics& g) override;
     void resized () override;
+
+    void comboBoxUpdate ( String text );
+    // void comboBoxChanged ( ComboBox* box ) override;
+
+    bool isLevelSlider( Slider* slider );
+    bool isFreqSlider( Slider* slider );
+    bool isFineTuneSlider( Slider* slider );
+
+    float getLevelSliderValue();
+    float getFreqSliderValue();
+    float getFineTuneSliderValue();
+    float getOscMult();
+    ComboBox& getOscBox();
+    ComboBox& getLengthBox();
+    String getOscType();
+
+    void setLevelSliderValue( float v );
+    void setFreqSliderValue( float v );
+    void setFineTuneSliderValue( float v );
+    void setOscMult( float v );
+    
     
 private:
-    Slider* levelSlider;
-    Slider* freqSlider;
-    Slider* fineTuneSlider;
+    Slider levelSlider;
+    Slider freqSlider;
+    Slider fineTuneSlider;
     Label levelLabel;
     Label freqLabel;
     Label fineTune;
-    Label oscType;
+    Label oscTypeLabel;
     Label oscLength;
-    ComboBox* oscBox;
-    ComboBox* lengthBox;
+    ComboBox oscBox;
+    ComboBox lengthBox;
+
+    float oscMult;
+
+    String oscType;
 };

@@ -17,21 +17,16 @@ MainComponent::MainComponent()
     modules.add ( Input );
     
     // LFO FREQ
-    LfoFreq = new LfoModule ( );
+    LfoFreq = new LfoModule ( lfoFM );
     modules.add ( LfoFreq );
     
     // OSCILLATORS
-    modules.add (new OscillatorModule ( 
-        &oscLevelSlider,
-        &lengthBox,
-        &fineTuneSlider,
-        &freqSlider, 
-        &oscBox
-    ) );
+    OSC_1 = new OscillatorModule ( );
+    modules.add( OSC_1 );
     
    
     // LFO AMP
-    LfoAmp = new LfoModule( ); 
+    LfoAmp = new LfoModule( lfoAmp ); 
     modules.add ( LfoAmp );
    
 
@@ -87,9 +82,9 @@ MainComponent::MainComponent()
     addAndMakeVisible ( scenes[0] );
     
     // COMPONENT LISTENERS
-    oscBox.addListener(this);
     filterBox.addListener(this);
-    lengthBox.addListener(this);
+    OSC_1->getOscBox().addListener( this );
+    OSC_1->getLengthBox().addListener( this );
 
 
     //set window size
@@ -98,33 +93,23 @@ MainComponent::MainComponent()
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
     
-// <<<<<<< Integration_10_29_18
     //set combo box selections ("8", sine, low pass)     
-    lengthBox.setSelectedId(2);
-    oscBox.setSelectedId(1);    
-    filterBox.setSelectedId(1);  
-// =======
+    
     //set filter combo box to low pass filter
     filterBox.setSelectedId(1);
     
     //set osc combo box to sine
-    oscBox.setSelectedId(1);
     
     //set sliders for osc and filter controls
     cutoffSlider.setValue(1000);
-    LfoAmp->setRateSliderValue( 1.0 ); 
-    LfoAmp->setDepthSliderValue( 0.0 );
-
-// >>>>>>> Allen_Gui_Main
 }
 
 MainComponent::~MainComponent()
 {
     // This shuts down the audio device and clears the audio source.
-
-
     shutdownAudio();
 }
+
 
 //prepareToPlay happens once when application is launched 
 //==============================================================================
@@ -134,16 +119,12 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     globalSampleRate = sampleRate;   
     
     //grab osc and lfo slider frequency values 
-    oscFrequency = freqSlider.getValue();
+    oscFrequency = OSC_1->getFreqSliderValue(); 
 
-// <<<<<<< Integration_10_29_18
-    // lfoFrequency = lfoAmpRateSlider.getValue();
-    lfoFreqFrequency = LfoFreq->getRateSliderValue(); // lfoFreqRateSlider.getValue();
-        
-// =======
+    lfoFreqFrequency = LfoAmp->getRateSliderValue();        
+
     lfoFrequency = LfoAmp->getRateSliderValue(); 
 
-// >>>>>>> Allen_Gui_Main
     //set for starting at beginning of osc and lfo wavetables
     oscPhase = 0;
     lfoPhase = 0;
@@ -181,8 +162,10 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) 
 {
     //grab osc and lfo depth slider values
-    auto oscLevel = (float) oscLevelSlider.getValue();
+    auto oscLevel = (float) OSC_1->getLevelSliderValue();
     auto lfoDepth = (float) LfoAmp->getDepthSliderValue(); 
+
+    String oscType = OSC_1->getOscType();
         
     //create pointers to beginning of both channels' buffer (for writing)
     auto* channelOne = bufferToFill.buffer->getWritePointer (0, bufferToFill.startSample);
@@ -229,16 +212,10 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
                                 ((sineTable[(int)oscPhase] * oscLevel) * (1.0 - lfoDepth));
        }
        
-// <<<<<<< Integration_10_29_18
-       //update osc and lfo frequencies/phases
-       // updateOscFrequency();
-       // updateLFOAmpFrequency();
-       updateLFOFreqFrequency();
-// =======
        //update osc and lfo frequencies
        updateOscFrequency( );
        updateLFOAmpFrequency( );
-// >>>>>>> Allen_Gui_Main
+       updateLFOFreqFrequency();
     }
      
     //grab filled buffer and store in sample block (so we can use with the filter)
@@ -315,6 +292,7 @@ void MainComponent::resized()
         GridItem ( modules[5] ).withArea( 1, 6, 3, 6 ),
         GridItem ( modules[6] ).withArea( 1, 7, 3, 7 ),
         GridItem ( modules[7] ).withArea( 1, 8, 3, 8 ),
+        GridItem ( modules[8] ).withArea( 1, 9, 3, 9 ),
         GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
     };
 
@@ -343,31 +321,7 @@ void MainComponent::comboBoxChanged(ComboBox* box)
         filterType = box->getText();
     }
 
-    //handles changes to osc length type
-    if (box->getText() == "4" || box->getText() == "8" || box->getText() == "16")
-    {
-        //set osc length multiplier to appropriate value
-        if (box->getText() == "4")
-        {
-          oscMult = 0.5;   
-        }
-        
-        else if (box->getText() == "8")
-        {
-          oscMult = 1;   
-        }
-        
-        else if (box->getText() == "16")
-        {
-          oscMult = 2;   
-        }
-    }
-    
-    //handles changes to osc type
-    if (box->getText() == "Sine" || box->getText() == "Saw" || box->getText() == "Square" || box->getText() == "Triangle")
-    {
-        oscType = box->getText();
-    }
+    OSC_1->comboBoxUpdate( box->getText() );
 }
 
 //Updates filter parameters set by user 
@@ -405,14 +359,14 @@ void MainComponent::updateFilterSettings()
 void MainComponent::updateOscFrequency()
 {
     //Determines even temperement tuning amount (one twelth movement based on octave below frequency) 
-    auto fineTune = (((freqSlider.getValue() * oscMult) / 2) / 12) * fineTuneSlider.getValue();
+    auto fineTune = (((OSC_1->getFreqSliderValue() * OSC_1->getOscMult()) / 2) / 12) * OSC_1->getFineTuneSliderValue();
     
     //Determine frequency addition/subtraction based on FM lfo phase and set depth value
-    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (/*lfoFreqDepthSlider.getValue()*/LfoFreq->getDepthSliderValue()*100);
+    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (LfoFreq->getDepthSliderValue()*100);
     
     //Determine next point in the osc wavetable for grabbing values
     //Multiply the current osc frequency (slider) by the wavetable size, then divide by the sample rate
-    oscIncrement = ((freqSlider.getValue() * oscMult) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
+    oscIncrement = ((OSC_1->getFreqSliderValue() * OSC_1->getOscMult()) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of osc table for grabbing values
     //"fmod" handles reaching past the osc table, and wrapping around to the appropriate phase from the beginning
@@ -436,7 +390,7 @@ void MainComponent::updateLFOFreqFrequency()
 {
     //Determine next point in the lfo FM wavetable for grabbing values
     //Multiply the current lfo FM frequency (slider) by the wavetable size, then divide by the sample rate
-    lfoFreqIncrement = (LfoFreq->getRateSliderValue()/*lfoFreqRateSlider.getValue()*/* 2) * lfoFreqTableSize / globalSampleRate;
+    lfoFreqIncrement = (LfoFreq->getRateSliderValue() * 2) * lfoFreqTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of lfo FM table for grabbing values
     //"fmod" handles reaching past the lfo FM table, and wrapping around to the appropriate phase from the beginning

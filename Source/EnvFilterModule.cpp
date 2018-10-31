@@ -10,19 +10,12 @@
 
 #include "EnvFilterModule.h"
 
-/*
 EnvFilterModule::EnvFilterModule ( Slider* as, Slider* ds, 
                   Slider* ss, Slider* rs,
                   Slider* ck, Slider* rk,
-                  TextButton* hpb,
-                  TextButton* lpb,
-                  TextButton* bpb,
-                  Label*  al, Label*  dl, 
-                  Label*  sl, Label*  rl )                 
+                  ComboBox *fB )                 
                 : AttackSlider (as), DecaySlider (ds), 
-                  SustainSlider (ss), ReleaseSlider (rs),
-                  AttackSliderLabel (al), DecaySliderLabel (dl),
-                  SustainSliderLabel (sl), ReleaseSliderLabel (rl)
+                  SustainSlider (ss), ReleaseSlider (rs)
                   
 {
     //
@@ -46,12 +39,24 @@ EnvFilterModule::EnvFilterModule ( Slider* as, Slider* ds,
     ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
     ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
-    LeftPanel = new LeftSide (ck, rk, hpb, lpb, bpb);
+    addAndMakeVisible ( AttackSliderLabel );
+    AttackSliderLabel.setText("A", dontSendNotification);
+
+    addAndMakeVisible ( DecaySliderLabel );
+    DecaySliderLabel.setText("D", dontSendNotification);
+
+    addAndMakeVisible ( SustainSliderLabel );
+    SustainSliderLabel.setText("S", dontSendNotification);
+            
+    addAndMakeVisible ( ReleaseSliderLabel );
+    ReleaseSliderLabel.setText("R", dontSendNotification);
+    
+    LeftPanel = new LeftSide (ck, rk, fB);
     addAndMakeVisible ( LeftPanel );
     
 }
 
-EnvFilterModule::~EnvFilterModule ()
+EnvFilterModule::~EnvFilterModule()
 {
     delete LeftPanel;
 }
@@ -62,7 +67,7 @@ void EnvFilterModule::paint (Graphics& g)
     buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
 
     // TEMP IDENTIFICATION TEXT
-    g.drawText ("EnvFILTER", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
+    g.drawText ("FILTER ENVELOPE", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 
 }
 
@@ -74,11 +79,12 @@ void EnvFilterModule::resized ()
 
     grid.templateRows = { 
         Track (1_fr) , 
-        Track (10_fr) 
+        Track (10_fr) ,
+        Track (1_fr)
     };
     
     grid.templateColumns = { 
-        Track (3_fr), 
+        Track (3_fr),
         Track (1_fr), 
         Track (1_fr), 
         Track (1_fr), 
@@ -95,7 +101,12 @@ void EnvFilterModule::resized ()
         GridItem (AttackSlider),
         GridItem (DecaySlider),
         GridItem (SustainSlider),
-        GridItem (ReleaseSlider)
+        GridItem (ReleaseSlider),
+        GridItem (nullptr),
+        GridItem (AttackSliderLabel),
+        GridItem (DecaySliderLabel),
+        GridItem (SustainSliderLabel),
+        GridItem (ReleaseSliderLabel)
     };
 
     Rectangle <int> bounds = getLocalBounds();
@@ -105,22 +116,53 @@ void EnvFilterModule::resized ()
 }
 
 
-// LEFT SIDE PANEL
-EnvFilterModule::LeftSide::LeftSide ( Slider* ck, Slider* rk, TextButton* hpb, TextButton* lpb, TextButton* bpb)
-                : CutoffKnob (ck), ResonanceKnob (rk), 
-                  HighPassButton (hpb), LowPassButton (lpb), BandPassButton (bpb)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EnvFilterModule::LeftSide::LeftSide( Slider* ck, Slider* rk, ComboBox *fB)
+        : CutoffKnob (ck), ResonanceKnob (rk), 
+          FilterBox (fB)
 {
-    //
     addAndMakeVisible ( CutoffKnob );
-    CutoffKnob->setRange ( 0, 100 );
-    CutoffKnob->setSliderStyle ( Slider::Rotary );
+    CutoffKnob->setRange ( 20.0, 2000.0 );
+    CutoffKnob->setSliderStyle ( Slider::RotaryVerticalDrag );
     CutoffKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    CutoffKnob->setValue(1000);
+    
+    addAndMakeVisible(CutoffLabel);
+    CutoffLabel.setText("Cutoff", dontSendNotification);
 
     addAndMakeVisible ( ResonanceKnob );
-    ResonanceKnob->setRange ( 0, 100 );
-    ResonanceKnob->setSliderStyle ( Slider::Rotary );
-    ResonanceKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );            
+    ResonanceKnob->setRange ( 1.0, 5.0 );
+    ResonanceKnob->setSliderStyle ( Slider::RotaryVerticalDrag );
+    ResonanceKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    ResonanceKnob->setValue(1);
+    
+    addAndMakeVisible(ResonanceLabel);
+    ResonanceLabel.setText("Res", dontSendNotification);
+    
+    addAndMakeVisible(FilterBox);
+    FilterBox->addItem("Low Pass", 1);
+    FilterBox->addItem("Band Pass", 2);
+    FilterBox->addItem("High Pass", 3);
+    
+    addAndMakeVisible(FilterTypeLabel);
+    FilterTypeLabel.setText("Filter Type", dontSendNotification);
 }
+
+EnvFilterModule::LeftSide::~LeftSide() {}
 
 void EnvFilterModule::LeftSide::paint (Graphics& g)
 {
@@ -133,23 +175,23 @@ void EnvFilterModule::LeftSide::resized ()
 
     using Track = Grid::TrackInfo;
 
-    grid.templateRows = { 
-        Track (1_fr) ,
-        Track (1_fr) , 
+    grid.templateRows = {  
         Track (1_fr), 
-        Track (1_fr) , 
+        Track (1_fr), 
         Track (1_fr)
     };
     
     grid.templateColumns = { 
-        Track (1_fr) 
+        Track (1_fr),
+        Track (2_fr)
     };
 
     grid.items = {
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
+        GridItem ( FilterTypeLabel ),
+        GridItem ( FilterBox ),
+        GridItem ( CutoffLabel ),
         GridItem ( CutoffKnob ),
+        GridItem ( ResonanceLabel ),
         GridItem ( ResonanceKnob )
     };
 
@@ -161,4 +203,12 @@ void EnvFilterModule::LeftSide::resized ()
 
 
 
-*/
+
+
+
+
+
+
+
+
+

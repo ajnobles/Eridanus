@@ -54,58 +54,33 @@ public:
     void sliderValueChanged (Slider* slider) override
     {
         //osc level
-        if (slider == &oscLevelSlider)
+        if ( OSC_1->isLevelSlider( slider ) )
         {
-            oscLevelSlider.setValue(oscLevelSlider.getValue());
+            OSC_1->setLevelSliderValue( OSC_1->getLevelSliderValue() );
         }
         
         //osc frequency
-        else if (slider == &freqSlider)
+        else if ( OSC_1->isFreqSlider( slider ) )
         {
-            freqSlider.setValue(freqSlider.getValue());
+            OSC_1->setFreqSliderValue( OSC_1->getFreqSliderValue() );
         }
         
-// <<<<<<< Integration_10_29_18
         //osc frequency fine tune
-        else if (slider == &fineTuneSlider)
+        else if ( OSC_1->isFineTuneSlider( slider ) )
         {
-            fineTuneSlider.setValue(fineTuneSlider.getValue());
+            OSC_1->setFineTuneSliderValue( OSC_1->getFineTuneSliderValue() );
         }
         
         //amp lfo rate (freq)
-        // else if (slider == &lfoAmpRateSlider)
-// =======
-        //lfo rate (freq)
         else if ( LfoAmp->isRateSlider( slider ) ) 
-// >>>>>>> Allen_Gui_Main
         {
             LfoAmp->setRateSliderValue( LfoAmp->getRateSliderValue() );
         }
         
-// <<<<<<< Integration_10_29_18
-        //amp lfo depth
-        // else if (slider == &lfoAmpDepthSlider)
-// =======
-        //lfo depth
         else if ( LfoAmp->isDepthSlider( slider ) )
-// >>>>>>> Allen_Gui_Main
         {
             LfoAmp->setDepthSliderValue( LfoAmp->getDepthSliderValue() );
         }
-        
-        //fm lfo rate (freq)
-        /*
-        else if (slider == &lfoFreqRateSlider)
-        {
-            lfoFreqRateSlider.setValue(lfoFreqRateSlider.getValue());
-        }
-        
-        //fm lfo depth
-        else if (slider == &lfoFreqDepthSlider)
-        {
-            lfoFreqDepthSlider.setValue(lfoFreqDepthSlider.getValue());
-        }
-        */
     }
   
     //function handles slider changes to osc and lfo frequencies
@@ -133,19 +108,6 @@ private:
     OwnedArray<Component> modules;
     OwnedArray<Component> scenes;
     
-// <<<<<<< Integration_10_29_18
-    // LFO FREQ MODULE
-    /*
-    Slider lfoFreqRateSlider;
-    Slider lfoFreqDepthSlider;
-    
-    Label  lfoFreqRateLabel;
-    Label  lfoFreqDepthLabel;
-    */  
-
-    String lfoFM = "FM LFO";
-    // OSC MODULE
-// =======
 
     // INPUT MODULE
     InputModule* Input;
@@ -153,39 +115,19 @@ private:
 
     // LFO FREQ MODULE
     LfoModule* LfoFreq;
+    String lfoFM = "FM LFO";
     
 
+    // OSCILLATOR 1
     //sliders for osc and filter controls
-// >>>>>>> Allen_Gui_Main
-    Slider oscLevelSlider;
-    Slider freqSlider;
-    Slider fineTuneSlider;
-    
-    ComboBox oscBox;   
-    String oscType;
-// <<<<<<< Integration_10_29_18
-    
-    ComboBox lengthBox;
-    String lengthType;
-    double oscMult;
-           
-    // LFO AMP
-    /*  
-    Slider lfoAmpRateSlider;
-    Slider lfoAmpDepthSlider;
-    
-    Label lfoAmpRateLabel;
-    Label lfoAmpDepthLabel;
-    */
-    String lfoAmp = "AMP LFO";
-    
-    // ENV AMP
-// =======
-   
+    OscillatorModule* OSC_1;
+          
 
     // LFO AMP
     LfoModule* LfoAmp;
-       
+    String lfoAmp = "AMP LFO";
+    
+
     // ENV FILTER
 // >>>>>>> Allen_Gui_Main
     Slider envAttackSlider;

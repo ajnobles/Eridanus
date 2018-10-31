@@ -19,7 +19,7 @@ public:
 
     // LfoModule (Slider* rs, Slider* ds, String* lfoName); 
 
-    LfoModule (); 
+    LfoModule ( String type ); 
     ~LfoModule () {};
     void paint (Graphics& g) override;    
     void resized () override;
@@ -41,12 +41,6 @@ private:
     Slider RateSlider;
     Slider DepthSlider;
     
-
-    // String* lfoType;
-    
-    // Label RateLabel;
-    // Label DepthLabel;
-
     String lfoType;
     
     Label  RateLabel;

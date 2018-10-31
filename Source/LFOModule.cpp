@@ -34,9 +34,9 @@ LfoModule::LfoModule (Slider* rs, Slider* ds, String* lfoName)
     DepthLabel.setText("Depth", dontSendNotification);
 */
 
-LfoModule::LfoModule ()
+LfoModule::LfoModule ( String type )
 {
-    lfoType = "FM LFO";
+    lfoType = type;
   
     addAndMakeVisible ( RateSlider );
     RateSlider.setRange ( 0, 10.0 );

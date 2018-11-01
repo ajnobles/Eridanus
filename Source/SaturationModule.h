@@ -16,17 +16,15 @@
 class SaturationModule : public CustomComponent
 {
 public:
-    SaturationModule ( Slider* dk,
-                       TextButton* tapeB,
-                       TextButton* tubeB );                       
-    ~SaturationModule() {};
+    SaturationModule ();                       
+    ~SaturationModule();
                   
     void paint (Graphics& g) override;
     void resized () override;
     
 private:    
-    Slider* DriveKnob;
+    Slider DriveKnob;
     
-    TextButton* TapeButton;
-    TextButton* TubeButton;
+    TextButton TapeButton;
+    TextButton TubeButton;
 };

@@ -128,60 +128,22 @@ private:
     String lfoAmp = "AMP LFO";
     
 
+    // AMP FILTER
+    AmpFilterModule* ampFilter;
+  
+
     // ENV FILTER
-// >>>>>>> Allen_Gui_Main
-    Slider envAttackSlider;
-    Slider envDecaySlider;
-    Slider envSustainSlider;
-    Slider envReleaseSlider;
- 
-    Label envAttackLabel;
-    Label envDecayLabel;
-    Label envSustainLabel;
-    Label envReleaseLabel;
-    
-    // ENV FILTER
-    Slider ampAttackSlider;
-    Slider ampDecaySlider;
-    Slider ampSustainSlider;
-    Slider ampReleaseSlider;
-    Slider cutoffSlider;
-    Slider resonanceSlider;
-    
-    ComboBox filterBox;
-    String filterType;      
-    
+    EnvFilterModule* envFilter;
+
+
     // SATURATION MODULE
-    Slider satDriveKnob;
-    
-    TextButton satTubeButton;
-    TextButton satTapeButton; 
-    
+    SaturationModule* saturation;
+   
+
     // OUTPUT MODULE
-    Slider outputLevelSlider;
-    Slider outputFeedbackSlider;
-    
-    Label outputLevelLabel;
-// <<<<<<< Integration_10_29_18
-    // Label outputFeedbackLabel;      
-// =======
-    Label outputFeedbackLabel;
-    
-
-    //combo boxes osc and filter types
-    // ComboBox filterBox;     
+    OutputModule *output;
 
 
-    //strings hold osc and filter selections
-    // String filterType;      
-    
-    // Slider cutoffSlider;
-    // Slider resonanceSlider;
-    
-    Label cutoffLabel;
-    Label resonanceLabel;
-// >>>>>>> Allen_Gui_Main
-    
     //holds audio device's sample rate for osc, lfo, and filter settings
     float globalSampleRate;  
  

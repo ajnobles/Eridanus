@@ -15,17 +15,18 @@
 class AmpFilterModule : public CustomComponent
 {
 public:
-	AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs);
+	AmpFilterModule ( );
     ~AmpFilterModule ();
 	
     void paint (Graphics& g) override;
 	void resized () override;
+
   
 private:
-	Slider* AttackSlider;
-	Slider* DecaySlider;
-	Slider* SustainSlider;
-	Slider* ReleaseSlider;
+	Slider AttackSlider;
+	Slider DecaySlider;
+	Slider SustainSlider;
+	Slider ReleaseSlider;
 
 	Label AttackSliderLabel;
 	Label DecaySliderLabel;

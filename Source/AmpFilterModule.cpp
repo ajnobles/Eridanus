@@ -11,39 +11,45 @@
 #include "AmpFilterModule.h"
 
 
-AmpFilterModule::AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs)
-	            : AttackSlider (as), DecaySlider (ds), 
-	              SustainSlider (ss), ReleaseSlider (rs)
+AmpFilterModule::AmpFilterModule ( )
 {
 	addAndMakeVisible ( AttackSlider );
-	AttackSlider->setRange ( 0, 100 );
-	AttackSlider->setSliderStyle ( Slider::LinearVertical );
-	AttackSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-// AmpFilterModule ( Slider* as, Slider* ds, Slider* ss, Slider* rs,
-//	              Label*  al, Label*  dl, Label*  sl, Label*  rl);
+	AttackSlider.setRange ( 0, 100 );
+	AttackSlider.setSliderStyle ( Slider::LinearVertical );
+	AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+
+    addAndMakeVisible ( DecaySlider );
+	DecaySlider.setRange ( 0, 100 );
+	DecaySlider.setSliderStyle ( Slider::LinearVertical );
+	DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
 
 	addAndMakeVisible ( SustainSlider );
-	SustainSlider->setRange ( 0, 100 );
-	SustainSlider->setSliderStyle ( Slider::LinearVertical );
-	SustainSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+	SustainSlider.setRange ( 0, 100 );
+	SustainSlider.setSliderStyle ( Slider::LinearVertical );
+	SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
 	addAndMakeVisible ( ReleaseSlider );
-	ReleaseSlider->setRange ( 0, 100 );
-	ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
-	ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+	ReleaseSlider.setRange ( 0, 100 );
+	ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
+	ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 	
 	addAndMakeVisible ( AttackSliderLabel );
     AttackSliderLabel.setText("A", dontSendNotification);
+    AttackSliderLabel.setJustificationType ( Justification::centred );
 
     addAndMakeVisible ( DecaySliderLabel );
     DecaySliderLabel.setText("D", dontSendNotification);
+    DecaySliderLabel.setJustificationType ( Justification::centred );
 
     addAndMakeVisible ( SustainSliderLabel );
     SustainSliderLabel.setText("S", dontSendNotification);
+    SustainSliderLabel.setJustificationType ( Justification::centred );
             
     addAndMakeVisible ( ReleaseSliderLabel );
     ReleaseSliderLabel.setText("R", dontSendNotification);
+    ReleaseSliderLabel.setJustificationType ( Justification::centred );
+
 }
 
 AmpFilterModule::~AmpFilterModule ()
@@ -66,22 +72,32 @@ void AmpFilterModule::resized ()
 
 	using Track = Grid::TrackInfo;
 
-	grid.templateRows = { Track (1_fr), Track (10_fr), Track (1_fr) };
-	grid.templateColumns = { Track (1_fr), Track (1_fr), Track (1_fr), Track (1_fr) };
+	grid.templateRows = { 
+        Track (1_fr),
+        Track (10_fr),  
+        Track (1_fr) 
+    };
+
+	grid.templateColumns = { 
+        Track (1_fr), 
+        Track (1_fr), 
+        Track (1_fr), 
+        Track (1_fr) 
+    };
 
 	grid.items = {
-	    GridItem ( nullptr ),
-	    GridItem ( nullptr ),
-	    GridItem ( nullptr ),
-	    GridItem ( nullptr ),
+	    GridItem ( nullptr  ),
+	    GridItem ( nullptr  ),
+	    GridItem ( nullptr  ),
+	    GridItem ( nullptr  ),
 	    GridItem ( AttackSlider  ),
 	    GridItem ( DecaySlider   ),
 	    GridItem ( SustainSlider ),
 	    GridItem ( ReleaseSlider ),
-	    GridItem (AttackSliderLabel),
-        GridItem (DecaySliderLabel),
-        GridItem (SustainSliderLabel),
-        GridItem (ReleaseSliderLabel)
+	    GridItem ( AttackSliderLabel ),
+        GridItem ( DecaySliderLabel ),
+        GridItem ( SustainSliderLabel ),
+        GridItem ( ReleaseSliderLabel )
 	};
 
 	Rectangle <int> bounds = getLocalBounds();
@@ -92,3 +108,17 @@ void AmpFilterModule::resized ()
 
 	grid.performLayout ( bounds );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

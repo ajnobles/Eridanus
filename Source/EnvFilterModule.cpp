@@ -10,34 +10,28 @@
 
 #include "EnvFilterModule.h"
 
-EnvFilterModule::EnvFilterModule ( Slider* as, Slider* ds, 
-                  Slider* ss, Slider* rs,
-                  Slider* ck, Slider* rk,
-                  ComboBox *fB )                 
-                : AttackSlider (as), DecaySlider (ds), 
-                  SustainSlider (ss), ReleaseSlider (rs)
-                  
+EnvFilterModule::EnvFilterModule ( )
 {
     //
     addAndMakeVisible ( AttackSlider );
-    AttackSlider->setRange ( 0 , 100 );
-    AttackSlider->setSliderStyle ( Slider::LinearVertical );
-    AttackSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    AttackSlider.setRange ( 0 , 100 );
+    AttackSlider.setSliderStyle ( Slider::LinearVertical );
+    AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( DecaySlider );
-    DecaySlider->setRange ( 0 , 100 );
-    DecaySlider->setSliderStyle ( Slider::LinearVertical );
-    DecaySlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DecaySlider.setRange ( 0 , 100 );
+    DecaySlider.setSliderStyle ( Slider::LinearVertical );
+    DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( SustainSlider );
-    SustainSlider->setRange ( 0 , 100 );
-    SustainSlider->setSliderStyle ( Slider::LinearVertical );
-    SustainSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    SustainSlider.setRange ( 0 , 100 );
+    SustainSlider.setSliderStyle ( Slider::LinearVertical );
+    SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( ReleaseSlider );
-    ReleaseSlider->setRange ( 0 , 100 );
-    ReleaseSlider->setSliderStyle ( Slider::LinearVertical );
-    ReleaseSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    ReleaseSlider.setRange ( 0 , 100 );
+    ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
+    ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( AttackSliderLabel );
     AttackSliderLabel.setText("A", dontSendNotification);
@@ -51,7 +45,7 @@ EnvFilterModule::EnvFilterModule ( Slider* as, Slider* ds,
     addAndMakeVisible ( ReleaseSliderLabel );
     ReleaseSliderLabel.setText("R", dontSendNotification);
     
-    LeftPanel = new LeftSide (ck, rk, fB);
+    LeftPanel = new LeftSide ( );
     addAndMakeVisible ( LeftPanel );
     
 }
@@ -92,21 +86,21 @@ void EnvFilterModule::resized ()
     };
 
     grid.items = {
-        GridItem (nullptr),
-        GridItem (nullptr),
-        GridItem (nullptr),
-        GridItem (nullptr),
-        GridItem (nullptr),
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
+        GridItem ( nullptr ),
         GridItem ( LeftPanel ),
-        GridItem (AttackSlider),
-        GridItem (DecaySlider),
-        GridItem (SustainSlider),
-        GridItem (ReleaseSlider),
-        GridItem (nullptr),
-        GridItem (AttackSliderLabel),
-        GridItem (DecaySliderLabel),
-        GridItem (SustainSliderLabel),
-        GridItem (ReleaseSliderLabel)
+        GridItem ( AttackSlider ),
+        GridItem ( DecaySlider ),
+        GridItem ( SustainSlider ),
+        GridItem ( ReleaseSlider ),
+        GridItem ( nullptr ),
+        GridItem ( AttackSliderLabel ),
+        GridItem ( DecaySliderLabel ),
+        GridItem ( SustainSliderLabel ),
+        GridItem ( ReleaseSliderLabel )
     };
 
     Rectangle <int> bounds = getLocalBounds();
@@ -116,47 +110,70 @@ void EnvFilterModule::resized ()
 }
 
 
+void EnvFilterModule::comboBoxUpdate ( String text )
+{
+    LeftPanel->comboBoxUpdate( text );
+}
 
 
+String EnvFilterModule::getFilterType()
+{
+    return LeftPanel->getFilterType();
+}
 
 
+float EnvFilterModule::getCutoffKnobValue()
+{
+    return LeftPanel->getCutoffKnobValue();
+}
+
+void EnvFilterModule::setCutoffKnobValue( float v )
+{
+    LeftPanel->setCutoffKnobValue( v );
+}
 
 
+float EnvFilterModule::getResonanceKnobValue()
+{
+    return LeftPanel->getResonanceKnobValue();
+}
+
+void EnvFilterModule::setResonanceKnobValue( float v )
+{
+    LeftPanel->setResonanceKnobValue( v );
+}
+
+ComboBox& EnvFilterModule::getFilterBox()
+{
+    return LeftPanel->getFilterBox();
+}
 
 
-
-
-
-
-
-
-
-EnvFilterModule::LeftSide::LeftSide( Slider* ck, Slider* rk, ComboBox *fB)
-        : CutoffKnob (ck), ResonanceKnob (rk), 
-          FilterBox (fB)
+EnvFilterModule::LeftSide::LeftSide( )
 {
     addAndMakeVisible ( CutoffKnob );
-    CutoffKnob->setRange ( 20.0, 2000.0 );
-    CutoffKnob->setSliderStyle ( Slider::RotaryVerticalDrag );
-    CutoffKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-    CutoffKnob->setValue(1000);
+    CutoffKnob.setRange ( 20.0, 2000.0 );
+    CutoffKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
+    CutoffKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    CutoffKnob.setValue(1000);
     
     addAndMakeVisible(CutoffLabel);
     CutoffLabel.setText("Cutoff", dontSendNotification);
 
     addAndMakeVisible ( ResonanceKnob );
-    ResonanceKnob->setRange ( 1.0, 5.0 );
-    ResonanceKnob->setSliderStyle ( Slider::RotaryVerticalDrag );
-    ResonanceKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-    ResonanceKnob->setValue(1);
+    ResonanceKnob.setRange ( 1.0, 5.0 );
+    ResonanceKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
+    ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    ResonanceKnob.setValue(1);
     
     addAndMakeVisible(ResonanceLabel);
     ResonanceLabel.setText("Res", dontSendNotification);
     
     addAndMakeVisible(FilterBox);
-    FilterBox->addItem("Low Pass", 1);
-    FilterBox->addItem("Band Pass", 2);
-    FilterBox->addItem("High Pass", 3);
+    FilterBox.addItem("Low Pass", 1);
+    FilterBox.addItem("Band Pass", 2);
+    FilterBox.addItem("High Pass", 3);
+    FilterBox.setSelectedId( 1 );
     
     addAndMakeVisible(FilterTypeLabel);
     FilterTypeLabel.setText("Filter Type", dontSendNotification);
@@ -202,7 +219,45 @@ void EnvFilterModule::LeftSide::resized ()
 }
 
 
+void EnvFilterModule::LeftSide::comboBoxUpdate ( String text )
+{
+    filterType = text;
+    printf("EnvFilter Combo Update\n");
+}
 
+
+String EnvFilterModule::LeftSide::getFilterType()
+{
+    return filterType; 
+}
+
+
+float EnvFilterModule::LeftSide::getCutoffKnobValue()
+{
+    return CutoffKnob.getValue();
+}
+
+void EnvFilterModule::LeftSide::setCutoffKnobValue( float v )
+{
+    CutoffKnob.setValue( v );
+}
+
+
+float EnvFilterModule::LeftSide::getResonanceKnobValue()
+{
+    return ResonanceKnob.getValue();
+}
+
+void EnvFilterModule::LeftSide::setResonanceKnobValue( float v )
+{
+    ResonanceKnob.setValue( v );
+}
+
+
+ComboBox& EnvFilterModule::LeftSide::getFilterBox()
+{
+    return FilterBox;
+}
 
 
 

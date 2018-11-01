@@ -30,47 +30,24 @@ MainComponent::MainComponent()
     modules.add ( LfoAmp );
    
 
-    // AMP FILTER
-    modules.add (new AmpFilterModule ( 
-        &envAttackSlider, 
-        &envDecaySlider, 
-        &envSustainSlider, 
-        &envReleaseSlider
-    ) );
-   
     // ENV FILTER
-    modules.add (new EnvFilterModule ( 
-        &ampAttackSlider, 
-        &ampDecaySlider, 
-        &ampSustainSlider, 
-        &ampReleaseSlider,
-        &cutoffSlider,
-        &resonanceSlider,
-        &filterBox
-    ) );
-    
+    envFilter = new EnvFilterModule();
+    modules.add ( envFilter );
+  
+
     // AMP FILTER
-    modules.add (new AmpFilterModule ( 
-        &envAttackSlider, 
-        &envDecaySlider, 
-        &envSustainSlider, 
-        &envReleaseSlider
-    ) );
-    
+    ampFilter = new AmpFilterModule();
+    modules.add( ampFilter );
+   
+
     // SATURATION
-    modules.add ( new SaturationModule (
-        &satDriveKnob,  // DRIVE KNOB
-        &satTapeButton, // TAPE BUTTON
-        &satTubeButton  // TUBE BUTTON
-    ) );
-    
+    saturation = new SaturationModule ();
+    modules.add ( saturation );
+   
+
     // OUTPUT
-    modules.add ( new OutputModule (
-        &outputLevelSlider, 
-        &outputFeedbackSlider,
-        &outputLevelLabel,  
-        &outputFeedbackLabel 
-    ) );
+    output = new OutputModule();
+    modules.add ( output );
 
     int numModules = modules.size();
     for (int i = 0; i < numModules; i++) {
@@ -82,7 +59,8 @@ MainComponent::MainComponent()
     addAndMakeVisible ( scenes[0] );
     
     // COMPONENT LISTENERS
-    filterBox.addListener(this);
+    // filterBox.addListener(this);
+    envFilter->getFilterBox().addListener( this );
     OSC_1->getOscBox().addListener( this );
     OSC_1->getLengthBox().addListener( this );
 
@@ -96,12 +74,11 @@ MainComponent::MainComponent()
     //set combo box selections ("8", sine, low pass)     
     
     //set filter combo box to low pass filter
-    filterBox.setSelectedId(1);
+    // filterBox.setSelectedId(1);
     
     //set osc combo box to sine
     
     //set sliders for osc and filter controls
-    cutoffSlider.setValue(1000);
 }
 
 MainComponent::~MainComponent()
@@ -315,22 +292,26 @@ void MainComponent::resized()
 //Handles combo box changes - grab selection's text
 void MainComponent::comboBoxChanged(ComboBox* box)
 {
+    String text = box->getText();
+
     //handles changes to filter type
-    if (box->getText() == "Low Pass" || box->getText() == "Band Pass" || box->getText() == "High Pass")
+    if (text  == "Low Pass" || text == "Band Pass" || text == "High Pass")
     {
-        filterType = box->getText();
+        envFilter->comboBoxUpdate( text );
     }
 
-    OSC_1->comboBoxUpdate( box->getText() );
+    OSC_1->comboBoxUpdate( text );
 }
 
 //Updates filter parameters set by user 
 void MainComponent::updateFilterSettings()
 {
     //grab and store filter slider values
-    auto cutoff = (float)cutoffSlider.getValue();
-    auto resonance = (float)resonanceSlider.getValue();
+    auto cutoff = (float) envFilter->getCutoffKnobValue(); // cutoffSlider.getValue();
+    auto resonance = (float) envFilter->getResonanceKnobValue(); // resonanceSlider.getValue();
     
+    String filterType = envFilter->getFilterType();
+
     //handles band pass selection in combo box
     if (filterType == "Band Pass")
     {

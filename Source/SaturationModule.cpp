@@ -10,24 +10,24 @@
 
 #include "SaturationModule.h"
 
-SaturationModule::SaturationModule ( Slider* dk,
-                   TextButton* tapeB,
-                   TextButton* tubeB )
-                 : DriveKnob (dk), TapeButton (tapeB), TubeButton (tubeB)
+SaturationModule::SaturationModule ( )
 {
     //
     addAndMakeVisible ( DriveKnob );
-    DriveKnob->setRange ( 0, 100 );
-    DriveKnob->setSliderStyle ( Slider::Rotary );
-    DriveKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DriveKnob.setRange ( 0, 100 );
+    DriveKnob.setSliderStyle ( Slider::Rotary );
+    DriveKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( TapeButton );
-    TapeButton->setButtonText ( "TB" );
+    TapeButton.setButtonText ( "TB" );
 
     addAndMakeVisible ( TubeButton );
-    TubeButton->setButtonText ( "TB" );
+    TubeButton.setButtonText ( "TB" );
 }
 
+SaturationModule::~SaturationModule ( )
+{
+}
               
 void SaturationModule::paint (Graphics& g)
 {

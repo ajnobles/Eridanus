@@ -3,6 +3,8 @@
 <JUCERPROJECT id="F2Bzt7" name="Eridanus" projectType="guiapp" jucerVersion="5.3.2">
   <MAINGROUP id="jt5MDY" name="Eridanus">
     <GROUP id="{6E9F95A2-4251-AEC8-D63B-9022AB105C8C}" name="Source">
+      <FILE id="Dlm74I" name="Keys.cpp" compile="1" resource="0" file="Source/Keys.cpp"/>
+      <FILE id="MIhUNm" name="Keys.h" compile="0" resource="0" file="Source/Keys.h"/>
       <FILE id="sRniJX" name="OutputModule.cpp" compile="1" resource="0"
             file="Source/OutputModule.cpp"/>
       <FILE id="Zf5g5X" name="OutputModule.h" compile="0" resource="0" file="Source/OutputModule.h"/>

@@ -235,15 +235,14 @@ void MainComponent::resized()
     };
     
     grid.templateColumns = {
+    //     Track (1_fr),
         Track (1_fr),
+        Track (3_fr),
         Track (1_fr),
+        Track (3_fr),
         Track (2_fr),
         Track (1_fr),
-        Track (2_fr),
-        Track (2_fr),
-        Track (1_fr),
-        Track (1_fr),
-        Track (1_fr),
+        Track (1_fr)
     };
     
 /*
@@ -261,15 +260,15 @@ void MainComponent::resized()
      */
     
     grid.items = {
-        GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),
-        GridItem ( modules[1] ).withArea( 1, 2, 3, 2 ),
-        GridItem ( modules[2] ).withArea( 1, 3, 2, 3 ),
-        GridItem ( modules[3] ).withArea( 1, 4, 3, 4 ),
-        GridItem ( modules[4] ).withArea( 1, 5, 3, 5 ),
-        GridItem ( modules[5] ).withArea( 1, 6, 3, 6 ),
-        GridItem ( modules[6] ).withArea( 1, 7, 3, 7 ),
-        GridItem ( modules[7] ).withArea( 1, 8, 3, 8 ),
-        GridItem ( modules[8] ).withArea( 1, 9, 3, 9 ),
+        // GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),
+        GridItem ( modules[1] ).withArea( 1, 1, 3, 1 ),
+        GridItem ( modules[2] ).withArea( 1, 2, 2, 2 ),
+        GridItem ( modules[3] ).withArea( 1, 3, 3, 3 ),
+        GridItem ( modules[4] ).withArea( 1, 4, 3, 4 ),
+        GridItem ( modules[5] ).withArea( 1, 5, 3, 5 ),
+        GridItem ( modules[6] ).withArea( 1, 6, 3, 6 ),
+        GridItem ( modules[7] ).withArea( 1, 7, 3, 7 ),
+        GridItem ( modules[8] ).withArea( 1, 8, 3, 8 ),
         GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
     };
 

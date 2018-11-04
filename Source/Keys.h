@@ -12,15 +12,16 @@
 
 #include "CustomComponent.h"
 
-class Keys : public CustomComponent 
+class Keys : public CustomComponent,
+             public LookAndFeel_V4
 {
 public:
-    Keys() {};
-    ~Keys() {};
+    Keys();
+    ~Keys();
 
-    void paint( Graphics& g ) override {}
-    void resized () override {}
+    void paint( Graphics& g ) override;
+    void resized () override;
 
 private:
-
+    ToggleButton key;
 };

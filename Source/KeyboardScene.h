@@ -43,6 +43,7 @@ public:
             void resized () override;
 
         private:
+            TextButton whiteKey;
         };
  
 
@@ -56,6 +57,7 @@ public:
             void resized () override;
 
         private:
+            TextButton blackKey;
         };
 
     private:

@@ -135,6 +135,8 @@ void KeyboardScene::Octave::resized (  )
     using Track = Grid::TrackInfo;
 
     grid.templateRows    = { 
+        Track (1_fr),
+        Track (1_fr),
         Track (1_fr)
     };
     
@@ -148,18 +150,18 @@ void KeyboardScene::Octave::resized (  )
 
 
     grid.items = {
-        GridItem ( c1      ).withArea( 1, 1,  1, 4 ),
-        GridItem ( cSharp1 ).withArea( 1, 3,  1, 5 ),
-        GridItem ( d1      ).withArea( 1, 4,  1, 7 ),
-        GridItem ( dSharp1 ).withArea( 1, 6,  1, 8 ),
-        GridItem ( e1      ).withArea( 1, 7,  1, 10 ),
-        GridItem ( f1      ).withArea( 1, 10, 1, 13 ),
-        GridItem ( fSharp1 ).withArea( 1, 12, 1, 14 ),
-        GridItem ( g1      ).withArea( 1, 13, 1, 16 ),
-        GridItem ( gSharp1 ).withArea( 1, 15, 1, 17 ),
-        GridItem ( a2      ).withArea( 1, 16, 1, 19 ),
-        GridItem ( aSharp2 ).withArea( 1, 18, 1, 20 ),
-        GridItem ( b2      ).withArea( 1, 19, 1, 22 )
+        GridItem ( c1      ).withArea( 1, 1,  4, 4 ),
+        GridItem ( cSharp1 ).withArea( 1, 3,  3, 5 ),
+        GridItem ( d1      ).withArea( 1, 4,  4, 7 ),
+        GridItem ( dSharp1 ).withArea( 1, 6,  3, 8 ),
+        GridItem ( e1      ).withArea( 1, 7,  4, 10 ),
+        GridItem ( f1      ).withArea( 1, 10, 4, 13 ),
+        GridItem ( fSharp1 ).withArea( 1, 12, 3, 14 ),
+        GridItem ( g1      ).withArea( 1, 13, 4, 16 ),
+        GridItem ( gSharp1 ).withArea( 1, 15, 3, 17 ),
+        GridItem ( a2      ).withArea( 1, 16, 4, 19 ),
+        GridItem ( aSharp2 ).withArea( 1, 18, 3, 20 ),
+        GridItem ( b2      ).withArea( 1, 19, 4, 22 )
     };
 
     Rectangle <int> bounds = getLocalBounds();
@@ -172,6 +174,9 @@ void KeyboardScene::Octave::resized (  )
 
 KeyboardScene::Octave::WhiteKey::WhiteKey()
 {
+    addAndMakeVisible( whiteKey );
+    whiteKey.setColour( TextButton::buttonColourId, Colours::ivory );
+    whiteKey.setColour( TextButton::buttonOnColourId, Colours::green );
 }
 
 
@@ -185,13 +190,32 @@ void KeyboardScene::Octave::WhiteKey::paint ( Graphics& g )
 {
     g.setColour( Colours::ivory );
 
-    // DRAW FILLED RECTANGLE
-    g.fillRect ( getLocalBounds() );
+    LookAndFeel_V4::drawButtonBackground( g, whiteKey, Colours::ivory, false, false );
 }
 
 
 void KeyboardScene::Octave::WhiteKey::resized ( )
 {
+
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = {
+        Track (1_fr)
+    };
+
+    grid.templateColumns = {
+        Track (1_fr)
+    };
+
+    
+    grid.items = {
+        GridItem ( whiteKey )
+    };
+
+    grid.performLayout( getLocalBounds() );
+
 }
 
 
@@ -199,6 +223,10 @@ void KeyboardScene::Octave::WhiteKey::resized ( )
 
 KeyboardScene::Octave::BlackKey::BlackKey()
 {
+    addAndMakeVisible( blackKey ); 
+    blackKey.setColour( TextButton::buttonColourId, Colours::black );
+    blackKey.setColour( TextButton::buttonOnColourId, Colours::green );
+
 }
 
 
@@ -212,14 +240,35 @@ void KeyboardScene::Octave::BlackKey::paint ( Graphics& g )
 {
     g.setColour( Colours::black );
 
+    LookAndFeel_V4::drawButtonBackground( g, blackKey, Colours::black, false, false );
+
     // DRAW FILLED RECTANGLE
-    Rectangle <int> bounds = getLocalBounds();
-    bounds.setHeight( bounds.getHeight() * (2.0 / 3.0)  );
-    g.fillRect ( bounds );
+//    Rectangle <int> bounds = getLocalBounds();
+//    bounds.setHeight( bounds.getHeight() * (2.0 / 3.0)  );
+//    g.fillRect ( bounds );
 
 }
 
 
 void KeyboardScene::Octave::BlackKey::resized ( )
 {
+    Grid grid;
+
+    using Track = Grid::TrackInfo;
+
+    grid.templateRows = {
+        Track (1_fr)
+    };
+
+    grid.templateColumns = {
+        Track (1_fr)
+    };
+
+    
+    grid.items = {
+        GridItem ( blackKey )
+    };
+
+    grid.performLayout( getLocalBounds() );
+
 }

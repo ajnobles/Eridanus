@@ -9,3 +9,21 @@
 */
 
 #include "Keys.h"
+
+
+Keys::Keys()
+{}
+
+
+Keys::~Keys()
+{}
+
+
+
+void Keys::paint( Graphics& G )
+{}
+
+
+
+void Keys::resized()
+{}

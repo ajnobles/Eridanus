@@ -27,6 +27,15 @@ MainComponent::MainComponent()
         &oscBox
     ) );
     
+    // OSCILLATORS -Two
+    modules.add (new OscillatorModule ( 
+        &oscLevelSliderTwo,
+        &lengthBoxTwo,
+        &fineTuneSliderTwo,
+        &freqSliderTwo, 
+        &oscBoxTwo
+    ) );
+    
     // LFO AMP
     modules.add (new LfoModule (
         &lfoAmpRateSlider,
@@ -56,8 +65,8 @@ MainComponent::MainComponent()
     // SATURATION
     modules.add ( new SaturationModule (
         &satDriveKnob,  // DRIVE KNOB
-        &satTapeButton, // TAPE BUTTON
-        &satTubeButton  // TUBE BUTTON
+        &satTubeButton, // TAPE BUTTON
+        &satTapeButton  // TUBE BUTTON
     ) );
     
     // OUTPUT
@@ -79,9 +88,13 @@ MainComponent::MainComponent()
     
     // COMPONENT LISTENERS
     oscBox.addListener(this);
+    oscBoxTwo.addListener(this);
     filterBox.addListener(this);
     lengthBox.addListener(this);
-
+    lengthBoxTwo.addListener(this);
+    satTubeButton.addListener(this);
+    satTapeButton.addListener(this);
+    
     //set window size
     setSize (1600, 800);
     
@@ -90,8 +103,11 @@ MainComponent::MainComponent()
     
     //set combo box selections ("8", sine, low pass)     
     lengthBox.setSelectedId(2);
-    oscBox.setSelectedId(1);    
-    filterBox.setSelectedId(1);  
+    lengthBoxTwo.setSelectedId(2);
+    oscBox.setSelectedId(1);
+    oscBoxTwo.setSelectedId(1);    
+    filterBox.setSelectedId(1);
+    satType = 1;
 }
 
 MainComponent::~MainComponent()
@@ -109,11 +125,13 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     
     //grab osc and lfo slider frequency values 
     oscFrequency = freqSlider.getValue();
+    oscFrequencyTwo = freqSlider.getValue();
     lfoFrequency = lfoAmpRateSlider.getValue();
     lfoFreqFrequency = lfoFreqRateSlider.getValue();
         
     //set for starting at beginning of osc and lfo wavetables
     oscPhase = 0;
+    oscPhaseTwo = 0;
     lfoPhase = 0;
     lfoFreqPhase = 0;
     
@@ -126,6 +144,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     //Multiply the current osc frequency by the wavetable size, then divide by the sample rate
     //Note: initialized here, but modifiable via functions 
     oscIncrement = oscFrequency * oscTableSize / globalSampleRate;
+    oscIncrementTwo = oscFrequencyTwo * oscTableSize / globalSampleRate;
     lfoIncrement = lfoFrequency * lfoTableSize / globalSampleRate;
     lfoFreqIncrement = lfoFreqFrequency * lfoFreqTableSize / globalSampleRate;
     
@@ -142,6 +161,22 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
         
     //initialize filter 
     stateVariableFilter.prepare(spec);
+ 
+    //initialize values for LinearSmoothedValue class
+    smoothOscOneOutput.reset(sampleRate, 0.035);        //sample rate and ramp length
+    smoothOscOneOutput.setValue(0.0);
+    
+    smoothOscTwoOutput.reset(sampleRate, 0.035);
+    smoothOscTwoOutput.setValue(0.0);
+    
+    smoothLFOAmpDepth.reset(sampleRate, 0.035);
+    smoothLFOAmpDepth.setValue(0.0);
+    
+    smoothDrive.reset(sampleRate, 0.035);
+    smoothDrive.setValue(0.0);
+    
+    smoothOutput.reset(sampleRate, 0.035);
+    smoothOutput.setValue(0.0);
 }
 
 
@@ -150,8 +185,18 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
 {
     //grab osc and lfo depth slider values
     auto oscLevel = (float) oscLevelSlider.getValue();
+    auto oscLevelTwo = (float) oscLevelSliderTwo.getValue();
     auto lfoDepth = (float) lfoAmpDepthSlider.getValue();
-        
+    auto drive = (float) satDriveKnob.getValue();
+    auto output = (float) outputLevelSlider.getValue();
+    
+    //set target smooth values
+    smoothOscOneOutput.setValue(oscLevel);
+    smoothOscTwoOutput.setValue(oscLevelTwo);
+    smoothLFOAmpDepth.setValue(lfoDepth);
+    smoothDrive.setValue(drive);
+    smoothOutput.setValue(output);
+    
     //create pointers to beginning of both channels' buffer (for writing)
     auto* channelOne = bufferToFill.buffer->getWritePointer (0, bufferToFill.startSample);
     auto* channelTwo = bufferToFill.buffer->getWritePointer( 1, bufferToFill.startSample);
@@ -159,48 +204,48 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     //loop with conditional statements handles osc selection (from wavetables) for writing to buffer
     for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
     {
-       //grab the lfo (amp) phase position
-       float lfoPhasePosition = lfoAmpTable[(int)lfoPhase];
+        //grab the lfo (amp) phase position
+        float lfoPhasePosition = lfoAmpTable[(int)lfoPhase];
        
-       //For the following osc's, grab the sample (from wavetable) in accordance to current phase 
-       //Thereafter, multiply against the osc level slider to determine amplitude
-       //Next, multiply the lfo (amp) with the lfo slider (depth) to determine modulation value
-       //Next, multiply the prior products to determine the lfo (amp) effect to the osc sample
-       //Next, multiply this original osc sample with (1 - lfo depth) to create a "dry" signal
-       //Lastly, add this "wet" and "dry" together, where the lfo's depth handles the ratio between the mentioned
-       if (oscType == "Triangle")
-       {
-           channelOne[sample] = ((triangleTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((triangleTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-           channelTwo[sample] = ((triangleTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((triangleTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-       }
-       else if (oscType == "Square")
-       {
-           channelOne[sample] = ((squareTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((squareTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-           channelTwo[sample] = ((squareTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((squareTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-       }
-       else if (oscType == "Saw")
-       {
-           channelOne[sample] = ((sawTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((sawTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-           channelTwo[sample] = ((sawTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((sawTable[(int)oscPhase] * oscLevel) * (1.0f - lfoDepth));
-       }
-       else //sine
-       {
-           channelOne[sample] = ((sineTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((sineTable[(int)oscPhase] * oscLevel) * (1.0 - lfoDepth));
-           channelTwo[sample] = ((sineTable[(int)oscPhase] * oscLevel) * (lfoDepth * lfoPhasePosition)) + 
-                                ((sineTable[(int)oscPhase] * oscLevel) * (1.0 - lfoDepth));
-       }
+        //Grab the samples from wavetables and add together (in accordance to current phase)
+        //Multiply against the osc level slider to determine amplitude      
+        if (smoothOscOneOutput.isSmoothing())
+        {
+            channelOne[sample] = (wavetableOne[(int)oscPhase] * smoothOscOneOutput.getNextValue()) + (wavetableTwo[(int)oscPhaseTwo] * oscLevelTwo);
+            channelTwo[sample] = (wavetableOne[(int)oscPhase] * smoothOscOneOutput.getNextValue()) + (wavetableTwo[(int)oscPhaseTwo] * oscLevelTwo); 
+        }
+        else if (smoothOscTwoOutput.isSmoothing())
+        {
+            channelOne[sample] = (wavetableOne[(int)oscPhase] * oscLevel) + (wavetableTwo[(int)oscPhaseTwo] * smoothOscTwoOutput.getNextValue());
+            channelTwo[sample] = (wavetableOne[(int)oscPhase] * oscLevel) + (wavetableTwo[(int)oscPhaseTwo] * smoothOscTwoOutput.getNextValue());             
+        }
+        else 
+        {
+            channelOne[sample] = (wavetableOne[(int)oscPhase] * oscLevel) + (wavetableTwo[(int)oscPhaseTwo] * oscLevelTwo);
+            channelTwo[sample] = (wavetableOne[(int)oscPhase] * oscLevel) + (wavetableTwo[(int)oscPhaseTwo] * oscLevelTwo); 
+        }
+ 
+        //LFO Treatment - Wet to Dry Ratio
+        if (smoothLFOAmpDepth.isSmoothing())
+        {
+            channelOne[sample] = ((channelOne[sample]) * (smoothLFOAmpDepth.getNextValue() * lfoPhasePosition)) + 
+                                 ((channelOne[sample]) * (1.0 - smoothLFOAmpDepth.getNextValue()));
+            channelTwo[sample] = ((channelTwo[sample]) * (smoothLFOAmpDepth.getNextValue() * lfoPhasePosition)) + 
+                                 ((channelTwo[sample]) * (1.0 - smoothLFOAmpDepth.getNextValue()));
+        }
+        else
+        {
+            channelOne[sample] = ((channelOne[sample]) * (lfoDepth * lfoPhasePosition)) + 
+                                 ((channelOne[sample]) * (1.0 - lfoDepth));
+            channelTwo[sample] = ((channelTwo[sample]) * (lfoDepth * lfoPhasePosition)) + 
+                                 ((channelTwo[sample]) * (1.0 - lfoDepth));  
+        }
        
-       //update osc and lfo frequencies/phases
-       updateOscFrequency();
-       updateLFOAmpFrequency();
-       updateLFOFreqFrequency();
+        //update osc and lfo frequencies/phases
+        updateOscFrequency();
+        updateOscFrequencyTwo();
+        updateLFOAmpFrequency();
+        updateLFOFreqFrequency();
     }
      
     //grab filled buffer and store in sample block (so we can use with the filter)
@@ -211,6 +256,81 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     
     //process sample block (buffer) with the filter
     stateVariableFilter.process(dsp::ProcessContextReplacing<float> (sampleBlock));
+    
+    //Saturation Button One handling
+    if (satType == 1)
+    {
+        for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+        {
+            if (smoothDrive.isSmoothing())
+            {
+                channelOne[sample] = (channelOne[sample] * 0.9) + (smoothDrive.getNextValue() * channelOne[sample]);             
+                channelTwo[sample] = (channelTwo[sample] * 0.9) + (smoothDrive.getNextValue() * channelTwo[sample]);
+            }
+            else
+            {
+                channelOne[sample] = (channelOne[sample] * 0.9) + (drive * channelOne[sample]);              
+                channelTwo[sample] = (channelTwo[sample] * 0.9) + (drive * channelTwo[sample]);
+            }
+            
+            if (channelOne[sample] > 1.0f) 
+                {channelOne[sample] = 1.0f;}
+                
+            if (channelOne[sample] < -1.0f) 
+                {channelOne[sample] = -1.0f;}
+                
+            if (channelTwo[sample] > 1.0f) 
+                {channelTwo[sample] = 1.0f;}
+                
+            if (channelTwo[sample] < -1.0f) 
+                {channelTwo[sample] = -1.0f;}
+        }
+    }
+    
+    //Saturation Button Two Handling
+    if (satType == 2)
+    {
+        for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+        {
+            if (smoothDrive.isSmoothing())
+            {
+                channelOne[sample] = (channelOne[sample] * 0.9) + (smoothDrive.getNextValue() * 3 * channelOne[sample]);             
+                channelTwo[sample] = (channelTwo[sample] * 0.9) + (smoothDrive.getNextValue() * 3 * channelTwo[sample]);
+            }
+            else
+            {
+                channelOne[sample] = (channelOne[sample] * 0.9) + (drive * 3 * channelOne[sample]);              
+                channelTwo[sample] = (channelTwo[sample] * 0.9) + (drive * 3 * channelTwo[sample]);
+            }
+            
+            if (channelOne[sample] > 1.0f) 
+                {channelOne[sample] = 1.0f;}
+                
+            if (channelOne[sample] < -1.0f) 
+                {channelOne[sample] = -1.0f;}
+                
+            if (channelTwo[sample] > 1.0f) 
+                {channelTwo[sample] = 1.0f;}
+                
+            if (channelTwo[sample] < -1.0f) 
+                {channelTwo[sample] = -1.0f;}
+        }
+    }
+     
+    //output
+    for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+    {
+        if(smoothOutput.isSmoothing())
+        {
+            channelOne[sample] = ((channelOne[sample]) * (smoothOutput.getNextValue() )); 
+            channelTwo[sample] = ((channelTwo[sample]) * (smoothOutput.getNextValue() ));
+        }
+        else
+        {
+            channelOne[sample] = ((channelOne[sample]) * (output)); 
+            channelTwo[sample] = ((channelTwo[sample]) * (output));
+        }
+    }
 }
 
 //When the audio device stops or restarted
@@ -240,6 +360,7 @@ void MainComponent::resized()
     grid.templateColumns = {
         Track (1_fr),
         Track (2_fr),
+        Track (2_fr),
         Track (1_fr),
         Track (3_fr),
         Track (2_fr),
@@ -264,35 +385,95 @@ void MainComponent::resized()
 void MainComponent::comboBoxChanged(ComboBox* box)
 {
     //handles changes to filter type
-    if (box->getText() == "Low Pass" || box->getText() == "Band Pass" || box->getText() == "High Pass")
+    if (box == &filterBox)
     {
-        filterType = box->getText();
+        filterType = box->getText();        
     }
 
     //handles changes to osc length type
-    if (box->getText() == "4" || box->getText() == "8" || box->getText() == "16")
+    if (box  == &lengthBox || box == &lengthBoxTwo)
     {
-        //set osc length multiplier to appropriate value
-        if (box->getText() == "4")
+        if (box == &lengthBox)
         {
-          oscMult = 0.5;   
-        }
+            //set osc length multiplier to appropriate value
+            if (box->getText() == "4")
+            {
+                oscMult = 0.5;   
+            }
         
-        else if (box->getText() == "8")
-        {
-          oscMult = 1;   
-        }
+            else if (box->getText() == "8")
+            {
+                oscMult = 1;   
+            }
         
-        else if (box->getText() == "16")
+            else if (box->getText() == "16")
+            {
+                oscMult = 2;   
+            }
+        }
+            
+        if (box == &lengthBoxTwo)
         {
-          oscMult = 2;   
+            //set osc length multiplier to appropriate value
+            if (box->getText() == "4")
+            {
+                oscMultTwo = 0.5;   
+            }
+        
+            else if (box->getText() == "8")
+            {
+                oscMultTwo = 1;   
+            }
+        
+            else if (box->getText() == "16")
+            {
+                oscMultTwo = 2;   
+            }
         }
     }
     
     //handles changes to osc type
-    if (box->getText() == "Sine" || box->getText() == "Saw" || box->getText() == "Square" || box->getText() == "Triangle")
+    if (box == &oscBox || box == &oscBoxTwo)
     {
-        oscType = box->getText();
+        if (box == &oscBox)
+        {
+            if (box->getText() == "Sine")
+            {
+                wavetableOne = sineTable;   
+            }
+            else if (box->getText() == "Saw")
+            {
+                wavetableOne = sawTable;   
+            }
+            else if (box->getText() == "Square")
+            {
+                wavetableOne = squareTable;   
+            }
+            else
+            {
+                wavetableOne = triangleTable;   
+            }
+        }
+        
+        if (box == &oscBoxTwo)
+        {
+            if (box->getText() == "Sine")
+            {
+                wavetableTwo = sineTable;   
+            }
+            else if (box->getText() == "Saw")
+            {
+                wavetableTwo = sawTable;   
+            }
+            else if (box->getText() == "Square")
+            {
+                wavetableTwo = squareTable;   
+            }
+            else
+            {
+                wavetableTwo = triangleTable;   
+            }
+        }
     }
 }
 
@@ -345,6 +526,18 @@ void MainComponent::updateOscFrequency()
     oscPhase = fmod((oscPhase + oscIncrement), oscTableSize);
 }
 
+//Handles user changes in osc frequency from slider
+void MainComponent::updateOscFrequencyTwo()
+{
+    auto fineTune = (((freqSliderTwo.getValue() * oscMultTwo) / 2) / 12) * fineTuneSliderTwo.getValue();
+    
+    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (lfoFreqDepthSlider.getValue()*100);
+    
+    oscIncrementTwo = ((freqSliderTwo.getValue() * oscMultTwo) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
+    
+    oscPhaseTwo = fmod((oscPhaseTwo + oscIncrementTwo), oscTableSize);
+}
+
 //Handles user changes in lfo Amp frequency from slider
 void MainComponent::updateLFOAmpFrequency()
 {
@@ -360,12 +553,8 @@ void MainComponent::updateLFOAmpFrequency()
 //Handles user changes in lfo FM frequency from slider
 void MainComponent::updateLFOFreqFrequency()
 {
-    //Determine next point in the lfo FM wavetable for grabbing values
-    //Multiply the current lfo FM frequency (slider) by the wavetable size, then divide by the sample rate
     lfoFreqIncrement = (lfoFreqRateSlider.getValue()* 2) * lfoFreqTableSize / globalSampleRate;
     
-    //"phase + increment" determines next part (phase) of lfo FM table for grabbing values
-    //"fmod" handles reaching past the lfo FM table, and wrapping around to the appropriate phase from the beginning
     lfoFreqPhase = fmod((lfoFreqPhase + lfoFreqIncrement), lfoFreqTableSize);
 }
 
@@ -405,3 +594,17 @@ void MainComponent::createWavetables()
     }
 }
 
+//Handle button click events - set appropriate saturation function
+void MainComponent::buttonClicked(Button* button)
+{
+    if (button == &satTubeButton)
+    {
+        satType = 1;
+    }
+    
+    else if(button == & satTapeButton)
+    {
+        satType = 2;
+    }
+    
+}

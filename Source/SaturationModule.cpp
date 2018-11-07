@@ -17,7 +17,7 @@ SaturationModule::SaturationModule ( Slider* dk,
 {
     //
     addAndMakeVisible ( DriveKnob );
-    DriveKnob->setRange ( 0, 100 );
+    DriveKnob->setRange ( 0.0f, 1.0f );
     DriveKnob->setSliderStyle ( Slider::Rotary );
     DriveKnob->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 

@@ -25,7 +25,7 @@ public:
     {
         //
         addAndMakeVisible ( OutputSlider );
-        OutputSlider->setRange ( 0, 100, 0 );
+        OutputSlider->setRange ( 0.0f, 1.0f);
         OutputSlider->setSliderStyle (Slider::LinearVertical);
         OutputSlider->setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
 

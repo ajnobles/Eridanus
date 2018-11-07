@@ -12,12 +12,12 @@
 
 KeyboardScene::KeyboardScene ()
 {
-     
-    lower = new Octave();
-    addAndMakeVisible( lower );
 
     upper = new Octave();
     addAndMakeVisible( upper );
+     
+    lower = new Octave();
+    addAndMakeVisible( lower );
 }
 
 

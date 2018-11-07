@@ -75,26 +75,16 @@ OscillatorModule::~OscillatorModule() {}
 
 void OscillatorModule::paint (Graphics& g)
 {
-/* <<<<<<< Integration_10_29_18
-    Colour colour = Colours::lightblue;
-    //String text = "OscillatorModule ITEM";
-    String text = " ";
-    g.fillAll (colour.withAlpha (0.5f));
 
-    g.setColour (Colours::black);
-    g.drawText (text, getLocalBounds().withSizeKeepingCentre (100, 100),
-                    Justification::centred, false);
-// =======
-*/
     g.setColour ( BORDER_COLOR );
     buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
-// >>>>>>> Allen_Gui_Main
+
 }
 
 
 void OscillatorModule::resized ()
 {
-// <<<<<<< Integration_10_29_18
+
     Grid grid;
     using Track = Grid::TrackInfo;
 
@@ -118,26 +108,7 @@ void OscillatorModule::resized ()
     };
 
     grid.performLayout ( getLocalBounds() );
-// =======
-/*
-    Rectangle <int> bounds = getLocalBounds();
 
-    bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
-    
-    int x = bounds.getX(),
-        y = bounds.getY(),
-        width = bounds.getWidth(),
-        height = bounds.getHeight();
-    
-    oscBox.setBounds ( x, y, width, height / 4 );
-    
-    levelSlider.setBounds ( x + 50, height * 0.75 / 2 * 1 + 10.0, width - 50, height / 4 );
-    levelLabel .setBounds ( x,      height * 0.75 / 2 * 1 + 10.0, 50,         height / 4 );
-    
-    freqSlider.setBounds  ( x + 50, height * 0.75 / 2 * 2 + 10.0, width - 50, height / 4 );
-    freqLabel .setBounds  ( x,      height * 0.75 / 2 * 2 + 10.0, 50,         height / 4 );    
-*/
-// >>>>>>> Allen_Gui_Main
 }
 
 

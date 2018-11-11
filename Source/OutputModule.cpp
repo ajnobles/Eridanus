@@ -12,9 +12,9 @@
 
 OutputModule::OutputModule ()
 {
-    //
+    
     addAndMakeVisible ( OutputSlider );
-    OutputSlider.setRange ( 0, 100, 0 );
+    OutputSlider.setRange ( 0.0, 1.0, 0 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
     OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
 
@@ -61,5 +61,20 @@ void OutputModule::resized ()
     bounds = moduleInternalsBounds ( bounds, MODULE_INSIDE_OFFSET, OFFSET, THICKNESS );
 
     grid.performLayout ( bounds );
+}
+
+bool OutputModule::isOutputSlider ( Slider* slider )
+{
+    return slider == &OutputSlider;
+}
+
+float OutputModule::getOutputSliderValue ()
+{
+    return OutputSlider.getValue();
+}
+
+void OutputModule::setOutputSliderValue ( float v )
+{
+    OutputSlider.setValue( v );
 }
 

@@ -32,7 +32,8 @@
 class MainComponent   : // public Component,
                         // public AudioSource,
                         public AudioAppComponent,
-                        public Slider::Listener, 
+                        public Slider::Listener,
+                        public Button::Listener,
                         private ComboBox::Listener
 {
 public:
@@ -53,22 +54,40 @@ public:
     //handles value changes in sliders
     void sliderValueChanged (Slider* slider) override
     {
-        //osc level
+        //osc 1 level
         if ( OSC_1->isLevelSlider( slider ) )
         {
             OSC_1->setLevelSliderValue( OSC_1->getLevelSliderValue() );
         }
         
-        //osc frequency
+        //osc 1 frequency
         else if ( OSC_1->isFreqSlider( slider ) )
         {
             OSC_1->setFreqSliderValue( OSC_1->getFreqSliderValue() );
         }
         
-        //osc frequency fine tune
+        //osc 1 frequency fine tune
         else if ( OSC_1->isFineTuneSlider( slider ) )
         {
             OSC_1->setFineTuneSliderValue( OSC_1->getFineTuneSliderValue() );
+        }
+        
+        //osc 2 level
+        else if ( OSC_2->isLevelSlider( slider ) )
+        {
+            OSC_2->setLevelSliderValue( OSC_2->getLevelSliderValue() );
+        }
+        
+        //osc 2 frequency
+        else if ( OSC_2->isFreqSlider( slider ) )
+        {
+            OSC_2->setFreqSliderValue( OSC_2->getFreqSliderValue() );
+        }
+        
+        //osc 2 frequency fine tune
+        else if ( OSC_2->isFineTuneSlider( slider ) )
+        {
+            OSC_2->setFineTuneSliderValue( OSC_2->getFineTuneSliderValue() );
         }
         
         //amp lfo rate (freq)
@@ -81,10 +100,21 @@ public:
         {
             LfoAmp->setDepthSliderValue( LfoAmp->getDepthSliderValue() );
         }
+ 
+        else if ( saturation->isDriveSlider( slider ) )
+        {
+            saturation->setDriveSliderValue( saturation->getDriveSliderValue() );
+        }
+        
+        else if ( output->isOutputSlider( slider ) )
+        {
+            output->setOutputSliderValue( output->getOutputSliderValue() );
+        }
     }
   
     //function handles slider changes to osc and lfo frequencies
-    void updateOscFrequency();
+    void updateOscOneFrequency();
+    void updateOscTwoFrequency();
     void updateLFOAmpFrequency();
     void updateLFOFreqFrequency();
 
@@ -93,6 +123,9 @@ public:
     
     //function handles user selected filter type adjustments
     void comboBoxChanged(ComboBox*) override;
+    
+    //function handles saturation selection
+    void buttonClicked(Button*) override;
     
     //updates changes within filter settings
     void updateFilterSettings();
@@ -118,11 +151,11 @@ private:
     String lfoFM = "FM LFO";
     
 
-    // OSCILLATOR 1
-    //sliders for osc and filter controls
+    // OSCILLATOR 1 & 2
     OscillatorModule* OSC_1;
-          
+    OscillatorModule* OSC_2;
 
+          
     // LFO AMP
     LfoModule* LfoAmp;
     String lfoAmp = "AMP LFO";
@@ -138,6 +171,7 @@ private:
 
     // SATURATION MODULE
     SaturationModule* saturation;
+    int saturationType;
    
 
     // OUTPUT MODULE
@@ -148,9 +182,14 @@ private:
     float globalSampleRate;  
  
     double oscTableSize;    //size of wavetables (osc Arrays)
-    double oscFrequency;    //osc frequency 
-    double oscPhase;        //position within the osc wavetable cycle
-    double oscIncrement;    //holds "next" place in wavetable for grabbing values
+
+    double oscOneFrequency;    //osc frequency 
+    double oscOnePhase;        //position within the osc wavetable cycle
+    double oscOneIncrement;    //holds "next" place in wavetable for grabbing values
+    
+    double oscTwoFrequency;    //osc frequency 
+    double oscTwoPhase;        //position within the osc wavetable cycle
+    double oscTwoIncrement;    //holds "next" place in wavetable for grabbing values
        
     double lfoTableSize;    //size of wavetable (lfo Array)
     double lfoFrequency;    //lfo frequency 
@@ -169,6 +208,10 @@ private:
     Array<float> triangleTable;
     Array<float> lfoAmpTable;
     Array<float> lfoFreqTable;
+   
+    //hold oscillators' wavetables for reading/output
+    Array<float> wavetableOne;
+    Array<float> wavetableTwo;
     
     //Filter creation...
     //Converts mono processor into multi-channels (2), as opposed to processing independently (L and R)
@@ -176,6 +219,13 @@ private:
     //and the filter's parameters (2nd part: state types (parameters)
     dsp::ProcessorDuplicator<dsp::StateVariableFilter::Filter<float>, 
          dsp::StateVariableFilter::Parameters<float>> stateVariableFilter;
-
+ 
+    //handles the smoothing of fader values -> linear increments to target slider value
+    LinearSmoothedValue<float> smoothOscOneOutput;
+    LinearSmoothedValue<float> smoothOscTwoOutput;        
+    LinearSmoothedValue<float> smoothLFOAmpDepth;
+    LinearSmoothedValue<float> smoothDrive;
+    LinearSmoothedValue<float> smoothOutput;
+         
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

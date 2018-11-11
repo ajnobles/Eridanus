@@ -14,12 +14,12 @@ SaturationModule::SaturationModule ( )
 {
     //
     addAndMakeVisible ( DriveKnob );
-    DriveKnob.setRange ( 0, 100 );
-    DriveKnob.setSliderStyle ( Slider::Rotary );
+    DriveKnob.setRange ( 0.0f, 1.0f );
+    DriveKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
     DriveKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( TapeButton );
-    TapeButton.setButtonText ( "TB" );
+    TapeButton.setButtonText ( "TP" );
 
     addAndMakeVisible ( TubeButton );
     TubeButton.setButtonText ( "TB" );
@@ -71,4 +71,43 @@ void SaturationModule::resized ()
 
 
     grid.performLayout ( bounds );
+}
+
+void SaturationModule::buttonUpdate( String text )
+{    
+    if (text == "TP")
+        saturationType = 1;
+
+    else if (text  == "TB")
+        saturationType = 2;
+}
+
+int SaturationModule::getSaturationType()
+{    
+    return saturationType;
+}
+
+TextButton& SaturationModule::getTapeButton()
+{
+    return TapeButton;
+}
+
+TextButton& SaturationModule::getTubeButton()
+{
+    return TubeButton;
+}
+
+bool SaturationModule::isDriveSlider ( Slider* slider )
+{
+    return slider == &DriveKnob;
+}
+
+float SaturationModule::getDriveSliderValue ()
+{
+    return DriveKnob.getValue();
+}
+
+void SaturationModule::setDriveSliderValue ( float v )
+{
+    DriveKnob.setValue( v );
 }

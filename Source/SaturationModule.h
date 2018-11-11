@@ -22,8 +22,23 @@ public:
     void paint (Graphics& g) override;
     void resized () override;
     
+    void buttonUpdate( String text );
+    
+    int getSaturationType();
+    
+    TextButton& getTapeButton();
+    TextButton& getTubeButton();
+    
+    bool isDriveSlider(Slider* slider);
+    
+    float getDriveSliderValue();
+
+    void setDriveSliderValue( float v );
+    
 private:    
     Slider DriveKnob;
+    
+    int saturationType = 1;
     
     TextButton TapeButton;
     TextButton TubeButton;

@@ -18,8 +18,15 @@ class OutputModule : public CustomComponent
 public:
     OutputModule ();
     ~OutputModule ();
+
     void paint (Graphics& g) override;   
     void resized () override;
+    
+    bool isOutputSlider(Slider* slider);
+    
+    float getOutputSliderValue();
+
+    void setOutputSliderValue( float v );
 
 private:
     Slider OutputSlider;

@@ -10,30 +10,6 @@
 
 #include "LFOModule.h"
 
-/*
-LfoModule::LfoModule (Slider* rs, Slider* ds, String* lfoName)
-    : RateSlider (rs), DepthSlider (ds), lfoType (lfoName)
-{
-    
-    addAndMakeVisible ( RateSlider );
-    RateSlider->setRange ( 0.0, 10.0 );
-    RateSlider->setSliderStyle ( Slider::LinearVertical );
-    RateSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-    RateSlider->setValue(1.0);
-    
-    addAndMakeVisible(RateLabel);
-    RateLabel.setText("Rate", dontSendNotification);
-
-    addAndMakeVisible ( DepthSlider );
-    DepthSlider->setRange ( 0.0, 1.0 );
-    DepthSlider->setSliderStyle ( Slider::LinearVertical );
-    DepthSlider->setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );        
-    DepthSlider->setValue(0.0); 
-    
-    addAndMakeVisible(DepthLabel);
-    DepthLabel.setText("Depth", dontSendNotification);
-*/
-
 LfoModule::LfoModule ( String type )
 {
     lfoType = type;

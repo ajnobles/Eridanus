@@ -132,10 +132,6 @@ void OscillatorModule::comboBoxUpdate( String text )
 
 }
 
-
-
-
-
 bool OscillatorModule::isLevelSlider( Slider* slider )
 {
     return slider == &levelSlider;

@@ -11,7 +11,23 @@
 #pragma once
 
 #include "CustomComponent.h"
-// #include "MainComponent.h"
+
+
+enum LengthState 
+{
+    FOUR,
+    EIGHT,
+    SIXTEEN
+};
+
+enum WaveState 
+{
+    SIN,
+    SAW,
+    TRIANGLE,
+    SQUARE
+};
+
 
 class OscillatorModule : public CustomComponent// ,
                          // public ComboBox::Listener
@@ -24,7 +40,13 @@ public:
     void resized () override;
 
     void comboBoxUpdate ( String text );
-    // void comboBoxChanged ( ComboBox* box ) override;
+
+    void lengthButtonClicked ( TextButton* current );
+    void waveButtonClicked ( TextButton* current );
+    
+
+    void changeWaveState (WaveState newWave);
+    void changeLengthState (LengthState newLength);    
 
     bool isLevelSlider( Slider* slider );
     bool isFreqSlider( Slider* slider );
@@ -34,8 +56,19 @@ public:
     float getFreqSliderValue();
     float getFineTuneSliderValue();
     float getOscMult();
+
     ComboBox& getOscBox();
     ComboBox& getLengthBox();
+
+    TextButton& getLength4Button();
+    TextButton& getLength8Button();
+    TextButton& getLength12Button();
+
+    TextButton& getSinButton();
+    TextButton& getSawButton();
+    TextButton& getTriangleButton();
+    TextButton& getSquareButton();
+
     String getOscType();
 
     void setLevelSliderValue( float v );
@@ -58,11 +91,13 @@ private:
     TextButton length4;
     TextButton length8;
     TextButton length16;
+    LengthState lenState;
 
-    TextButton sin;
-    TextButton saw;
-    TextButton tri;
-    TextButton sqr;
+    TextButton sinButton;
+    TextButton sawButton;
+    TextButton triButton;
+    TextButton sqrButton;
+    WaveState waveState;
     
 
     ComboBox oscBox;

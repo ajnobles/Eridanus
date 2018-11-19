@@ -10,7 +10,8 @@
 
 #include "OscillatorModule.h"
 
-OscillatorModule::OscillatorModule ( ) 
+OscillatorModule::OscillatorModule ( ) :
+    lenState ( FOUR ), waveState ( SIN )
 {
     // LEVEL
     addAndMakeVisible ( levelSlider );
@@ -43,8 +44,8 @@ OscillatorModule::OscillatorModule ( )
     addAndMakeVisible(freqLabel);
     freqLabel.setText("Freq", dontSendNotification);
 */
-
 // >>>>>>> Allen_Gui_Main
+
     // FINE TUNE
     addAndMakeVisible(fineTuneSlider);
     fineTuneSlider.setRange(-1.0, 1.0);
@@ -58,33 +59,42 @@ OscillatorModule::OscillatorModule ( )
     // LENGTH
     addAndMakeVisible( length4 );
     length4.setButtonText( "4'" );
+    length4.onClick = [this] { 
+        lengthButtonClicked( &length4 );
+    };
     
     addAndMakeVisible( length8 );
     length8.setButtonText( "8'" );
+    length8.onClick = [this] { 
+        lengthButtonClicked( &length8 );
+    };
     
-// <<<<<<< Integration_11_11_18
-    //add frequency slider label and set text
-    //addAndMakeVisible(freqLabel);
-    //freqLabel.setText("Freq", dontSendNotification);
-	        
-// =======
     addAndMakeVisible( length16 );
     length16.setButtonText( "16'" );
+    length16.onClick = [this] {
+        lengthButtonClicked( &length16 );
+    };
+
 
     // WAVE FORM
-    addAndMakeVisible( sin );
-    sin.setButtonText( "Sin" );
+    addAndMakeVisible( sinButton );
+    sinButton.setButtonText( "Sin" );
+    sinButton.onClick = [this] { waveButtonClicked(&sinButton); };
  
-    addAndMakeVisible( saw );
-    saw.setButtonText( "Saw" );
+    addAndMakeVisible( sawButton );
+    sawButton.setButtonText( "Saw" );
+    sawButton.onClick = [this] { waveButtonClicked(&sawButton); };
       
-    addAndMakeVisible( tri );
-    tri.setButtonText( "Tri" );
+    addAndMakeVisible( triButton );
+    triButton.setButtonText( "Tri" );
+    triButton.onClick = [this] { waveButtonClicked(&triButton); };
     
-    addAndMakeVisible( sqr );
-    sqr.setButtonText( "Sqr" );
+    addAndMakeVisible( sqrButton );
+    sqrButton.setButtonText( "Sqr" );
+    sqrButton.onClick = [this] { waveButtonClicked(&sqrButton); };
 /*   	        
 // >>>>>>> Allen_Gui_Main
+    
     // COMBO BOX
     addAndMakeVisible(oscBox);
     oscBox.addItem("Sine", 1);
@@ -132,10 +142,6 @@ void OscillatorModule::resized ()
         Track (1_fr)
     };
     grid.templateColumns = { 
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr), 
         Track (1_fr) 
     };
   
@@ -156,20 +162,20 @@ void OscillatorModule::resized ()
     };
 */
 
-    grid.setGap( Px ( 5_px ) );
+    grid.setGap( Px ( 3_px ) );
 
     grid.items = {
         GridItem ( length4  ).withArea( 3, 1, 5, 1 ),
         GridItem ( length8  ).withArea( 5, 1, 7, 1 ),
         GridItem ( length16 ).withArea( 7, 1, 9, 1 ),
 
-        GridItem ( fineTuneSlider ).withArea( 7, 4 , 9, 7 ),
-        GridItem ( levelSlider    ).withArea( 3, 8, 9, 8 ),
+        GridItem ( fineTuneSlider ).withArea( 7, 3, 9, 6 ),
+        GridItem ( levelSlider    ).withArea( 3, 6, 9, 6 ),
         
-        GridItem ( sin ).withArea( 3, 3 , 5, 4 ),
-        GridItem ( saw ).withArea( 3, 4 , 5, 5 ),
-        GridItem ( tri ).withArea( 3, 5 , 5, 6 ),
-        GridItem ( sqr ).withArea( 3, 6 , 5, 7 ),
+        GridItem ( sinButton ).withArea( 3, 2 , 5, 3 ),
+        GridItem ( sawButton ).withArea( 3, 3 , 5, 4 ),
+        GridItem ( triButton ).withArea( 3, 4 , 5, 5 ),
+        GridItem ( sqrButton ).withArea( 3, 5 , 5, 6 ),
     };
 
     Rectangle <int> bounds = getLocalBounds();
@@ -199,6 +205,110 @@ void OscillatorModule::comboBoxUpdate( String text )
         oscType = text;
 
 }
+
+
+void OscillatorModule::lengthButtonClicked( TextButton* current )
+{
+    cout << "lengthButtonClicked" << endl;
+    return;
+}
+
+
+void OscillatorModule::waveButtonClicked( TextButton* current )
+{
+    cout << "waveButtonClicked" << endl;
+    return;
+}
+
+
+void OscillatorModule::changeWaveState ( WaveState newWave )
+{
+    if (waveState != newWave) {
+        waveState = newWave;
+
+        switch (waveState)
+        {
+            case SIN:
+                oscType = "Sine";
+                sinButton.setEnabled( true  );
+                sawButton.setEnabled( false );
+                triButton.setEnabled( false );
+                sqrButton.setEnabled( false );
+                break;
+
+            case SAW:
+                oscType = "Saw";
+                sinButton.setEnabled( false );
+                sawButton.setEnabled( true  );
+                triButton.setEnabled( false );
+                sqrButton.setEnabled( false );
+                break;
+
+
+            case TRIANGLE:
+                oscType = "Sine";
+                sinButton.setEnabled( false );
+                sawButton.setEnabled( false );
+                triButton.setEnabled( true  );
+                sqrButton.setEnabled( false );
+                break;
+
+
+            case SQUARE:
+                oscType = "Sine";
+                sinButton.setEnabled( false );
+                sawButton.setEnabled( false );
+                triButton.setEnabled( false );
+                sqrButton.setEnabled( true  );
+                break;
+
+            default: 
+                cout << "changeWaveState ERROR" << endl;
+       }
+    }
+}
+
+
+void OscillatorModule::changeLengthState ( LengthState newLength )
+{
+    if (lenState != newLength) {
+        lenState = newLength;
+
+        switch (lenState)
+        {
+
+            case FOUR:  
+                oscMult = 0.5f;
+                length4 .setEnabled( true  );
+                length8 .setEnabled( false );
+                length16.setEnabled( false );
+                break;
+
+            case EIGHT:  
+                oscMult = 1.0f;
+                length4 .setEnabled( false );
+                length8 .setEnabled( true  );
+                length16.setEnabled( false );
+                break;
+
+            case SIXTEEN:  
+                oscMult = 2.0f;
+                length4 .setEnabled( false );
+                length8 .setEnabled( false );
+                length16.setEnabled( true  );
+                break;
+ 
+            // case ZERO:  
+            default:  
+                oscMult = 0.0f;
+                length4 .setEnabled( false );
+                length8 .setEnabled( false );
+                length16.setEnabled( false );
+                break;
+       }
+    }
+}
+
 
 bool OscillatorModule::isLevelSlider( Slider* slider )
 {
@@ -264,6 +374,31 @@ ComboBox& OscillatorModule::getLengthBox()
 {
     return lengthBox;
 }
+
+
+TextButton& OscillatorModule::getSinButton()
+{
+    return sinButton;
+}
+
+
+TextButton& OscillatorModule::getSawButton()
+{
+    return sawButton;
+}
+
+
+TextButton& OscillatorModule::getTriangleButton()
+{
+    return triButton;
+}
+
+
+TextButton& OscillatorModule::getSquareButton()
+{
+    return sqrButton;
+}
+
 
 void OscillatorModule::setOscMult( float v )
 {

@@ -18,6 +18,9 @@ SaturationModule::SaturationModule ( )
     DriveKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
     DriveKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
+    addAndMakeVisible( DriveLabel );
+    DriveLabel.setText( "Drive", dontSendNotification );
+    
     addAndMakeVisible ( TapeButton );
     TapeButton.setButtonText ( "TP" );
 
@@ -59,7 +62,8 @@ void SaturationModule::resized ()
         GridItem (nullptr),
         GridItem ( TapeButton ),
         GridItem ( TubeButton ),
-        GridItem ( DriveKnob )
+        GridItem ( DriveKnob ),
+        GridItem ( DriveLabel )
     };
 
     Rectangle <int> bounds = getLocalBounds();

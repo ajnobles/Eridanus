@@ -10,8 +10,7 @@
 
 //==============================================================================
 MainComponent::MainComponent()
-{    
-
+{        
     // INPUT
     Input = new InputModule( );
     modules.add ( Input );
@@ -72,6 +71,9 @@ MainComponent::MainComponent()
 
     //set window size
     setSize (1600, 800);
+
+    // Set MIDI device for listening (controller = [2])
+    setMidiInputDevice(2);
     
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
@@ -95,27 +97,23 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     oscOneFrequency = OSC_1->getFreqSliderValue(); 
     oscTwoFrequency = OSC_2->getFreqSliderValue();     
     lfoFreqFrequency = LfoAmp->getRateSliderValue();        
-    lfoFrequency = LfoAmp->getRateSliderValue(); 
+    lfoAmpFrequency = LfoAmp->getRateSliderValue(); 
 
     //set for starting at beginning of osc and lfo wavetables
     oscOnePhase = 0;
     oscTwoPhase = 0;
-    
-    lfoPhase = 0;
+    lfoAmpPhase = 0;
     lfoFreqPhase = 0;
     
     //set wavetable size
     oscTableSize = 1024;
-    lfoTableSize = 1024;
-    lfoFreqTableSize = 1024;
 
     //Determine increment size to find the next point in the osc wavetable for grabbing values 
-    //Multiply the current osc frequency by the wavetable size, then divide by the sample rate
     //Note: initialized here, but modifiable via functions 
     oscOneIncrement = oscOneFrequency * oscTableSize / globalSampleRate;
     oscTwoIncrement = oscTwoFrequency * oscTableSize / globalSampleRate;    
-    lfoIncrement = lfoFrequency * lfoTableSize / globalSampleRate;
-    lfoFreqIncrement = lfoFreqFrequency * lfoFreqTableSize / globalSampleRate;
+    lfoAmpIncrement = lfoAmpFrequency * oscTableSize / globalSampleRate;
+    lfoFreqIncrement = lfoFreqFrequency * oscTableSize / globalSampleRate;
     
     //generate wavetables for osc and lfo's
     createWavetables();
@@ -133,14 +131,17 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
     //initialize values for LinearSmoothedValue Class
     //Sample rate & Time to reach set value (slider)
-    smoothOscOneOutput.reset(sampleRate, 0.035);
-    smoothOscOneOutput.setValue(0.0);
-
-    smoothOscTwoOutput.reset(sampleRate, 0.035);
-    smoothOscTwoOutput.setValue(0.0);
+    smoothOsc1Level.reset(sampleRate, 0.035);
+    smoothOsc1Level.setValue(0.0);
+    
+    smoothOsc2Level.reset(sampleRate, 0.035);
+    smoothOsc2Level.setValue(0.0);
     
     smoothLFOAmpDepth.reset(sampleRate, 0.035);
     smoothLFOAmpDepth.setValue(0.0);
+
+    smoothAmpEnv.reset(sampleRate, 0.035);
+    smoothAmpEnv.setValue(0.0);
     
     smoothDrive.reset(sampleRate, 0.035);
     smoothDrive.setValue(0.0);
@@ -156,16 +157,35 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     //grab osc and lfo depth slider values
     auto oscOneLevel = (float) OSC_1->getLevelSliderValue();
     auto oscTwoLevel = (float) OSC_2->getLevelSliderValue();
-    auto lfoDepth = (float) LfoAmp->getDepthSliderValue();
+    auto lfoAmpDepth = (float) LfoAmp->getDepthSliderValue();
     auto drive = (float) saturation->getDriveSliderValue();
     auto outputValue = (float) output->getOutputSliderValue();
+        
+    if (smoothStart)
+    {
+        smoothOsc1Level.setValue(0.0);
+        smoothOsc1Level.setValue(0.0);
+                
+        oscOneLevel = smoothOsc1Level.getNextValue(); 
+        oscTwoLevel = smoothOsc2Level.getNextValue();
+        
+        //oscOneLevel = 0.0f;
+        //oscTwoLevel = 0.0f;
+    }
+    
+    /*if (!smoothStart && smoothOsc1Level.isSmoothing())
+    {
+        smoothOsc1Level.setValue(OSC_1->getLevelSliderValue());
+        smoothOsc1Level.setValue(OSC_2->getLevelSliderValue());
+                
+        oscOneLevel = smoothOsc1Level.getNextValue(); 
+        oscTwoLevel = smoothOsc2Level.getNextValue();
+    }*/
     
     saturationType = saturation->getSaturationType();
  
     //set target values for smooth class via slider values
-    smoothOscOneOutput.setValue(oscOneLevel);
-    smoothOscTwoOutput.setValue(oscTwoLevel);   
-    smoothLFOAmpDepth.setValue(lfoDepth);
+    smoothLFOAmpDepth.setValue(lfoAmpDepth);
     smoothDrive.setValue(drive);
     smoothOutput.setValue(outputValue);
         
@@ -177,18 +197,7 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
     {
         //grab the lfo (amp) phase position
-        float lfoPhasePosition = lfoAmpTable[(int)lfoPhase];
-
-        //check for osc output smoothing 
-        if (smoothOscOneOutput.isSmoothing())
-        {
-            oscOneLevel = smoothOscOneOutput.getNextValue();
-        }
-       
-        if (smoothOscTwoOutput.isSmoothing())
-        {
-            oscTwoLevel = smoothOscTwoOutput.getNextValue();
-        }
+        float lfoAmpPhasePosition = sineTable[(int)lfoAmpPhase];
         
        //For the following osc's, grab the sample (from wavetable) in accordance to current phase 
        //Multiply against the osc level slider to determine amplitude
@@ -198,15 +207,14 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
        //Check for LFO Amp Depth Smoothing
         if (smoothLFOAmpDepth.isSmoothing())
         {
-            lfoDepth = smoothLFOAmpDepth.getNextValue();
-            
+            lfoAmpDepth = smoothLFOAmpDepth.getNextValue();        
         }
 
         //LFO Treatment - Wet to Dry Ratio 
-        channelOne[sample] = ((channelOne[sample]) * (lfoDepth * lfoPhasePosition)) + 
-                                ((channelOne[sample]) * (1.0 - lfoDepth));
-        channelTwo[sample] = ((channelTwo[sample]) * (lfoDepth * lfoPhasePosition)) + 
-                                ((channelTwo[sample]) * (1.0 - lfoDepth));  
+        channelOne[sample] = ((channelOne[sample]) * (lfoAmpDepth * lfoAmpPhasePosition)) + 
+                                ((channelOne[sample]) * (1.0 - lfoAmpDepth));
+        channelTwo[sample] = ((channelTwo[sample]) * (lfoAmpDepth * lfoAmpPhasePosition)) + 
+                                ((channelTwo[sample]) * (1.0 - lfoAmpDepth));  
 
        //update osc and lfo frequencies
        updateOscOneFrequency( );
@@ -224,6 +232,40 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     //process sample block (buffer) with the filter
     stateVariableFilter.process(dsp::ProcessContextReplacing<float> (sampleBlock));
 
+    if (smoothStart)
+    {
+        if (smoothStartFlag == false)
+        {
+            smoothAmpEnv.setValue(smoothAmpEnv.getNextValue());
+            smoothAmpEnv.reset(globalSampleRate, 0.4f);
+            smoothStartFlag = true;
+        }
+        
+        smoothAmpEnv.setValue(0.0f);        
+        
+        if (smoothAmpEnv.getNextValue() == 0.0f)
+        {
+            smoothStart = false;
+            smoothStartFlag = false;
+        }
+    }
+    
+    if (!smoothStart)
+    {
+        ampEnvelope();
+        
+        smoothStartFlag = false;
+    }
+        
+    //ampEnvelope();
+    
+    //amp envelope processing    
+    for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
+    {   
+        channelOne[sample] = channelOne[sample] * smoothAmpEnv.getNextValue(); 
+        channelTwo[sample] = channelTwo[sample] * smoothAmpEnv.getNextValue();
+    }
+    
     //saturation processing
     for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
     {
@@ -289,10 +331,6 @@ void MainComponent::paint (Graphics& g)
 
 void MainComponent::resized()
 {
-    // This is called when the MainComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
-
     Grid grid;
     
     using Track = Grid::TrackInfo;
@@ -314,20 +352,6 @@ void MainComponent::resized()
         Track (1_fr)
     };
     
-/*
-    grid.autoRows = Track (1_fr);
-    grid.autoColumns = Track (1_fr);
-
-    grid.autoFlow = Grid::AutoFlow::column;
-*/
-    /* 
-    grid.templateAreas = {
-        "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
-        "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output",
-        "input lfoFreq Oscillators lfoAmp envFilter ampFilter saturation output"
-    };
-     */
-    
     grid.items = {
         //GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),       
         GridItem ( modules[1] ).withArea( 1, 1, 3, 1 ),
@@ -341,16 +365,6 @@ void MainComponent::resized()
         GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
         GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
     };
-
-    /*
-    int numModules = modules.size();
-    
-    for (int i = 0; i < numModules; i++) {
-        grid.items.add ( modules[i] );
-    }
-
-    grid.items.add ( scenes[0] );
-    */
       
     Rectangle<int> bounds = getLocalBounds();
     
@@ -444,8 +458,8 @@ void MainComponent::buttonClicked(Button* button)
 void MainComponent::updateFilterSettings()
 {
     //grab and store filter slider values
-    auto cutoff = (float) envFilter->getCutoffKnobValue(); // cutoffSlider.getValue();
-    auto resonance = (float) envFilter->getResonanceKnobValue(); // resonanceSlider.getValue();
+    auto cutoff = (float) envFilter->getCutoffKnobValue();
+    auto resonance = (float) envFilter->getResonanceKnobValue(); 
     
     //grab oscillator filter type
     String filterType = envFilter->getFilterType();
@@ -478,14 +492,13 @@ void MainComponent::updateFilterSettings()
 void MainComponent::updateOscOneFrequency()
 {
     //Determines even temperement tuning amount (one twelth movement based on octave below frequency) 
-    auto fineTune = (((OSC_1->getFreqSliderValue() * OSC_1->getOscMult()) / 2) / 12) * OSC_1->getFineTuneSliderValue();
+    auto fineTune = (((midiFrequency * OSC_1->getOscMult()) / 2) / 12) * OSC_1->getFineTuneSliderValue();
     
     //Determine frequency addition/subtraction based on FM lfo phase and set depth value
-    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (LfoFreq->getDepthSliderValue()*100);
+    auto freqModAdd = sineTable[(int)lfoFreqPhase] * (LfoFreq->getDepthSliderValue()*100);
     
     //Determine next point in the osc wavetable for grabbing values
-    //Multiply the current osc frequency (slider) by the wavetable size, then divide by the sample rate
-    oscOneIncrement = ((OSC_1->getFreqSliderValue() * OSC_1->getOscMult()) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
+    oscOneIncrement = ((midiFrequency * OSC_1->getOscMult()) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of osc table for grabbing values
     //"fmod" handles reaching past the osc table, and wrapping around to the appropriate phase from the beginning
@@ -495,11 +508,12 @@ void MainComponent::updateOscOneFrequency()
 //Handles user changes in osc Two frequency from slider
 void MainComponent::updateOscTwoFrequency()
 {
-    auto fineTune = (((OSC_2->getFreqSliderValue() * OSC_2->getOscMult()) / 2) / 12) * OSC_2->getFineTuneSliderValue();
+    //same as above
+    auto fineTune = (((midiFrequency * OSC_2->getOscMult()) / 2) / 12) * OSC_2->getFineTuneSliderValue();
     
-    auto freqModAdd = lfoFreqTable[(int)lfoFreqPhase] * (LfoFreq->getDepthSliderValue()*100);
+    auto freqModAdd = sineTable[(int)lfoFreqPhase] * (LfoFreq->getDepthSliderValue()*100);
     
-    oscTwoIncrement = ((OSC_2->getFreqSliderValue() * OSC_2->getOscMult()) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
+    oscTwoIncrement = ((midiFrequency * OSC_2->getOscMult()) + fineTune + freqModAdd) * oscTableSize / globalSampleRate;
     
     oscTwoPhase = fmod((oscTwoPhase + oscTwoIncrement), oscTableSize);
 }
@@ -508,24 +522,22 @@ void MainComponent::updateOscTwoFrequency()
 void MainComponent::updateLFOAmpFrequency()
 {
     //Determine next point in the lfo Amp wavetable for grabbing values
-    //Multiply the current lfo frequency (slider) by the wavetable size, then divide by the sample rate
-    lfoIncrement = LfoAmp->getRateSliderValue() * lfoTableSize / globalSampleRate;
+    lfoAmpIncrement = LfoAmp->getRateSliderValue() * oscTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of lfo Amp table for grabbing values
     //"fmod" handles reaching past the lfo table, and wrapping around to the appropriate phase from the beginning
-    lfoPhase = fmod((lfoPhase + lfoIncrement), lfoTableSize);
+    lfoAmpPhase = fmod((lfoAmpPhase + lfoAmpIncrement), oscTableSize);
 }
 
 //Handles user changes in lfo FM frequency from slider
 void MainComponent::updateLFOFreqFrequency()
 {
     //Determine next point in the lfo FM wavetable for grabbing values
-    //Multiply the current lfo FM frequency (slider) by the wavetable size, then divide by the sample rate
-    lfoFreqIncrement = (LfoFreq->getRateSliderValue() * 2) * lfoFreqTableSize / globalSampleRate;
+    lfoFreqIncrement = (LfoFreq->getRateSliderValue() * 2) * oscTableSize / globalSampleRate;
     
     //"phase + increment" determines next part (phase) of lfo FM table for grabbing values
     //"fmod" handles reaching past the lfo FM table, and wrapping around to the appropriate phase from the beginning
-    lfoFreqPhase = fmod((lfoFreqPhase + lfoFreqIncrement), lfoFreqTableSize);
+    lfoFreqPhase = fmod((lfoFreqPhase + lfoFreqIncrement), oscTableSize);
 }
 
 //create wavetables for sine, sawtooth, square, and triangle
@@ -536,8 +548,6 @@ void MainComponent::createWavetables()
     {
         //sine wave table for osc and amp lfo
         sineTable.insert(i , sin(2.0 * double_Pi * i / oscTableSize));   
-        lfoAmpTable.insert(i , sin(2.0 * double_Pi * i / lfoTableSize));
-        lfoFreqTable.insert(i , sin(2.0 * double_Pi * i / lfoFreqTableSize));   
         
         //saw wave table for osc (ramp up)
         sawTable.insert(i , ((i / oscTableSize) - 0.5) * 2);   
@@ -564,3 +574,48 @@ void MainComponent::createWavetables()
     }
 }
 
+void MainComponent::ampEnvelope()
+{
+    if (attackAmpEnv == true)
+    {
+        smoothAmpEnv.reset(globalSampleRate, ampFilter->getAttackSliderValue() + 0.04);        
+        attackAmpEnv = false;
+        decayAmpEnv = false;
+        releaseAmpEnv = false;
+        
+        envTemp = 1.0f;
+    }
+    
+    if (smoothAmpEnv.getNextValue() == midiVelocity)
+    {
+        attackAmpEnv = false;
+        decayAmpEnv = true;
+        releaseAmpEnv = false;
+    }
+    
+    if (decayAmpEnv == true)
+    {
+        smoothAmpEnv.reset(globalSampleRate, ampFilter->getDecaySliderValue() + 0.04);
+        attackAmpEnv = false;
+        decayAmpEnv = false;
+        releaseAmpEnv = false;
+        
+        envTemp = ampFilter->getSustainSliderValue();
+    }
+    
+    if (releaseAmpEnv == true)
+    {
+        smoothAmpEnv.setValue(smoothAmpEnv.getNextValue());
+        
+        smoothOsc1Level.reset(globalSampleRate, 0.04);
+        smoothOsc2Level.reset(globalSampleRate, 0.04);
+        
+        smoothAmpEnv.reset(globalSampleRate, ampFilter->getReleaseSliderValue() + 0.04);
+        attackAmpEnv = false;
+        decayAmpEnv = false;
+        releaseAmpEnv = false;        
+        envTemp = 0.0f;        
+    }
+    
+    smoothAmpEnv.setValue(envTemp * midiVelocity);
+}

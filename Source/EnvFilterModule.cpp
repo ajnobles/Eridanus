@@ -222,7 +222,7 @@ void EnvFilterModule::LeftSide::resized ()
 void EnvFilterModule::LeftSide::comboBoxUpdate ( String text )
 {
     filterType = text;
-    printf("EnvFilter Combo Update\n");
+    //printf("EnvFilter Combo Update\n");
 }
 
 

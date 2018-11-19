@@ -20,6 +20,11 @@ public:
 	
     void paint (Graphics& g) override;
 	void resized () override;
+	
+	float getAttackSliderValue();
+    float getDecaySliderValue();
+    float getSustainSliderValue();
+    float getReleaseSliderValue();
 
   
 private:

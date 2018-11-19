@@ -25,12 +25,17 @@ OscillatorModule::OscillatorModule ( )
 /*
     // FREQ
     // frequency slider, slider display attributes
-    addAndMakeVisible(freqSlider);
+    //addAndMakeVisible(freqSlider);
     freqSlider.setRange(200.0, 1000.0);
     freqSlider.setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
     freqSlider.setValue(400);
     freqSlider.setSliderStyle ( Slider::LinearHorizontal );
     
+// <<<<<<< Integration_11_11_18
+    //addAndMakeVisible(freqLabel);
+    //freqLabel.setText("Osc Freq", dontSendNotification);
+    
+// =======
     addAndMakeVisible(freqLabel);
     freqLabel.setText("Osc Freq", dontSendNotification);
      
@@ -39,6 +44,7 @@ OscillatorModule::OscillatorModule ( )
     freqLabel.setText("Freq", dontSendNotification);
 */
 
+// >>>>>>> Allen_Gui_Main
     // FINE TUNE
     addAndMakeVisible(fineTuneSlider);
     fineTuneSlider.setRange(-1.0, 1.0);
@@ -56,6 +62,12 @@ OscillatorModule::OscillatorModule ( )
     addAndMakeVisible( length8 );
     length8.setButtonText( "8'" );
     
+// <<<<<<< Integration_11_11_18
+    //add frequency slider label and set text
+    //addAndMakeVisible(freqLabel);
+    //freqLabel.setText("Freq", dontSendNotification);
+	        
+// =======
     addAndMakeVisible( length16 );
     length16.setButtonText( "16'" );
 
@@ -72,6 +84,7 @@ OscillatorModule::OscillatorModule ( )
     addAndMakeVisible( sqr );
     sqr.setButtonText( "Sqr" );
 /*   	        
+// >>>>>>> Allen_Gui_Main
     // COMBO BOX
     addAndMakeVisible(oscBox);
     oscBox.addItem("Sine", 1);
@@ -137,9 +150,9 @@ void OscillatorModule::resized ()
         GridItem ( fineTune     ),
         GridItem ( fineTuneSlider),
         GridItem ( levelLabel   ),
-        GridItem ( levelSlider  ),
-        GridItem ( freqLabel    ),
-        GridItem ( freqSlider   )
+        GridItem ( levelSlider  )
+        //GridItem ( freqLabel    )
+        //GridItem ( freqSlider   )
     };
 */
 

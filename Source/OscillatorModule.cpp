@@ -24,13 +24,13 @@ OscillatorModule::OscillatorModule ( )
     
     // FREQ
     // frequency slider, slider display attributes
-    addAndMakeVisible(freqSlider);
+    //addAndMakeVisible(freqSlider);
     freqSlider.setRange(200.0, 1000.0);
     freqSlider.setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
     freqSlider.setValue(400);
     
-    addAndMakeVisible(freqLabel);
-    freqLabel.setText("Osc Freq", dontSendNotification);
+    //addAndMakeVisible(freqLabel);
+    //freqLabel.setText("Osc Freq", dontSendNotification);
     
     // FINE TUNE
     addAndMakeVisible(fineTuneSlider);
@@ -44,8 +44,8 @@ OscillatorModule::OscillatorModule ( )
     freqSlider.setSliderStyle ( Slider::LinearHorizontal );
     
     //add frequency slider label and set text
-    addAndMakeVisible(freqLabel);
-    freqLabel.setText("Freq", dontSendNotification);
+    //addAndMakeVisible(freqLabel);
+    //freqLabel.setText("Freq", dontSendNotification);
 	        
     // COMBO BOX
     addAndMakeVisible(oscBox);
@@ -102,9 +102,9 @@ void OscillatorModule::resized ()
         GridItem ( fineTune     ),
         GridItem ( fineTuneSlider),
         GridItem ( levelLabel   ),
-        GridItem ( levelSlider  ),
-        GridItem ( freqLabel    ),
-        GridItem ( freqSlider   )
+        GridItem ( levelSlider  )
+        //GridItem ( freqLabel    )
+        //GridItem ( freqSlider   )
     };
 
     grid.performLayout ( getLocalBounds() );

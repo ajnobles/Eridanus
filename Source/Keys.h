@@ -12,8 +12,7 @@
 
 #include "CustomComponent.h"
 
-class Keys : public CustomComponent,
-             public LookAndFeel_V4
+class Keys : public CustomComponent
 {
 public:
     Keys();
@@ -21,6 +20,7 @@ public:
 
     void paint( Graphics& g ) override;
     void resized () override;
+
 
 private:
     ToggleButton key;

@@ -12,12 +12,14 @@
 
 KeyboardScene::KeyboardScene ()
 {
+    setBaseFrequency( 440.0 );
+    fillFrequecyVector( );
 
-    upper = new Octave();
-    addAndMakeVisible( upper );
-     
-    lower = new Octave();
+    lower = new Octave( getOctaveFrequencies( 2 ) );
     addAndMakeVisible( lower );
+    
+    upper = new Octave( getOctaveFrequencies( 3 ) );
+    addAndMakeVisible( upper );
 }
 
 
@@ -70,25 +72,78 @@ void KeyboardScene::resized ()
 }
 
 
-
-
-
-
-KeyboardScene::Octave::Octave()
+void KeyboardScene::fillFrequecyVector()
 {
-    c1 = new WhiteKey();
-    d1 = new WhiteKey();
-    e1 = new WhiteKey();
-    f1 = new WhiteKey();
-    g1 = new WhiteKey();
-    a2 = new WhiteKey();
-    b2 = new WhiteKey();
+
+    int distFromA4 = -45,  
+        numOctaves = 8,
+        numKeys    = numOctaves * 12;
+
+    float curBaseFrequency = getBaseFrequency();
+
+    for (int i = 0; i < numOctaves; i++) {
+        vector<float> currentOctave;
+
+        for (int j = 0; j < 12; j++) {
+            float curNoteFreq = pow( 2, (distFromA4 / 12) );
+            curNoteFreq      *= curBaseFrequency;
+            currentOctave.push_back( curNoteFreq );
+            distFromA4++;
+        }
+
+        key_frequencies.push_back( currentOctave );
+    }
+}
+
+
+float KeyboardScene::getBaseFrequency()
+{
+    return baseFrequency;
+}
+
+
+void KeyboardScene::setBaseFrequency( float v )
+{
+    if (v < 440.0 || v > 440.0) {
+        printf("BASE FREQUENCY ERROR\n");
+    }
+
+    baseFrequency = v;
+}    
+
+
+vector<float> KeyboardScene::getOctaveFrequencies( int octave )
+{
+    if (octave < 0 || octave > 8) {
+        printf("FREQ OCTAVE ERROR");
+        return key_frequencies.at( 0 );
+    }
+
+    return key_frequencies.at( octave );
+}
+
+
+
+KeyboardScene::Octave::Octave( vector<float> frequencies )
+{
+    int curIndex = 0;
+
+    c1 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    cSharp1 = new BlackKey( frequencies.at( curIndex++ ) );
+    d1 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    dSharp1 = new BlackKey( frequencies.at( curIndex++ ) );
+    e1 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    f1 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    fSharp1 = new BlackKey( frequencies.at( curIndex++ ) );
+    g1 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    gSharp1 = new BlackKey( frequencies.at( curIndex++ ) );
+    a2 =      new WhiteKey( frequencies.at( curIndex++ ) );
+    aSharp2 = new BlackKey( frequencies.at( curIndex++ ) );
+    b2 =      new WhiteKey( frequencies.at( curIndex++ ) );
  
-    cSharp1 = new BlackKey();
-    dSharp1 = new BlackKey();
-    fSharp1 = new BlackKey();
-    gSharp1 = new BlackKey();
-    aSharp2 = new BlackKey();
+    if (curIndex != 12) {
+        printf("KEY FREQ ASSIGN ERROR\n");
+    }
  
     addAndMakeVisible( c1 );
     addAndMakeVisible( d1 );
@@ -172,11 +227,13 @@ void KeyboardScene::Octave::resized (  )
 
 
 
-KeyboardScene::Octave::WhiteKey::WhiteKey()
+KeyboardScene::Octave::WhiteKey::WhiteKey( float freq )
 {
-    addAndMakeVisible( whiteKey );
+    frequency = freq;
     whiteKey.setColour( TextButton::buttonColourId, Colours::ivory );
     whiteKey.setColour( TextButton::buttonOnColourId, Colours::green );
+
+    addAndMakeVisible( whiteKey );
 }
 
 
@@ -190,7 +247,10 @@ void KeyboardScene::Octave::WhiteKey::paint ( Graphics& g )
 {
     g.setColour( Colours::ivory );
 
-    LookAndFeel_V4::drawButtonBackground( g, whiteKey, Colours::ivory, false, false );
+    // LookAndFeel_V4::drawButtonBackground( g, whiteKey, Colours::ivory, false, false );
+    
+    g.setColour( Colours::blue );
+    g.drawText ( "WhiteKey", 0, 0, getWidth(), getHeight(), Justification::centred, false);
 }
 
 
@@ -219,14 +279,19 @@ void KeyboardScene::Octave::WhiteKey::resized ( )
 }
 
 
-
-
-KeyboardScene::Octave::BlackKey::BlackKey()
+float KeyboardScene::Octave::WhiteKey::getFrequency ( )
 {
-    addAndMakeVisible( blackKey ); 
-    blackKey.setColour( TextButton::buttonColourId, Colours::black );
-    blackKey.setColour( TextButton::buttonOnColourId, Colours::green );
+    return frequency;
+}
 
+
+KeyboardScene::Octave::BlackKey::BlackKey( float freq )
+{
+    frequency = freq;
+    addAndMakeVisible( blackKey ); 
+
+    blackKey.setColour( TextButton::buttonColourId, Colours::black );
+    blackKey.setColour( TextButton::buttonOnColourId, Colours::red );
 }
 
 
@@ -240,13 +305,10 @@ void KeyboardScene::Octave::BlackKey::paint ( Graphics& g )
 {
     g.setColour( Colours::black );
 
-    LookAndFeel_V4::drawButtonBackground( g, blackKey, Colours::black, false, false );
+    // LookAndFeel_V4::drawButtonBackground( g, blackKey, Colours::black, false, false );
 
-    // DRAW FILLED RECTANGLE
-//    Rectangle <int> bounds = getLocalBounds();
-//    bounds.setHeight( bounds.getHeight() * (2.0 / 3.0)  );
-//    g.fillRect ( bounds );
-
+    g.setColour( Colours::blue );
+    g.drawText ( "BlackKey", 0, 0, getWidth(), getHeight(), Justification::centred, false);
 }
 
 
@@ -270,5 +332,12 @@ void KeyboardScene::Octave::BlackKey::resized ( )
     };
 
     grid.performLayout( getLocalBounds() );
-
 }
+
+
+float KeyboardScene::Octave::BlackKey::getFrequency ( )
+{
+    return frequency;
+}
+
+

@@ -22,11 +22,16 @@ public:
     void paint ( Graphics& g ) override;
     void resized () override;
 
+    void fillFrequecyVector();
+    float getBaseFrequency();
+    void  setBaseFrequency( float v );
+    vector<float> getOctaveFrequencies( int octave );
+
 
     class Octave : public CustomComponent 
     {
     public:
-        Octave();
+        Octave( vector<float> frequencies );
         ~Octave();
 
         void paint ( Graphics& g ) override;
@@ -36,28 +41,34 @@ public:
         class WhiteKey : public Keys 
         {
         public:
-            WhiteKey();
+            WhiteKey( float freq );
             ~WhiteKey();
 
             void paint ( Graphics& g );
             void resized () override;
 
+            float getFrequency();
+
         private:
             TextButton whiteKey;
+            float frequency;
         };
  
 
         class BlackKey : public Keys
         {
         public:
-            BlackKey();
+            BlackKey( float freq );
             ~BlackKey();
 
             void paint ( Graphics& g );
             void resized () override;
 
+            float getFrequency();
+
         private:
             TextButton blackKey;
+            float frequency;
         };
 
     private:
@@ -74,6 +85,7 @@ public:
         WhiteKey* a2;
         BlackKey* aSharp2;
         WhiteKey* b2;
+
     };
 
    
@@ -81,5 +93,9 @@ private:
 
     Octave* lower;
     Octave* upper;
+
+    float baseFrequency;
+    // HOLDS FREQUENCIES FROM C0 thru B7
+    vector< vector<float> > key_frequencies;
 
 };

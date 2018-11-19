@@ -48,11 +48,23 @@ private:
     Slider levelSlider;
     Slider freqSlider;
     Slider fineTuneSlider;
+
     Label levelLabel;
     Label freqLabel;
     Label fineTune;
     Label oscTypeLabel;
     Label oscLength;
+
+    TextButton length4;
+    TextButton length8;
+    TextButton length16;
+
+    TextButton sin;
+    TextButton saw;
+    TextButton tri;
+    TextButton sqr;
+    
+
     ComboBox oscBox;
     ComboBox lengthBox;
 

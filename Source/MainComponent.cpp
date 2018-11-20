@@ -143,11 +143,23 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     smoothAmpEnv.reset(sampleRate, 0.035);
     smoothAmpEnv.setValue(0.0);
     
+    smoothFilEnv.reset(sampleRate, 0.035);
+    smoothFilEnv.setValue(0.0);
+    
     smoothDrive.reset(sampleRate, 0.035);
     smoothDrive.setValue(0.0);
     
     smoothOutput.reset(sampleRate, 0.035);
     smoothOutput.setValue(0.0);
+    
+    OSC_1->setLevelSliderValue(3.0);
+    OSC_2->setLevelSliderValue(3.0);
+    
+    output->setOutputSliderValue(1.0);
+    
+    startFilEnv = false;
+    endFilEnv = false;
+    notFilDecay = false;
 }
 
 
@@ -160,28 +172,63 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
     auto lfoAmpDepth = (float) LfoAmp->getDepthSliderValue();
     auto drive = (float) saturation->getDriveSliderValue();
     auto outputValue = (float) output->getOutputSliderValue();
-        
+
+    //handles smooth beginning for envelopes and oscillators (eliminate audible clicks)
     if (smoothStart)
     {
-        smoothOsc1Level.setValue(0.0);
-        smoothOsc1Level.setValue(0.0);
-                
-        oscOneLevel = smoothOsc1Level.getNextValue(); 
-        oscTwoLevel = smoothOsc2Level.getNextValue();
+        //handles the beginning of the envelope and oscillator amplitude 
+        if (smoothStartFlag == false)
+        {   
+            //momentarily grab smoothed value from current state in Amp Envelope
+            smoothAmpEnv.setValue(smoothAmpEnv.getNextValue()); 
+            
+            //reset AMP envelope smoothed liear class to "short" time-to-reach target
+            smoothAmpEnv.reset(globalSampleRate, 0.04);
+            
+            //reset oscs' smoothed liear classes to "short" time-to-reach target
+            smoothOsc1Level.reset(globalSampleRate, 0.04);
+            smoothOsc2Level.reset(globalSampleRate, 0.04);
+            
+            //ensure that this reset point is not retriggered
+            smoothStartFlag = true;
+        }
         
-        //oscOneLevel = 0.0f;
-        //oscTwoLevel = 0.0f;
+        //set all target values to 0 (reached in 0.04 seconds)
+        smoothAmpEnv.setValue(0.0f); 
+        smoothOsc1Level.setValue(0.0);
+        smoothOsc2Level.setValue(0.0);
+                       
+        //repeat smoothing until target value is reached, then...
+        if (smoothAmpEnv.getNextValue() == 0.0f)
+        {
+            //...reset "smooth start" until next utilization of the amp envelope 
+            smoothStart = false;
+            smoothStartFlag = false;
+        }
     }
     
-    /*if (!smoothStart && smoothOsc1Level.isSmoothing())
+    //set osc level mults during smooth start (reaching "target 0")
+    if (smoothStart)
     {
-        smoothOsc1Level.setValue(OSC_1->getLevelSliderValue());
-        smoothOsc1Level.setValue(OSC_2->getLevelSliderValue());
-                
         oscOneLevel = smoothOsc1Level.getNextValue(); 
         oscTwoLevel = smoothOsc2Level.getNextValue();
-    }*/
+    }
     
+    //when smoothStart is not active, set osc levels with slider values
+    if (!smoothStart)
+    {
+        smoothOsc1Level.setValue(OSC_1->getLevelSliderValue());
+        smoothOsc2Level.setValue(OSC_2->getLevelSliderValue());
+    }
+
+    //grab smoothed values if smooth start not active and the osc's smoothed class is active (until slider value is reached)
+    if (!smoothStart && smoothOsc1Level.isSmoothing())
+    {         
+        oscOneLevel = smoothOsc1Level.getNextValue(); 
+        oscTwoLevel = smoothOsc2Level.getNextValue();
+    }
+    
+    //set saturation type, based on user selection
     saturationType = saturation->getSaturationType();
  
     //set target values for smooth class via slider values
@@ -225,39 +272,25 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
      
     //grab filled buffer and store in sample block (so we can use with the filter)
     dsp::AudioBlock<float> sampleBlock (*bufferToFill.buffer);
+   
+    //begin filter envelope value creation
+    filterEnvelope();
     
     //grab filter parameter settings
     updateFilterSettings();
     
     //process sample block (buffer) with the filter
     stateVariableFilter.process(dsp::ProcessContextReplacing<float> (sampleBlock));
-
-    if (smoothStart)
-    {
-        if (smoothStartFlag == false)
-        {
-            smoothAmpEnv.setValue(smoothAmpEnv.getNextValue());
-            smoothAmpEnv.reset(globalSampleRate, 0.4f);
-            smoothStartFlag = true;
-        }
-        
-        smoothAmpEnv.setValue(0.0f);        
-        
-        if (smoothAmpEnv.getNextValue() == 0.0f)
-        {
-            smoothStart = false;
-            smoothStartFlag = false;
-        }
-    }
-    
+ 
+    //trigger the amp envelope if "smooth start" is not active (finished)
     if (!smoothStart)
     {
+        //begin amplitude envelope creation
         ampEnvelope();
         
+        //...reset "smooth start" flag until next utilization of the amp envelope
         smoothStartFlag = false;
     }
-        
-    //ampEnvelope();
     
     //amp envelope processing    
     for (int sample = 0; sample < bufferToFill.numSamples; ++sample)
@@ -454,11 +487,11 @@ void MainComponent::buttonClicked(Button* button)
     saturation->buttonUpdate( text );
 }
 
-//Updates filter parameters set by user 
+//Updates filter parameters set by user (implemented with filter envelope cutoff smoothing) 
 void MainComponent::updateFilterSettings()
-{
+{      
     //grab and store filter slider values
-    auto cutoff = (float) envFilter->getCutoffKnobValue();
+    cutoff = envFilter->getCutoffKnobValue();
     auto resonance = (float) envFilter->getResonanceKnobValue(); 
     
     //grab oscillator filter type
@@ -469,7 +502,7 @@ void MainComponent::updateFilterSettings()
     {
         //set filter type to low pass and set cutoff and resonance parameters
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::bandPass;
-        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff, resonance);
+        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff * smoothFilEnv.getNextValue() + 20, resonance);
     }
     
     //handles high pass selection in combo box
@@ -477,14 +510,14 @@ void MainComponent::updateFilterSettings()
     {
         //set filter type to low pass and set cutoff and resonance parameters
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::highPass;
-        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff, resonance);
+        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff * (1.0f - smoothFilEnv.getNextValue()) + 20, resonance);
     }
     //handles low pass selection in combo box
     else
     {
         //set filter type to low pass and set cutoff and resonance parameters
         stateVariableFilter.state->type = dsp::StateVariableFilter::Parameters<float>::Type::lowPass;
-        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff, resonance);
+        stateVariableFilter.state->setCutOffFrequency (globalSampleRate, cutoff * smoothFilEnv.getNextValue() + 20, resonance);
     }  
 }
 
@@ -553,69 +586,150 @@ void MainComponent::createWavetables()
         sawTable.insert(i , ((i / oscTableSize) - 0.5) * 2);   
         
         //square wave table for osc
-        if (i / oscTableSize < 0.5)     //first half of table (-1)
+        if (i / oscTableSize < 0.5)     
         {
             squareTable.insert(i, -1);
         }
-        else                            //second half of table (1)
+        else                            
         {
             squareTable.insert(i, 1);
         }
         
         //triangle wave table for osc
-        if (i / oscTableSize < 0.5)     //first half of table (ramp up)
+        if (i / oscTableSize < 0.5)     
         {
             triangleTable.insert(i , ((i / (oscTableSize/2)) - 0.5) * 2); 
         }
-        else                            //second half ot table (ramp down)
+        else                            
         {
             triangleTable.insert(i, (0.5 - ((i - oscTableSize/2) / (oscTableSize/2))) * 2);
         }
     }
 }
 
+//creates envelope values for the amplitude envelope
 void MainComponent::ampEnvelope()
 {
+    //beginning of envelope (Attack) value generation, triggered by MIDI note ON
     if (attackAmpEnv == true)
     {
+        //set smoothed value class with Attack time
         smoothAmpEnv.reset(globalSampleRate, ampFilter->getAttackSliderValue() + 0.04);        
+
+        //set bool's for continuation in envelope
         attackAmpEnv = false;
         decayAmpEnv = false;
         releaseAmpEnv = false;
         
-        envTemp = 1.0f;
+        ampEnvValue = 1.0f;     //set target value
     }
     
+    //set envelope to handle Decay values if target Attack value is reached
     if (smoothAmpEnv.getNextValue() == midiVelocity)
     {
+        //set bool's for continuation in envelope
         attackAmpEnv = false;
         decayAmpEnv = true;
         releaseAmpEnv = false;
     }
     
+    //set envelope to Decay
     if (decayAmpEnv == true)
     {
+        //momentarily grab current value and set as target
+        smoothAmpEnv.setValue(smoothAmpEnv.getNextValue());
+        
+        //reset linear smoothed class to Decay time
         smoothAmpEnv.reset(globalSampleRate, ampFilter->getDecaySliderValue() + 0.04);
+
+        //set bool's for continuation in envelope
         attackAmpEnv = false;
         decayAmpEnv = false;
         releaseAmpEnv = false;
         
-        envTemp = ampFilter->getSustainSliderValue();
+        //set target value, based on Sustain slider value
+        ampEnvValue = ampFilter->getSustainSliderValue();
     }
     
+    //set envelope to Release, triggered by MIDI Note Off
     if (releaseAmpEnv == true)
     {
+        //momentarily grab current value and set as target
         smoothAmpEnv.setValue(smoothAmpEnv.getNextValue());
-        
-        smoothOsc1Level.reset(globalSampleRate, 0.04);
-        smoothOsc2Level.reset(globalSampleRate, 0.04);
-        
+         
+        //reset linear smoothed class to Release time
         smoothAmpEnv.reset(globalSampleRate, ampFilter->getReleaseSliderValue() + 0.04);
+
+        //set bool's for continuation in envelope
         attackAmpEnv = false;
         decayAmpEnv = false;
-        releaseAmpEnv = false;        
-        envTemp = 0.0f;        
+        releaseAmpEnv = false; 
+        
+        //set target value
+        ampEnvValue = 0.0f;        
     }
     
-    smoothAmpEnv.setValue(envTemp * midiVelocity);
+    //set target value vor linear smoothed class, based on MIDI velocity and target envelope values
+    smoothAmpEnv.setValue(ampEnvValue * midiVelocity);
+}
+
+//creates envelope values for the filter's envelope (cutoff handling)
+void MainComponent::filterEnvelope()
+{
+    //handles the attack, decay, and sustain values of the envelope, triggered by MIDI Note On
+    if (attackFilEnv)
+    {        
+        //handles the beginning of the envelope 
+        if (!startFilEnv)
+        {    
+            //set linear smoothed class with Attack time (to reach target)
+            smoothFilEnv.reset(globalSampleRate, 0.01 * envFilter->getAttackSliderValue() + 0.0004);        
+            
+            startFilEnv = true;     //change bool to not reset the beginning of the envelope 
+            endFilEnv = false;      //change bool to prep Release of the envelope (triggered by Note Off)
+            notFilDecay = true;     //change bool to continue the full Attack amount
+        }
+        
+        //Begin Decay if peak value is hit on the attack
+        if (smoothFilEnv.getNextValue() == 1.0f)
+        {
+            //set linear smoothed class with Decay time (to reach target)
+            smoothFilEnv.reset(globalSampleRate, 0.01 * envFilter->getDecaySliderValue() + 0.0004);
+            
+            //set target from Sustain slider value
+            filEnvValue =  envFilter->getSustainSliderValue();
+            
+            //change bool to begin new decay
+            notFilDecay = false;
+        }        
+        
+        //Continue full attack amount until reaching peak value
+        if (notFilDecay)
+        {
+            filEnvValue = 1.0;
+        }
+        
+        //set target values for linear smooth class
+        smoothFilEnv.setValue(filEnvValue);
+    }
+          
+    //handles the release values of the envelope, triggered by MIDI Note Off
+    else if (releaseFilEnv)
+    {      
+        //handles the Release of the envelope 
+        if (!endFilEnv)
+        {
+            //momentarily set target value to the last smoothed envelope value
+            smoothFilEnv.setValue(smoothFilEnv.getNextValue());        
+            
+            //reset smoothed value class to time based on the Sustain slider value
+            smoothFilEnv.reset(globalSampleRate,  0.01 * envFilter->getReleaseSliderValue() + 0.0004);
+                        
+            endFilEnv = true;       //change bool to finalize target (not re-enter conditional statement)
+            startFilEnv = false;    //change bool to prep the next beginning of the envelope
+            
+            //set target value
+            smoothFilEnv.setValue(0.0);
+        }          
+    }
 }

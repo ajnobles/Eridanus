@@ -125,6 +125,9 @@ public:
     //handle amp envelope manipulation
     void ampEnvelope();
     
+    //handle filter envelope manipulation
+    void filterEnvelope();
+    
     //function receives incoming MIDI messages (Midi input device & Midi message argruments)
     void handleIncomingMidiMessage(MidiInput* source, const MidiMessage& message) override
     {
@@ -134,20 +137,32 @@ public:
         //store MIDI note velocity for OSCs' levels
         midiVelocity = message.getFloatVelocity();
         
+        //trigger envelopes
         if (message.isNoteOn())
         {
-            smoothStart = true;
+            smoothStart = true;     //handles smooth Amp beginning for osc's and env's
             
+            //values trigger AMP envelope-state value generation within movement
             attackAmpEnv = true;
             decayAmpEnv = false;
             releaseAmpEnv = false;
+        
+            //values handle the beginning of the filter envelope
+            attackFilEnv = true;
+            releaseFilEnv = false;
         }
         
+        //trigger the end of envelopes
         if (message.isNoteOff())
-        {            
+        {      
+            //values trigger AMP envelope-state value generation within movement
             attackAmpEnv = false;
             decayAmpEnv = false;
             releaseAmpEnv = true;
+            
+            //values hand the release of the filter envelope
+            attackFilEnv = false;
+            releaseFilEnv = true;
         }
     };
     
@@ -174,18 +189,31 @@ private:
     AudioDeviceManager deviceManager;
 
     //Store MIDI Note On Frequency and Velocity
-    float midiFrequency = 300.0f;
-    float midiVelocity = 0.0f;
+    float midiFrequency;
+    float midiVelocity;
+        
+    float ampEnvValue = 1.0f;       //hold target amplitude envelope values
     
-    float ampEnvValue = 0.0f;
-    float envTemp = 1.0f;
-    bool attackAmpEnv = false;
+    //hold AMP bool values for triggering attack, decay, and release
+    bool attackAmpEnv = false;     
     bool decayAmpEnv = false;
     bool releaseAmpEnv = false;
-    
+
+    //hold AMP bool values for triggering smooth Attacks and Releases (osc's and envelope)
     bool smoothStart = false;
     bool smoothStartFlag = false;
-
+    
+    float cutoff = 20.0f;           //hold filter cutoff value
+    
+    //hold FILTER bool values for triggering Attack, Decay, and Release
+    bool attackFilEnv = false;
+    bool releaseFilEnv = false;
+    bool startFilEnv;
+    bool endFilEnv;
+    bool notFilDecay;
+    
+    float filEnvValue = 0.0f;       //hold target filter envelope values
+    
     // SCENE COMPONENTS
     OwnedArray<Component> modules;
     OwnedArray<Component> scenes;
@@ -270,6 +298,7 @@ private:
     LinearSmoothedValue<float> smoothOsc2Level;
     LinearSmoothedValue<float> smoothLFOAmpDepth;
     LinearSmoothedValue<float> smoothAmpEnv;
+    LinearSmoothedValue<float> smoothFilEnv;
     LinearSmoothedValue<float> smoothDrive;
     LinearSmoothedValue<float> smoothOutput;
          

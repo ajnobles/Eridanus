@@ -14,22 +14,22 @@ EnvFilterModule::EnvFilterModule ( )
 {
     //
     addAndMakeVisible ( AttackSlider );
-    AttackSlider.setRange ( 0 , 100 );
+    AttackSlider.setRange ( 0.0f , 5.0f );
     AttackSlider.setSliderStyle ( Slider::LinearVertical );
     AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( DecaySlider );
-    DecaySlider.setRange ( 0 , 100 );
+    DecaySlider.setRange ( 0.0f , 3.0f );
     DecaySlider.setSliderStyle ( Slider::LinearVertical );
     DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( SustainSlider );
-    SustainSlider.setRange ( 0 , 100 );
+    SustainSlider.setRange ( 0.0f , 1.0f );
     SustainSlider.setSliderStyle ( Slider::LinearVertical );
     SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
     addAndMakeVisible ( ReleaseSlider );
-    ReleaseSlider.setRange ( 0 , 100 );
+    ReleaseSlider.setRange ( 0.0f , 5.0f );
     ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
     ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
 
@@ -259,7 +259,25 @@ ComboBox& EnvFilterModule::LeftSide::getFilterBox()
     return FilterBox;
 }
 
+float EnvFilterModule::getAttackSliderValue ()
+{
+    return AttackSlider.getValue();
+}
 
+float EnvFilterModule::getDecaySliderValue ()
+{
+    return DecaySlider.getValue();
+}
+
+float EnvFilterModule::getSustainSliderValue ()
+{
+    return SustainSlider.getValue();
+}
+
+float EnvFilterModule::getReleaseSliderValue ()
+{
+    return ReleaseSlider.getValue();
+}
 
 
 

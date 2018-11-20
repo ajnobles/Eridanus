@@ -75,6 +75,13 @@ MainComponent::MainComponent()
     
     // OSC_2->getOscBox().addListener( this );
     // OSC_2->getLengthBox().addListener( this );
+    OSC_2->getLength4Button().addListener( this );
+    OSC_2->getLength8Button().addListener( this );
+    OSC_2->getLength16Button().addListener( this );
+    OSC_2->getSinButton().addListener( this );
+    OSC_2->getSawButton().addListener( this );
+    OSC_2->getTriangleButton().addListener( this );
+    OSC_2->getSquareButton().addListener( this );
     
     saturation->getTapeButton().addListener( this );
     saturation->getTubeButton().addListener( this );
@@ -93,7 +100,6 @@ MainComponent::MainComponent()
 
     // SET WAVETABLES
     String text = OSC_1->getOscType();
-    
     if (text == "Sin")
         wavetableOne = sineTable;
 
@@ -105,6 +111,20 @@ MainComponent::MainComponent()
 
     else if (text == "Sqr")
         wavetableOne = squareTable;
+
+    text = OSC_2->getOscType();
+    if (text == "Sin")
+        wavetableTwo = sineTable;
+
+    else if (text == "Saw")
+        wavetableTwo = sawTable;
+
+    else if (text == "Tri")
+        wavetableTwo = triangleTable;
+
+    else if (text == "Sqr")
+        wavetableTwo = squareTable;
+
 }
 
 MainComponent::~MainComponent()

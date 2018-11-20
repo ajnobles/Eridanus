@@ -57,41 +57,47 @@ OscillatorModule::OscillatorModule ( ) :
     fineTune.setText("Fine Tune", dontSendNotification);
 
     // LENGTH
+    addAndMakeVisible( length0 );
+    length0.setButtonText( "0'" );
+//    length0.onClick = [this] { 
+//        lengthButtonClicked( &length0 );
+//    };
+    
     addAndMakeVisible( length4 );
     length4.setButtonText( "4'" );
-    length4.onClick = [this] { 
-        lengthButtonClicked( &length4 );
-    };
+//    length4.onClick = [this] { 
+//        lengthButtonClicked( &length4 );
+//    };
     
     addAndMakeVisible( length8 );
     length8.setButtonText( "8'" );
-    length8.onClick = [this] { 
-        lengthButtonClicked( &length8 );
-    };
+//    length8.onClick = [this] { 
+//        lengthButtonClicked( &length8 );
+//    };
     
     addAndMakeVisible( length16 );
     length16.setButtonText( "16'" );
-    length16.onClick = [this] {
-        lengthButtonClicked( &length16 );
-    };
+//    length16.onClick = [this] {
+//        lengthButtonClicked( &length16 );
+//    };
 
 
     // WAVE FORM
     addAndMakeVisible( sinButton );
     sinButton.setButtonText( "Sin" );
-    sinButton.onClick = [this] { waveButtonClicked(&sinButton); };
+    // sinButton.onClick = [this] { waveButtonClicked(&sinButton); };
  
     addAndMakeVisible( sawButton );
     sawButton.setButtonText( "Saw" );
-    sawButton.onClick = [this] { waveButtonClicked(&sawButton); };
+    // sawButton.onClick = [this] { waveButtonClicked(&sawButton); };
       
     addAndMakeVisible( triButton );
     triButton.setButtonText( "Tri" );
-    triButton.onClick = [this] { waveButtonClicked(&triButton); };
+    // triButton.onClick = [this] { waveButtonClicked(&triButton); };
     
     addAndMakeVisible( sqrButton );
     sqrButton.setButtonText( "Sqr" );
-    sqrButton.onClick = [this] { waveButtonClicked(&sqrButton); };
+    // sqrButton.onClick = [this] { waveButtonClicked(&sqrButton); };
 /*   	        
 // >>>>>>> Allen_Gui_Main
     
@@ -165,6 +171,7 @@ void OscillatorModule::resized ()
     grid.setGap( Px ( 3_px ) );
 
     grid.items = {
+        GridItem ( length0  ).withArea( 1, 1, 3, 1 ),
         GridItem ( length4  ).withArea( 3, 1, 5, 1 ),
         GridItem ( length8  ).withArea( 5, 1, 7, 1 ),
         GridItem ( length16 ).withArea( 7, 1, 9, 1 ),
@@ -207,17 +214,42 @@ void OscillatorModule::comboBoxUpdate( String text )
 }
 
 
-void OscillatorModule::lengthButtonClicked( TextButton* current )
+void OscillatorModule::lengthButtonClicked( Button* current )
 {
     cout << "lengthButtonClicked" << endl;
-    return;
+
+    if ( current == &length0 )
+        changeLengthState( ZERO );
+
+    else if ( current == &length4 )
+        changeLengthState( FOUR );
+
+    else if (current == &length8 )
+        changeLengthState( EIGHT );
+
+    else if ( current == &length16 )
+        changeLengthState( SIXTEEN );
 }
 
 
-void OscillatorModule::waveButtonClicked( TextButton* current )
+void OscillatorModule::waveButtonClicked( Button* current )
 {
     cout << "waveButtonClicked" << endl;
-    return;
+
+    if (current == &sinButton) 
+        changeWaveState( SIN );
+
+    else if (current == &sawButton)
+        changeWaveState( SAW );
+
+    else if (current == &triButton)
+        changeWaveState( TRIANGLE );
+
+    else if (current == &sqrButton)
+        changeWaveState( SQUARE );
+
+    else
+        cout << "waveButtonClicked ERROR" << endl;
 }
 
 
@@ -230,36 +262,36 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
         {
             case SIN:
                 oscType = "Sine";
-                sinButton.setEnabled( true  );
-                sawButton.setEnabled( false );
-                triButton.setEnabled( false );
-                sqrButton.setEnabled( false );
+                sinButton.setEnabled( false );
+                sawButton.setEnabled( true  );
+                triButton.setEnabled( true  );
+                sqrButton.setEnabled( true  );
                 break;
 
             case SAW:
                 oscType = "Saw";
-                sinButton.setEnabled( false );
-                sawButton.setEnabled( true  );
-                triButton.setEnabled( false );
-                sqrButton.setEnabled( false );
+                sinButton.setEnabled( true  );
+                sawButton.setEnabled( false );
+                triButton.setEnabled( true  );
+                sqrButton.setEnabled( true  );
                 break;
 
 
             case TRIANGLE:
                 oscType = "Sine";
-                sinButton.setEnabled( false );
-                sawButton.setEnabled( false );
-                triButton.setEnabled( true  );
-                sqrButton.setEnabled( false );
+                sinButton.setEnabled( true  );
+                sawButton.setEnabled( true  );
+                triButton.setEnabled( false );
+                sqrButton.setEnabled( true  );
                 break;
 
 
             case SQUARE:
                 oscType = "Sine";
-                sinButton.setEnabled( false );
-                sawButton.setEnabled( false );
-                triButton.setEnabled( false );
-                sqrButton.setEnabled( true  );
+                sinButton.setEnabled( true  );
+                sawButton.setEnabled( true  );
+                triButton.setEnabled( true  );
+                sqrButton.setEnabled( false );
                 break;
 
             default: 
@@ -271,6 +303,8 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
 
 void OscillatorModule::changeLengthState ( LengthState newLength )
 {
+
+    cout << "newLength: " << newLength << endl;
     if (lenState != newLength) {
         lenState = newLength;
 
@@ -279,33 +313,37 @@ void OscillatorModule::changeLengthState ( LengthState newLength )
 
             case FOUR:  
                 oscMult = 0.5f;
-                length4 .setEnabled( true  );
-                length8 .setEnabled( false );
-                length16.setEnabled( false );
+                length0 .setEnabled( true );
+                length4 .setEnabled( false );
+                length8 .setEnabled( true );
+                length16.setEnabled( true );
                 break;
 
             case EIGHT:  
                 oscMult = 1.0f;
-                length4 .setEnabled( false );
-                length8 .setEnabled( true  );
-                length16.setEnabled( false );
+                length0 .setEnabled( true );
+                length4 .setEnabled( true );
+                length8 .setEnabled( false );
+                length16.setEnabled( true );
                 break;
 
             case SIXTEEN:  
                 oscMult = 2.0f;
-                length4 .setEnabled( false );
-                length8 .setEnabled( false );
-                length16.setEnabled( true  );
+                length0 .setEnabled( true );
+                length4 .setEnabled( true );
+                length8 .setEnabled( true );
+                length16.setEnabled( false );
                 break;
  
             // case ZERO:  
             default:  
                 oscMult = 0.0f;
-                length4 .setEnabled( false );
-                length8 .setEnabled( false );
-                length16.setEnabled( false );
+                length0 .setEnabled( false );
+                length4 .setEnabled( true );
+                length8 .setEnabled( true );
+                length16.setEnabled( true );
                 break;
-       }
+        }
     }
 }
 
@@ -325,6 +363,67 @@ bool OscillatorModule::isFreqSlider( Slider* slider )
 bool OscillatorModule::isFineTuneSlider( Slider* slider )
 {
     return slider == &fineTuneSlider;
+}
+
+
+bool OscillatorModule::isLength0Button( Button *button ) 
+{
+    return button == &length0;
+}
+
+
+bool OscillatorModule::isLength4Button( Button *button ) 
+{
+    return button == &length4;
+}
+
+
+bool OscillatorModule::isLength8Button( Button *button ) 
+{
+    return button == &length8;
+}
+
+
+bool OscillatorModule::isLength16Button( Button *button )
+{
+    return button == &length16;
+}
+
+
+bool OscillatorModule::isSinWaveButton( Button *button )
+{
+    return button == &sinButton;
+}
+
+
+bool OscillatorModule::isSawWaveButton( Button *button )
+{
+    return button == &sawButton;
+}
+
+
+bool OscillatorModule::isTriangleWaveButton( Button *button )
+{
+    return button == &triButton;
+}
+
+
+bool OscillatorModule::isSquareWaveButton( Button *button )
+{
+    return button == &sqrButton;
+}
+
+
+bool OscillatorModule::isThis( Button *button ) 
+{
+    return isLength0Button( button )
+        || isLength4Button( button )
+        || isLength8Button( button )
+        || isLength16Button( button )
+        || isSinWaveButton( button )
+        || isSawWaveButton( button )
+        || isTriangleWaveButton( button )
+        || isSquareWaveButton( button );
 }
 
 
@@ -374,6 +473,31 @@ ComboBox& OscillatorModule::getLengthBox()
 {
     return lengthBox;
 }
+
+
+TextButton& OscillatorModule::getLength0Button()
+{
+    return length0;
+}
+
+
+TextButton& OscillatorModule::getLength4Button()
+{
+    return length4;
+}
+
+
+TextButton& OscillatorModule::getLength8Button()
+{
+    return length8;
+}
+
+
+TextButton& OscillatorModule::getLength16Button()
+{
+    return length16;
+}
+
 
 
 TextButton& OscillatorModule::getSinButton()

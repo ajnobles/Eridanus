@@ -62,12 +62,26 @@ MainComponent::MainComponent()
     
     // COMPONENT LISTENERS
     envFilter->getFilterBox().addListener( this );
-    OSC_1->getOscBox().addListener( this );
-    OSC_1->getLengthBox().addListener( this );
-    OSC_2->getOscBox().addListener( this );
-    OSC_2->getLengthBox().addListener( this );
+
+//    OSC_1->getOscBox().addListener( this );
+//    OSC_1->getLengthBox().addListener( this );
+    OSC_1->getLength0Button().addListener( this );
+    OSC_1->getLength4Button().addListener( this );
+    OSC_1->getLength8Button().addListener( this );
+    OSC_1->getLength16Button().addListener( this );
+    OSC_1->getSinButton().addListener( this );
+    OSC_1->getSawButton().addListener( this );
+    OSC_1->getTriangleButton().addListener( this );
+    OSC_1->getSquareButton().addListener( this );
+    
+    // OSC_2->getOscBox().addListener( this );
+    // OSC_2->getLengthBox().addListener( this );
+    
     saturation->getTapeButton().addListener( this );
     saturation->getTubeButton().addListener( this );
+
+
+    
 
     //set window size
     setSize (1600, 800);
@@ -353,16 +367,16 @@ void MainComponent::resized()
     };
     
     grid.items = {
-        //GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),       
-        GridItem ( modules[1] ).withArea( 1, 1, 3, 1 ),
-        GridItem ( modules[2] ).withArea( 2, 2, 2, 2 ),
-        GridItem ( modules[3] ).withArea( 1, 2, 2, 2 ),
-        GridItem ( modules[4] ).withArea( 1, 3, 3, 3 ),
-        GridItem ( modules[5] ).withArea( 1, 4, 3, 4 ),
-        GridItem ( modules[6] ).withArea( 1, 5, 3, 5 ),
-        GridItem ( modules[7] ).withArea( 1, 6, 3, 6 ),
-        GridItem ( modules[8] ).withArea( 1, 7, 3, 7 ),
-        GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
+        //GridItem ( Input ).withArea( 1, 1, 3, 1 ),       
+        GridItem ( LfoFreq   ).withArea( 1, 1, 3, 1 ),
+        GridItem ( OSC_1     ).withArea( 1, 2, 2, 2 ),
+        GridItem ( OSC_2     ).withArea( 2, 2, 2, 2 ),
+        GridItem ( LfoAmp    ).withArea( 1, 3, 3, 3 ),
+        GridItem ( ampFilter ).withArea( 1, 4, 3, 4 ),
+        GridItem ( envFilter ).withArea( 1, 5, 3, 5 ),
+        GridItem ( saturation ).withArea( 1, 6, 3, 6 ),
+        GridItem ( output ).withArea( 1, 7, 3, 7 ),
+        // ? GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
         GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
     };
       
@@ -447,12 +461,30 @@ void MainComponent::comboBoxChanged(ComboBox* box)
 //Handle button click events - set appropriate saturation function
 void MainComponent::buttonClicked(Button* button)
 {
-    //grab button text
     String text = button->getButtonText();
+    OscillatorModule *currentOSC = nullptr;
+
+    if ( OSC_1->isThis( button ) )
+        currentOSC = OSC_1;
+
+    else if ( OSC_2->isThis( button ) )
+        currentOSC = OSC_2;
+
+    cout << "buttonClicked Text: " << text << endl;
     
+    if ( text == "0'" || text == "4'" || text == "8'" || text == "16'" )
+        currentOSC->lengthButtonClicked( button );
+
+    if ( text == "Sin" || text == "Saw" || text == "Tri" || text == "Sqr" )
+        currentOSC->waveButtonClicked( button );
+
     //set saturation type via text
-    saturation->buttonUpdate( text );
+    if ( text == "TB" || text == "TP" )
+        saturation->buttonUpdate( text );
 }
+
+
+
 
 //Updates filter parameters set by user 
 void MainComponent::updateFilterSettings()

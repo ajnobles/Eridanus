@@ -15,6 +15,7 @@
 
 enum LengthState 
 {
+    ZERO,
     FOUR,
     EIGHT,
     SIXTEEN
@@ -41,8 +42,8 @@ public:
 
     void comboBoxUpdate ( String text );
 
-    void lengthButtonClicked ( TextButton* current );
-    void waveButtonClicked ( TextButton* current );
+    void lengthButtonClicked ( Button* current );
+    void waveButtonClicked ( Button* current );
     
 
     void changeWaveState (WaveState newWave);
@@ -51,6 +52,15 @@ public:
     bool isLevelSlider( Slider* slider );
     bool isFreqSlider( Slider* slider );
     bool isFineTuneSlider( Slider* slider );
+    bool isLength0Button( Button *button);
+    bool isLength4Button( Button *button);
+    bool isLength8Button( Button *button);
+    bool isLength16Button( Button *button);
+    bool isSinWaveButton( Button *button );
+    bool isSawWaveButton( Button *button );
+    bool isTriangleWaveButton( Button *button );
+    bool isSquareWaveButton( Button *button );
+    bool isThis ( Button *button );
 
     float getLevelSliderValue();
     float getFreqSliderValue();
@@ -60,9 +70,10 @@ public:
     ComboBox& getOscBox();
     ComboBox& getLengthBox();
 
+    TextButton& getLength0Button();
     TextButton& getLength4Button();
     TextButton& getLength8Button();
-    TextButton& getLength12Button();
+    TextButton& getLength16Button();
 
     TextButton& getSinButton();
     TextButton& getSawButton();
@@ -88,6 +99,7 @@ private:
     Label oscTypeLabel;
     Label oscLength;
 
+    TextButton length0;
     TextButton length4;
     TextButton length8;
     TextButton length16;

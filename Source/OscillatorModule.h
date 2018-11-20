@@ -15,7 +15,6 @@
 
 enum LengthState 
 {
-    ZERO,
     FOUR,
     EIGHT,
     SIXTEEN
@@ -40,12 +39,11 @@ public:
     void paint (Graphics& g) override;
     void resized () override;
 
-    void comboBoxUpdate ( String text );
+    // void comboBoxUpdate ( String text );
 
     void lengthButtonClicked ( Button* current );
     void waveButtonClicked ( Button* current );
     
-
     void changeWaveState (WaveState newWave);
     void changeLengthState (LengthState newLength);    
 
@@ -67,7 +65,7 @@ public:
     float getOscMult();
 
     // ComboBox& getOscBox();
-    ComboBox& getLengthBox();
+    // ComboBox& getLengthBox();
 
     TextButton& getLength4Button();
     TextButton& getLength8Button();
@@ -108,9 +106,8 @@ private:
     TextButton sqrButton;
     WaveState waveState;
     
-
     // ComboBox oscBox;
-    ComboBox lengthBox;
+    // ComboBox lengthBox;
 
     float oscMult;
 

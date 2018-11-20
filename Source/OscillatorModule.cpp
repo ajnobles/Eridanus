@@ -152,6 +152,7 @@ void OscillatorModule::resized ()
   
     grid.autoRows = Track (1_fr);
     grid.autoColumns = Track (1_fr);
+    
 /*
     grid.items = {
         GridItem ( oscTypeLabel ),
@@ -191,7 +192,7 @@ void OscillatorModule::resized ()
 }
 
 
-
+/*
 void OscillatorModule::comboBoxUpdate( String text )
 // void OscillatorModule::comboBoxChanged ( ComboBox* box )
 {
@@ -210,7 +211,7 @@ void OscillatorModule::comboBoxUpdate( String text )
         oscType = text;
 
 }
-
+*/
 
 void OscillatorModule::lengthButtonClicked( Button* current )
 {
@@ -433,18 +434,6 @@ float OscillatorModule::getFineTuneSliderValue()
 void OscillatorModule::setFineTuneSliderValue( float v )
 {
     fineTuneSlider.setValue( v );
-}
-
-/*
-ComboBox& OscillatorModule::getOscBox()
-{
-    return oscBox;
-}
-*/
-
-ComboBox& OscillatorModule::getLengthBox()
-{
-    return lengthBox;
 }
 
 

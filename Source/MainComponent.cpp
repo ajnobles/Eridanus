@@ -112,6 +112,7 @@ MainComponent::MainComponent()
     else if (text == "Sqr")
         wavetableOne = squareTable;
 
+
     text = OSC_2->getOscType();
     if (text == "Sin")
         wavetableTwo = sineTable;

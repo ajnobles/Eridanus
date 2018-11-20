@@ -258,6 +258,7 @@ private:
     Array<float> wavetableOne;
     Array<float> wavetableTwo;
     
+
     //Filter creation...
     //Converts mono processor into multi-channels (2), as opposed to processing independently (L and R)
     //Comprised of two components: the filter (1rst part: contains mono processor)

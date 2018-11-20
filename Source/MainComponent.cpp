@@ -65,7 +65,6 @@ MainComponent::MainComponent()
 
 //    OSC_1->getOscBox().addListener( this );
 //    OSC_1->getLengthBox().addListener( this );
-    OSC_1->getLength0Button().addListener( this );
     OSC_1->getLength4Button().addListener( this );
     OSC_1->getLength8Button().addListener( this );
     OSC_1->getLength16Button().addListener( this );
@@ -91,6 +90,21 @@ MainComponent::MainComponent()
     
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
+
+    // SET WAVETABLES
+    String text = OSC_1->getOscType();
+    
+    if (text == "Sin")
+        wavetableOne = sineTable;
+
+    else if (text == "Saw")
+        wavetableOne = sawTable;
+
+    else if (text == "Tri")
+        wavetableOne = triangleTable;
+
+    else if (text == "Sqr")
+        wavetableOne = squareTable;
 }
 
 MainComponent::~MainComponent()
@@ -396,7 +410,7 @@ void MainComponent::comboBoxChanged(ComboBox* box)
     {
         envFilter->comboBoxUpdate( text );
     }
-
+/*
     //handles osc one combo box oscillator type
     //set wavetable
     if (box == &OSC_1->getOscBox())
@@ -456,6 +470,7 @@ void MainComponent::comboBoxChanged(ComboBox* box)
     {
         OSC_2->comboBoxUpdate( text );
     }
+*/
 }
 
 //Handle button click events - set appropriate saturation function
@@ -463,20 +478,39 @@ void MainComponent::buttonClicked(Button* button)
 {
     String text = button->getButtonText();
     OscillatorModule *currentOSC = nullptr;
+    Array<float> *currentTable = nullptr;
 
-    if ( OSC_1->isThis( button ) )
+    // DETERMINE OSCILLATOR
+    if ( OSC_1->isThis( button ) ) {
         currentOSC = OSC_1;
+        currentTable = &wavetableOne;
+    }
 
-    else if ( OSC_2->isThis( button ) )
+    else if ( OSC_2->isThis( button ) ) {
         currentOSC = OSC_2;
+        currentTable = &wavetableTwo;
+    }
 
-    cout << "buttonClicked Text: " << text << endl;
-    
-    if ( text == "0'" || text == "4'" || text == "8'" || text == "16'" )
+    if ( text == "4'" || text == "8'" || text == "16'" ) {
         currentOSC->lengthButtonClicked( button );
+    }
 
-    if ( text == "Sin" || text == "Saw" || text == "Tri" || text == "Sqr" )
+    // THIS SHOULD BE REFACTORED
+    if ( text == "Sin" || text == "Saw" || text == "Tri" || text == "Sqr" ) {
         currentOSC->waveButtonClicked( button );
+
+        if (text == "Sin")
+            *currentTable = sineTable;
+
+        else if (text == "Saw")
+            *currentTable = sawTable;
+
+        else if (text == "Tri")
+            *currentTable = triangleTable;
+
+        else
+            *currentTable = squareTable;
+    }
 
     //set saturation type via text
     if ( text == "TB" || text == "TP" )

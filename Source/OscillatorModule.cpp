@@ -10,8 +10,7 @@
 
 #include "OscillatorModule.h"
 
-OscillatorModule::OscillatorModule ( ) :
-    lenState ( FOUR ), waveState ( SIN )
+OscillatorModule::OscillatorModule ( ) 
 {
     // LEVEL
     addAndMakeVisible ( levelSlider );
@@ -57,12 +56,6 @@ OscillatorModule::OscillatorModule ( ) :
     fineTune.setText("Fine Tune", dontSendNotification);
 
     // LENGTH
-    addAndMakeVisible( length0 );
-    length0.setButtonText( "0'" );
-//    length0.onClick = [this] { 
-//        lengthButtonClicked( &length0 );
-//    };
-    
     addAndMakeVisible( length4 );
     length4.setButtonText( "4'" );
 //    length4.onClick = [this] { 
@@ -80,6 +73,8 @@ OscillatorModule::OscillatorModule ( ) :
 //    length16.onClick = [this] {
 //        lengthButtonClicked( &length16 );
 //    };
+    changeLengthState( FOUR  );
+    changeLengthState( EIGHT );
 
 
     // WAVE FORM
@@ -98,7 +93,11 @@ OscillatorModule::OscillatorModule ( ) :
     addAndMakeVisible( sqrButton );
     sqrButton.setButtonText( "Sqr" );
     // sqrButton.onClick = [this] { waveButtonClicked(&sqrButton); };
-/*   	        
+
+    changeWaveState( SAW );
+    changeWaveState( SIN );
+    
+    /*   	        
 // >>>>>>> Allen_Gui_Main
     
     // COMBO BOX
@@ -171,7 +170,6 @@ void OscillatorModule::resized ()
     grid.setGap( Px ( 3_px ) );
 
     grid.items = {
-        GridItem ( length0  ).withArea( 1, 1, 3, 1 ),
         GridItem ( length4  ).withArea( 3, 1, 5, 1 ),
         GridItem ( length8  ).withArea( 5, 1, 7, 1 ),
         GridItem ( length16 ).withArea( 7, 1, 9, 1 ),
@@ -216,12 +214,7 @@ void OscillatorModule::comboBoxUpdate( String text )
 
 void OscillatorModule::lengthButtonClicked( Button* current )
 {
-    cout << "lengthButtonClicked" << endl;
-
-    if ( current == &length0 )
-        changeLengthState( ZERO );
-
-    else if ( current == &length4 )
+    if ( current == &length4 )
         changeLengthState( FOUR );
 
     else if (current == &length8 )
@@ -234,8 +227,6 @@ void OscillatorModule::lengthButtonClicked( Button* current )
 
 void OscillatorModule::waveButtonClicked( Button* current )
 {
-    cout << "waveButtonClicked" << endl;
-
     if (current == &sinButton) 
         changeWaveState( SIN );
 
@@ -261,7 +252,7 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
         switch (waveState)
         {
             case SIN:
-                oscType = "Sine";
+                oscType = "Sin";
                 sinButton.setEnabled( false );
                 sawButton.setEnabled( true  );
                 triButton.setEnabled( true  );
@@ -278,7 +269,7 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
 
 
             case TRIANGLE:
-                oscType = "Sine";
+                oscType = "Tri";
                 sinButton.setEnabled( true  );
                 sawButton.setEnabled( true  );
                 triButton.setEnabled( false );
@@ -287,7 +278,7 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
 
 
             case SQUARE:
-                oscType = "Sine";
+                oscType = "Sqr";
                 sinButton.setEnabled( true  );
                 sawButton.setEnabled( true  );
                 triButton.setEnabled( true  );
@@ -304,7 +295,6 @@ void OscillatorModule::changeWaveState ( WaveState newWave )
 void OscillatorModule::changeLengthState ( LengthState newLength )
 {
 
-    cout << "newLength: " << newLength << endl;
     if (lenState != newLength) {
         lenState = newLength;
 
@@ -313,7 +303,6 @@ void OscillatorModule::changeLengthState ( LengthState newLength )
 
             case FOUR:  
                 oscMult = 0.5f;
-                length0 .setEnabled( true );
                 length4 .setEnabled( false );
                 length8 .setEnabled( true );
                 length16.setEnabled( true );
@@ -321,7 +310,6 @@ void OscillatorModule::changeLengthState ( LengthState newLength )
 
             case EIGHT:  
                 oscMult = 1.0f;
-                length0 .setEnabled( true );
                 length4 .setEnabled( true );
                 length8 .setEnabled( false );
                 length16.setEnabled( true );
@@ -329,20 +317,11 @@ void OscillatorModule::changeLengthState ( LengthState newLength )
 
             case SIXTEEN:  
                 oscMult = 2.0f;
-                length0 .setEnabled( true );
                 length4 .setEnabled( true );
                 length8 .setEnabled( true );
                 length16.setEnabled( false );
                 break;
- 
-            // case ZERO:  
-            default:  
-                oscMult = 0.0f;
-                length0 .setEnabled( false );
-                length4 .setEnabled( true );
-                length8 .setEnabled( true );
-                length16.setEnabled( true );
-                break;
+    
         }
     }
 }
@@ -363,12 +342,6 @@ bool OscillatorModule::isFreqSlider( Slider* slider )
 bool OscillatorModule::isFineTuneSlider( Slider* slider )
 {
     return slider == &fineTuneSlider;
-}
-
-
-bool OscillatorModule::isLength0Button( Button *button ) 
-{
-    return button == &length0;
 }
 
 
@@ -416,8 +389,7 @@ bool OscillatorModule::isSquareWaveButton( Button *button )
 
 bool OscillatorModule::isThis( Button *button ) 
 {
-    return isLength0Button( button )
-        || isLength4Button( button )
+    return isLength4Button( button )
         || isLength8Button( button )
         || isLength16Button( button )
         || isSinWaveButton( button )
@@ -463,21 +435,16 @@ void OscillatorModule::setFineTuneSliderValue( float v )
     fineTuneSlider.setValue( v );
 }
 
-
+/*
 ComboBox& OscillatorModule::getOscBox()
 {
     return oscBox;
 }
+*/
 
 ComboBox& OscillatorModule::getLengthBox()
 {
     return lengthBox;
-}
-
-
-TextButton& OscillatorModule::getLength0Button()
-{
-    return length0;
 }
 
 

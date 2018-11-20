@@ -52,7 +52,6 @@ public:
     bool isLevelSlider( Slider* slider );
     bool isFreqSlider( Slider* slider );
     bool isFineTuneSlider( Slider* slider );
-    bool isLength0Button( Button *button);
     bool isLength4Button( Button *button);
     bool isLength8Button( Button *button);
     bool isLength16Button( Button *button);
@@ -67,10 +66,9 @@ public:
     float getFineTuneSliderValue();
     float getOscMult();
 
-    ComboBox& getOscBox();
+    // ComboBox& getOscBox();
     ComboBox& getLengthBox();
 
-    TextButton& getLength0Button();
     TextButton& getLength4Button();
     TextButton& getLength8Button();
     TextButton& getLength16Button();
@@ -99,7 +97,6 @@ private:
     Label oscTypeLabel;
     Label oscLength;
 
-    TextButton length0;
     TextButton length4;
     TextButton length8;
     TextButton length16;
@@ -112,7 +109,7 @@ private:
     WaveState waveState;
     
 
-    ComboBox oscBox;
+    // ComboBox oscBox;
     ComboBox lengthBox;
 
     float oscMult;

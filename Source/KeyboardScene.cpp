@@ -67,7 +67,6 @@ void KeyboardScene::resized ()
                                      OFFSET,
                                      THICKNESS);
 
-
     grid.performLayout( bounds );
 }
 
@@ -109,7 +108,13 @@ void KeyboardScene::setBaseFrequency( float v )
     }
 
     baseFrequency = v;
-}    
+}
+
+
+void KeyboardScene::addListeners( Button::Listener* l )
+{
+    return;
+}
 
 
 vector<float> KeyboardScene::getOctaveFrequencies( int octave )
@@ -230,6 +235,7 @@ void KeyboardScene::Octave::resized (  )
 KeyboardScene::Octave::WhiteKey::WhiteKey( float freq )
 {
     frequency = freq;
+
     whiteKey.setColour( TextButton::buttonColourId, Colours::ivory );
     whiteKey.setColour( TextButton::buttonOnColourId, Colours::green );
 

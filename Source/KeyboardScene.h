@@ -26,7 +26,8 @@ public:
     float getBaseFrequency();
     void  setBaseFrequency( float v );
     vector<float> getOctaveFrequencies( int octave );
-
+    
+    void addListeners( Button::Listener*);
 
     class Octave : public CustomComponent 
     {
@@ -96,6 +97,6 @@ private:
 
     float baseFrequency;
     // HOLDS FREQUENCIES FROM C0 thru B7
-    vector< vector<float> > key_frequencies;
+    vector < vector<float> > key_frequencies;
 
 };

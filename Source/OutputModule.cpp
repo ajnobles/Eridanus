@@ -17,13 +17,13 @@ OutputModule::OutputModule ()
     OutputSlider.setRange ( 0.0, 1.0, 0 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
     OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
-
+/*
     addAndMakeVisible ( OutputFeedbackSlider );
     OutputFeedbackSlider.setRange ( 0.0, 100.0, 1.0 );
     OutputFeedbackSlider.setSliderStyle ( Slider::LinearBarVertical );
     OutputFeedbackSlider.setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
     OutputFeedbackSlider.setValue (50.0f);
-
+*/
 }
 
 OutputModule::~OutputModule ()
@@ -47,13 +47,11 @@ void OutputModule::resized ()
     using Track = Grid::TrackInfo;
 
     grid.templateRows = { Track (1_fr), Track (10_fr) };
-    grid.templateColumns = { Track (1_fr) , Track (1_fr) };
+    grid.templateColumns = { Track (1_fr) };
 
     grid.items = {
         GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( OutputSlider ),
-        GridItem ( OutputFeedbackSlider )
+        GridItem ( OutputSlider )
     };
 
     Rectangle<int> bounds = getLocalBounds();

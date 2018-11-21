@@ -177,6 +177,9 @@ private:
     // OUTPUT MODULE
     OutputModule *output;
 
+    // KEYBOARD SCENE
+    KeyboardScene *keyboard;
+
 
     //holds audio device's sample rate for osc, lfo, and filter settings
     float globalSampleRate;  

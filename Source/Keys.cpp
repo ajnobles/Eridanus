@@ -28,3 +28,8 @@ void Keys::paint( Graphics& G )
 void Keys::resized()
 {}
 
+/*
+void buttonClicked( Button* key )
+{
+}
+*/

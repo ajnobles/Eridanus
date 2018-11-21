@@ -58,8 +58,9 @@ MainComponent::MainComponent()
     }
 
     // SCENES
-    scenes.add ( new KeyboardScene );
-    addAndMakeVisible ( scenes[0] );
+    keyboard = new KeyboardScene();
+    addAndMakeVisible ( keyboard );
+
     
     // COMPONENT LISTENERS
     envFilter->getFilterBox().addListener( this );
@@ -69,6 +70,10 @@ MainComponent::MainComponent()
     OSC_2->getLengthBox().addListener( this );
     saturation->getTapeButton().addListener( this );
     saturation->getTubeButton().addListener( this );
+
+    keyboard->addListeners( this );
+
+    
 
     //set window size
     setSize (1600, 800);
@@ -339,7 +344,7 @@ void MainComponent::resized()
         GridItem ( modules[7] ).withArea( 1, 6, 3, 6 ),
         GridItem ( modules[8] ).withArea( 1, 7, 3, 7 ),
         GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
-        GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
+        GridItem ( keyboard ).withArea( 3, 1, 3, 8 )
     };
 
     /*

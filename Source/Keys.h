@@ -12,7 +12,8 @@
 
 #include "CustomComponent.h"
 
-class Keys : public CustomComponent
+class Keys : public CustomComponent// ,
+                    // Button::Listener
 {
 public:
     Keys();
@@ -21,6 +22,7 @@ public:
     void paint( Graphics& g ) override;
     void resized () override;
 
+//     void buttonClicked ( Button* key );
 
 private:
     ToggleButton key;

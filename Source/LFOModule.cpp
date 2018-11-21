@@ -20,6 +20,9 @@ LfoModule::LfoModule ( String type )
     RateSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
     RateSlider.setValue( 1.0 );
 
+    addAndMakeVisible( RateLabel );
+    RateLabel.setText( "Rate", dontSendNotification );
+    
     addAndMakeVisible ( DepthSlider );
     DepthSlider.setRange ( 0, 1.0 );
     DepthSlider.setSliderStyle ( Slider::LinearVertical );

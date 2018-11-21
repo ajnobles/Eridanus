@@ -37,6 +37,7 @@ public:
     
 private:    
     Slider DriveKnob;
+    Label  DriveLabel;
     
     int saturationType = 1;
     

@@ -9,7 +9,7 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent() 
 {        
     // INPUT
     Input = new InputModule( );
@@ -60,6 +60,29 @@ MainComponent::MainComponent()
     keyboard = new KeyboardScene();
     addAndMakeVisible ( keyboard );
 
+    addAndMakeVisible ( midiInputListLabel );
+    midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
+    midiInputListLabel.attachToComponent (&midiInputList, true);
+
+    addAndMakeVisible( midiInputList );
+    midiInputList.setTextWhenNoChoicesAvailable ("No MIDI Inputs Enabled");
+    auto midiInputs = MidiInput::getDevices();
+    midiInputList.addItemList (midiInputs, 1);
+    midiInputList.onChange = [this] {
+        setMidiInputDevice ( midiInputList.getSelectedItemIndex() );
+    };
+
+    for (auto midiInput : midiInputs) {
+        if (deviceManager.isMidiInputEnabled (midiInput)) {
+            setMidiInputDevice ( midiInputs.indexOf (midiInput) );
+            break;
+        }
+    }
+
+    if (midiInputList.getSelectedId() == 0) {
+        setMidiInputDevice ( 0 );
+    }
+
     
     // COMPONENT LISTENERS
     envFilter->getFilterBox().addListener( this );
@@ -87,18 +110,12 @@ MainComponent::MainComponent()
     saturation->getTapeButton().addListener( this );
     saturation->getTubeButton().addListener( this );
 
-// <<<<<<< HEAD
-    keyboard->addListeners( this );
-// =======
-// >>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
-
-    
 
     //set window size
     setSize (1600, 800);
 
     // Set MIDI device for listening (controller = [2])
-    setMidiInputDevice(2);
+    setMidiInputDevice( 0 );
     
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
@@ -137,6 +154,8 @@ MainComponent::~MainComponent()
 {
     // This shuts down the audio device and clears the audio source.
     shutdownAudio();
+
+    delete keyboard;
 }
 
 
@@ -388,7 +407,7 @@ void MainComponent::resized()
     Grid grid;
     
     using Track = Grid::TrackInfo;
-        
+/*        
     grid.templateRows    = {
         Track (1_fr),
         Track (1_fr),
@@ -400,9 +419,17 @@ void MainComponent::resized()
         Track (1_fr),
         Track (3_fr),
         Track (1_fr),
-        Track (3_fr),
         Track (2_fr),
+        Track (3_fr),
         Track (1_fr),
+        Track (1_fr)
+    };
+*/
+    grid.autoRows = {
+        Track (1_fr)
+    };
+
+    grid.autoColumns = {
         Track (1_fr)
     };
     
@@ -419,19 +446,19 @@ void MainComponent::resized()
         GridItem ( modules[8] ).withArea( 1, 7, 3, 7 ),
         GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
         GridItem ( keyboard ).withArea( 3, 1, 3, 8 )
-*/ =======
+ ======= */
         //GridItem ( Input ).withArea( 1, 1, 3, 1 ),       
-        GridItem ( LfoFreq   ).withArea( 1, 1, 3, 1 ),
-        GridItem ( OSC_1     ).withArea( 1, 2, 2, 2 ),
-        GridItem ( OSC_2     ).withArea( 2, 2, 2, 2 ),
-        GridItem ( LfoAmp    ).withArea( 1, 3, 3, 3 ),
-        GridItem ( ampFilter ).withArea( 1, 4, 3, 4 ),
-        GridItem ( envFilter ).withArea( 1, 5, 3, 5 ),
-        GridItem ( saturation ).withArea( 1, 6, 3, 6 ),
-        GridItem ( output ).withArea( 1, 7, 3, 7 ),
-        // ? GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
-        GridItem ( scenes [0] ).withArea( 3, 1, 3, 8 )
->>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
+        GridItem ( LfoFreq       ).withArea( 1, 1, 3, 1 ),
+        GridItem ( OSC_1         ).withArea( 1, 2, 2, 2 ),
+        GridItem ( OSC_2         ).withArea( 2, 2, 2, 2 ),
+        GridItem ( LfoAmp        ).withArea( 1, 3, 3, 3 ),
+        GridItem ( ampFilter     ).withArea( 1, 4, 3, 4 ),
+        GridItem ( envFilter     ).withArea( 1, 5, 3, 5 ),
+        GridItem ( saturation    ).withArea( 1, 6, 3, 6 ),
+        GridItem ( output        ).withArea( 1, 7, 3, 7 ),
+        GridItem ( keyboard      ).withArea( 3, 1, 4, 8 ),
+        GridItem ( midiInputList ).withArea( 4, 1, 5, 8 )
+// >>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
     };
       
     Rectangle<int> bounds = getLocalBounds();

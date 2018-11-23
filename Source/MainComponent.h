@@ -36,6 +36,7 @@ class MainComponent   : // public Component,
                         public Button::Listener,
                         private MidiInputCallback,
                         private ComboBox::Listener
+
 {
 public:
     //==============================================================================
@@ -156,15 +157,23 @@ public:
     {
         //store list (String Array) of available MIDI devices
         auto deviceList = MidiInput::getDevices();
+
+        deviceManager.removeMidiInputCallback (deviceList[lastInputIndex], keyboard->getMidiCollector());
         
         //store MIDI device (3rd option [2] for connected controller)
         auto newMidiDeviceInput = deviceList[index];
 
         //enable MIDI input device (controller)
-        deviceManager.setMidiInputEnabled(newMidiDeviceInput, true);
+        if ( ! deviceManager.isMidiInputEnabled (newMidiDeviceInput) ) {
+            deviceManager.setMidiInputEnabled ( newMidiDeviceInput, true );
+        }
 
         //set manager to receive all incoming events from the enabled device
-        deviceManager.addMidiInputCallback(newMidiDeviceInput, this);
+        // deviceManager.addMidiInputCallback(newMidiDeviceInput, this);
+        deviceManager.addMidiInputCallback (newMidiDeviceInput, keyboard->getMidiCollector());
+        midiInputList.setSelectedId (index + 1, dontSendNotification);
+
+        lastInputIndex = index;
     }
       
 private:
@@ -176,6 +185,11 @@ private:
     //Store MIDI Note On Frequency and Velocity
     float midiFrequency = 300.0f;
     float midiVelocity = 0.0f;
+
+    // MIDI
+    ComboBox midiInputList;
+    Label    midiInputListLabel;
+    int lastInputIndex = 0;
     
     float ampEnvValue = 0.0f;
     float envTemp = 1.0f;

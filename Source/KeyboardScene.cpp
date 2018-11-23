@@ -10,6 +10,7 @@
 
 #include "KeyboardScene.h"
 
+/*
 KeyboardScene::KeyboardScene ()
 {
     setBaseFrequency( 440.0 );
@@ -346,4 +347,4 @@ float KeyboardScene::Octave::BlackKey::getFrequency ( )
     return frequency;
 }
 
-
+*/

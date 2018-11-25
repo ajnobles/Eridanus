@@ -61,10 +61,11 @@ MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*
     addAndMakeVisible ( keyboard );
     
     // keyboardState = keyboard->getKeyboardState();
-
+*/
     addAndMakeVisible ( midiInputListLabel );
     midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
-    midiInputListLabel.attachToComponent (&midiInputList, true);
+    midiInputListLabel.attachToComponent (&midiInputList, false);
+    midiInputListLabel.setJustificationType ( Justification::horizontallyCentred );
 
     addAndMakeVisible( midiInputList );
     midiInputList.setTextWhenNoChoicesAvailable ("No MIDI Inputs Enabled");
@@ -84,7 +85,6 @@ MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*
     if (midiInputList.getSelectedId() == 0) {
         setMidiInputDevice ( 0 );
     }
-*/
     
     // COMPONENT LISTENERS
     envFilter->getFilterBox().addListener( this );
@@ -453,16 +453,16 @@ void MainComponent::resized()
         GridItem ( keyboard ).withArea( 3, 1, 3, 8 )
  ======= */
         //GridItem ( Input ).withArea( 1, 1, 3, 1 ),       
-        GridItem ( LfoFreq       ).withArea( 1, 1, 3, 1 ),
-        GridItem ( OSC_1         ).withArea( 1, 2, 2, 2 ),
-        GridItem ( OSC_2         ).withArea( 2, 2, 2, 2 ),
-        GridItem ( LfoAmp        ).withArea( 1, 3, 3, 3 ),
-        GridItem ( ampFilter     ).withArea( 1, 4, 3, 4 ),
-        GridItem ( envFilter     ).withArea( 1, 5, 3, 5 ),
-        GridItem ( saturation    ).withArea( 1, 6, 3, 6 ),
-        GridItem ( output        ).withArea( 1, 7, 3, 7 ),
-//        GridItem ( keyboard      ).withArea( 3, 1, 4, 8 ),
-//        GridItem ( midiInputList ).withArea( 4, 1, 5, 8 )
+        GridItem ( LfoFreq       ).withArea( 1 , 1  ,  10, 10 ),
+        GridItem ( OSC_1         ).withArea( 1 , 10 ,  5 , 30 ),
+        GridItem ( OSC_2         ).withArea( 5 , 10 ,  10, 30 ),
+        GridItem ( LfoAmp        ).withArea( 1 , 30 ,  10, 40 ),
+        GridItem ( ampFilter     ).withArea( 1 , 40 ,  10, 60 ),
+        GridItem ( envFilter     ).withArea( 1 , 60 ,  10, 90 ),
+        GridItem ( saturation    ).withArea( 1 , 90 ,  10, 100 ),
+        GridItem ( output        ).withArea( 1 , 100,  10, 110 ),
+        GridItem ( midiInputList ).withArea( 11, 1  ,  11, 20 ),
+//        GridItem ( keyboard      ).withArea( 10, 20, 20, 100 )
 // >>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
     };
       

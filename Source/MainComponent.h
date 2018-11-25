@@ -35,6 +35,7 @@ class MainComponent   : // public Component,
                         public Slider::Listener,
                         public Button::Listener,
                         private MidiInputCallback,
+                        private MidiKeyboardStateListener,
                         private ComboBox::Listener
 {
 public:
@@ -124,10 +125,14 @@ public:
     
     //handle amp envelope manipulation
     void ampEnvelope();
-   
+  
     //function receives incoming MIDI messages (Midi input device & Midi message argruments)
     void handleIncomingMidiMessage(MidiInput* source, const MidiMessage& message) override
-    {
+    { 
+        const ScopedValueSetter<bool> scopedInputFlag ( isAddingFromMidiInput, true );
+        keyboardState.processNextMidiEvent ( message );
+        postMessageToList ( message, source->getName() );
+ 
         //convert MIDI note to frequency for OSC's
         midiFrequency = (float) MidiMessage::getMidiNoteInHertz (message.getNoteNumber());
         
@@ -149,7 +154,7 @@ public:
             decayAmpEnv = false;
             releaseAmpEnv = true;
         }
-    };
+   };
     
     //select MIDI input device for listening
     void setMidiInputDevice (int index)
@@ -174,7 +179,110 @@ public:
 
         lastInputIndex = index;
     }
-      
+
+
+    //
+    void handleNoteOn (MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override
+    {
+        if ( ! isAddingFromMidiInput ) {
+            auto m = MidiMessage::noteOn ( midiChannel, midiNoteNumber, velocity );
+            m.setTimeStamp ( Time::getMillisecondCounterHiRes() * 0.001 );
+            postMessageToList ( m, "On-Screen Keyboard" );
+
+            //convert MIDI note to frequency for OSC's
+            midiFrequency = (float) MidiMessage::getMidiNoteInHertz (m.getNoteNumber());
+        
+            //store MIDI note velocity for OSCs' levels
+            midiVelocity = m.getFloatVelocity();
+        }
+    }
+
+    void handleNoteOff (MidiKeyboardState*, int midiChannel, int midiNoteNumber, float /*velocity*/) override
+    {
+        if ( ! isAddingFromMidiInput ) {
+            auto m = MidiMessage::noteOff ( midiChannel, midiNoteNumber );
+            m.setTimeStamp ( Time::getMillisecondCounterHiRes() * 0.001 );
+            postMessageToList ( m, "On-Screen Keyboard" );
+            midiVelocity = m.getFloatVelocity();
+        }
+    }
+
+
+    void postMessageToList ( const MidiMessage& message, const String& source )
+    {
+        (new IncomingMessageCallback (this, message, source))->post();
+    }
+
+    void addMessageToList (const MidiMessage& message, const String& source)
+    {
+        auto time = message.getTimeStamp() - startTime;
+
+        auto hours = ((int) (time / 3600.0)) % 24;
+        auto minutes = ((int) (time / 60.0)) % 60;
+        auto seconds = ((int) time) % 60;
+        auto millis = ((int) (time * 1000.0)) % 1000;
+
+        auto timecode = String::formatted ("%02d:%02d:%02d:%03d", hours, minutes, seconds, millis);
+
+        auto description = getMidiMessageDescription (message);
+
+        String midiMessageString (timecode + " - " + description + " (" + source + ")");
+        logMessage (midiMessageString);
+    }
+    
+    static String getMidiMessageDescription (const MidiMessage& m)
+    {
+        if (m.isNoteOn())           return "Note on "          + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3);
+        if (m.isNoteOff())          return "Note off "         + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3);
+        if (m.isProgramChange())    return "Program change "   + String (m.getProgramChangeNumber());
+        if (m.isPitchWheel())       return "Pitch wheel "      + String (m.getPitchWheelValue());
+        if (m.isAftertouch())       return "After touch "      + MidiMessage::getMidiNoteName (m.getNoteNumber(), true, true, 3) +  ": " + String (m.getAfterTouchValue());
+        if (m.isChannelPressure())  return "Channel pressure " + String (m.getChannelPressureValue());
+        if (m.isAllNotesOff())      return "All notes off";
+        if (m.isAllSoundOff())      return "All sound off";
+        if (m.isMetaEvent())        return "Meta event";
+
+        if (m.isController())
+        {
+            String name (MidiMessage::getControllerName (m.getControllerNumber()));
+
+            if (name.isEmpty())
+                name = "[" + String (m.getControllerNumber()) + "]";
+
+            return "Controller " + name + ": " + String (m.getControllerValue());
+        }
+
+        return String::toHexString (m.getRawData(), m.getRawDataSize());
+    }
+
+    void logMessage (const String& m)
+    {
+        midiMessageBox.moveCaretToEnd();
+        midiMessageBox.insertTextAtCaret (m + newLine);
+    }
+
+    // 
+    class IncomingMessageCallback : public CallbackMessage
+    {
+    public:
+        IncomingMessageCallback (MainComponent* o, const MidiMessage& m, const String& s)
+            : owner (o), message (m), source (s)
+        {}
+
+        void messageCallback() override
+        {
+            if ( owner != nullptr ) {
+                owner->addMessageToList (message, source);
+            }
+        }
+
+        Component::SafePointer<MainComponent> owner;
+        MidiMessage message;
+        String source;
+    private:
+    };
+
+
 private:
     //==============================================================================
     
@@ -189,9 +297,13 @@ private:
     ComboBox midiInputList;
     Label    midiInputListLabel;
     int lastInputIndex = 0;
+    bool isAddingFromMidiInput = false;
     
-    // MidiKeyboardState& keyboardState;
-    // MidiMessageCollector midiCollector;
+    MidiKeyboardState keyboardState;
+    MidiKeyboardComponent keyboardComponent;
+
+    TextEditor midiMessageBox;
+    double startTime;
     
     float ampEnvValue = 0.0f;
     float envTemp = 1.0f;

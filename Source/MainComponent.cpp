@@ -9,7 +9,9 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*/
+MainComponent::MainComponent() 
+    : keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard),
+      startTime         ( Time::getMillisecondCounterHiRes() * 0.001 )
 {    
     // INPUT
     Input = new InputModule( );
@@ -62,6 +64,10 @@ MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*
     
     // keyboardState = keyboard->getKeyboardState();
 */
+
+    addAndMakeVisible ( keyboardComponent );
+    keyboardState.addListener ( this );
+
     addAndMakeVisible ( midiInputListLabel );
     midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
     midiInputListLabel.attachToComponent (&midiInputList, false);
@@ -82,6 +88,7 @@ MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*
         }
     }
 
+    // IF NO DEVICE FOUND, USE THE FIRST ONE IN THE LIST
     if (midiInputList.getSelectedId() == 0) {
         setMidiInputDevice ( 0 );
     }
@@ -412,24 +419,7 @@ void MainComponent::resized()
     Grid grid;
     
     using Track = Grid::TrackInfo;
-/*        
-    grid.templateRows    = {
-        Track (1_fr),
-        Track (1_fr),
-        Track (2_fr)
-    };
-    
-    grid.templateColumns = {
-        //Track (1_fr),
-        Track (1_fr),
-        Track (3_fr),
-        Track (1_fr),
-        Track (2_fr),
-        Track (3_fr),
-        Track (1_fr),
-        Track (1_fr)
-    };
-*/
+
     grid.autoRows = {
         Track (1_fr)
     };
@@ -439,20 +429,6 @@ void MainComponent::resized()
     };
     
     grid.items = {
-/* <<<<<<< HEAD
-        //GridItem ( modules[0] ).withArea( 1, 1, 3, 1 ),       
-        GridItem ( modules[1] ).withArea( 1, 1, 3, 1 ),
-        GridItem ( modules[2] ).withArea( 2, 2, 2, 2 ),
-        GridItem ( modules[3] ).withArea( 1, 2, 2, 2 ),
-        GridItem ( modules[4] ).withArea( 1, 3, 3, 3 ),
-        GridItem ( modules[5] ).withArea( 1, 4, 3, 4 ),
-        GridItem ( modules[6] ).withArea( 1, 5, 3, 5 ),
-        GridItem ( modules[7] ).withArea( 1, 6, 3, 6 ),
-        GridItem ( modules[8] ).withArea( 1, 7, 3, 7 ),
-        GridItem ( modules[9] ).withArea( 1, 8, 3, 8 ),
-        GridItem ( keyboard ).withArea( 3, 1, 3, 8 )
- ======= */
-        //GridItem ( Input ).withArea( 1, 1, 3, 1 ),       
         GridItem ( LfoFreq       ).withArea( 1 , 1  ,  10, 10 ),
         GridItem ( OSC_1         ).withArea( 1 , 10 ,  5 , 30 ),
         GridItem ( OSC_2         ).withArea( 5 , 10 ,  10, 30 ),
@@ -462,8 +438,7 @@ void MainComponent::resized()
         GridItem ( saturation    ).withArea( 1 , 90 ,  10, 100 ),
         GridItem ( output        ).withArea( 1 , 100,  10, 110 ),
         GridItem ( midiInputList ).withArea( 11, 1  ,  11, 20 ),
-//        GridItem ( keyboard      ).withArea( 10, 20, 20, 100 )
-// >>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
+        GridItem ( keyboardComponent ).withArea ( 10, 20, 15, 90) 
     };
       
     Rectangle<int> bounds = getLocalBounds();

@@ -34,7 +34,7 @@ class MainComponent   : // public Component,
                         public AudioAppComponent,
                         public Slider::Listener,
                         public Button::Listener,
-                        // private MidiInputCallback,
+                        private MidiInputCallback,
                         private ComboBox::Listener
 {
 public:
@@ -124,7 +124,7 @@ public:
     
     //handle amp envelope manipulation
     void ampEnvelope();
-/*   
+   
     //function receives incoming MIDI messages (Midi input device & Midi message argruments)
     void handleIncomingMidiMessage(MidiInput* source, const MidiMessage& message) override
     {
@@ -150,14 +150,14 @@ public:
             releaseAmpEnv = true;
         }
     };
-*/    
+    
     //select MIDI input device for listening
     void setMidiInputDevice (int index)
     {
         //store list (String Array) of available MIDI devices
         auto deviceList = MidiInput::getDevices();
 
-        deviceManager.removeMidiInputCallback (deviceList[lastInputIndex], keyboard->getMidiCollector());
+        deviceManager.removeMidiInputCallback (deviceList[lastInputIndex], this );
         
         //store MIDI device (3rd option [2] for connected controller)
         auto newMidiDeviceInput = deviceList[index];
@@ -169,7 +169,7 @@ public:
 
         //set manager to receive all incoming events from the enabled device
         // deviceManager.addMidiInputCallback(newMidiDeviceInput, this);
-        deviceManager.addMidiInputCallback (newMidiDeviceInput, keyboard->getMidiCollector());
+        deviceManager.addMidiInputCallback (newMidiDeviceInput, this );
         midiInputList.setSelectedId (index + 1, dontSendNotification);
 
         lastInputIndex = index;
@@ -190,8 +190,8 @@ private:
     Label    midiInputListLabel;
     int lastInputIndex = 0;
     
-    MidiKeyboardState& keyboardState;
-    MidiMessageCollector midiCollector;
+    // MidiKeyboardState& keyboardState;
+    // MidiMessageCollector midiCollector;
     
     float ampEnvValue = 0.0f;
     float envTemp = 1.0f;
@@ -243,7 +243,7 @@ private:
     OutputModule *output;
 
     // KEYBOARD SCENE
-    KeyboardScene *keyboard;
+    // KeyboardScene *keyboard;
 
 
     //holds audio device's sample rate for osc, lfo, and filter settings

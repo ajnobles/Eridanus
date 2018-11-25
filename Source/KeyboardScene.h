@@ -15,6 +15,7 @@
 
 
 
+/*
 struct SineWaveSound : public SynthesiserSound
 {
     SineWaveSound() {}
@@ -43,7 +44,7 @@ struct SineWaveVoice   : public SynthesiserVoice
     }
 
     void startNote (int midiNoteNumber, float velocity,
-                    SynthesiserSound*, int /*currentPitchWheelPosition*/) override
+                    SynthesiserSound*, int /*currentPitchWheelPosition/) override
     {
         currentAngle = 0.0;
         level = velocity * 0.15;
@@ -55,7 +56,7 @@ struct SineWaveVoice   : public SynthesiserVoice
         angleDelta = cyclesPerSample * 2.0 * MathConstants<double>::pi;
     }
 
-    void stopNote (float /*velocity*/, bool allowTailOff) override
+    void stopNote (float /*velocity/, bool allowTailOff) override
     {
         if (allowTailOff)
         {
@@ -137,7 +138,7 @@ public:
         synth.clearSounds();
     }
 
-    void prepareToPlay (int /*samplesPerBlockExpected*/, double sampleRate) override
+    void prepareToPlay (int /*samplesPerBlockExpected/, double sampleRate) override
     {
         synth.setCurrentPlaybackSampleRate (sampleRate); // [3]
         midiCollector.reset (sampleRate);
@@ -255,7 +256,6 @@ class KeyboardScene : // public AudioAppComponent,
 
 
 
-/*
 class KeyboardScene : public CustomComponent
 {
 public:

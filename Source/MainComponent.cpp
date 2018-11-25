@@ -9,7 +9,7 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : keyboardState (keyboard->getKeyboardState())
+MainComponent::MainComponent()/* : keyboardState (keyboard->getKeyboardState())*/
 {    
     // INPUT
     Input = new InputModule( );
@@ -55,7 +55,7 @@ MainComponent::MainComponent() : keyboardState (keyboard->getKeyboardState())
     for (int i = 0; i < numModules; i++) {
         addAndMakeVisible ( modules[i] );
     }
-
+/*
     // SCENES
     keyboard = new KeyboardScene();
     addAndMakeVisible ( keyboard );
@@ -84,7 +84,7 @@ MainComponent::MainComponent() : keyboardState (keyboard->getKeyboardState())
     if (midiInputList.getSelectedId() == 0) {
         setMidiInputDevice ( 0 );
     }
-
+*/
     
     // COMPONENT LISTENERS
     envFilter->getFilterBox().addListener( this );
@@ -117,7 +117,7 @@ MainComponent::MainComponent() : keyboardState (keyboard->getKeyboardState())
     setSize (1600, 800);
 
     // Set MIDI device for listening (controller = [2])
-    setMidiInputDevice( 0 );
+    setMidiInputDevice( 2 );
     
     //set audio channels to 0 Inputs and 2 Outputs(Stereo playback)
     setAudioChannels (0, 2);
@@ -157,7 +157,7 @@ MainComponent::~MainComponent()
     // This shuts down the audio device and clears the audio source.
     shutdownAudio();
 
-    delete keyboard;
+    // delete keyboard;
 }
 
 
@@ -169,7 +169,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     globalSampleRate = sampleRate; 
     
     // MIDI
-    midiCollector.reset (sampleRate);  
+    // midiCollector.reset (sampleRate);  
     
     //grab osc and lfo slider frequency values 
     oscOneFrequency = OSC_1->getFreqSliderValue(); 
@@ -461,8 +461,8 @@ void MainComponent::resized()
         GridItem ( envFilter     ).withArea( 1, 5, 3, 5 ),
         GridItem ( saturation    ).withArea( 1, 6, 3, 6 ),
         GridItem ( output        ).withArea( 1, 7, 3, 7 ),
-        GridItem ( keyboard      ).withArea( 3, 1, 4, 8 ),
-        GridItem ( midiInputList ).withArea( 4, 1, 5, 8 )
+//        GridItem ( keyboard      ).withArea( 3, 1, 4, 8 ),
+//        GridItem ( midiInputList ).withArea( 4, 1, 5, 8 )
 // >>>>>>> f87be5ec441af4e151f31ed319fb67492ece8304
     };
       

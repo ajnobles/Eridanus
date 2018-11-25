@@ -27,6 +27,7 @@ AmpFilterModule::AmpFilterModule ( )
 	SustainSlider.setRange ( 0.0f, 1.0f );
 	SustainSlider.setSliderStyle ( Slider::LinearVertical );
 	SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    SustainSlider.setValue( 1.0f );
 
 	addAndMakeVisible ( ReleaseSlider );
 	ReleaseSlider.setRange ( 0.0f, 5.0f );

@@ -10,8 +10,7 @@
 
 //==============================================================================
 MainComponent::MainComponent() 
-    : keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard),
-      startTime         ( Time::getMillisecondCounterHiRes() * 0.001 )
+    : keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {    
     // INPUT
     Input = new InputModule( );
@@ -66,10 +65,15 @@ MainComponent::MainComponent()
 */
 
     addAndMakeVisible ( keyboardComponent );
+    keyboardComponent.setKeyWidth( 75.0f );
+    int octave = 6,
+        low    = octave * 12,
+        high   = low + 24;
+    // keyboardComponent.setAvailableRange( low, high );
     keyboardState.addListener ( this );
 
     addAndMakeVisible ( midiInputListLabel );
-    midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
+    midiInputListLabel.setText ("MIDI Input", dontSendNotification);
     midiInputListLabel.attachToComponent (&midiInputList, false);
     midiInputListLabel.setJustificationType ( Justification::horizontallyCentred );
 
@@ -437,8 +441,8 @@ void MainComponent::resized()
         GridItem ( envFilter     ).withArea( 1 , 60 ,  10, 90 ),
         GridItem ( saturation    ).withArea( 1 , 90 ,  10, 100 ),
         GridItem ( output        ).withArea( 1 , 100,  10, 110 ),
-        GridItem ( midiInputList ).withArea( 11, 1  ,  11, 20 ),
-        GridItem ( keyboardComponent ).withArea ( 10, 20, 15, 90) 
+        GridItem ( midiInputList ).withArea( 11, 1  ,  11, 19 ),
+        GridItem ( keyboardComponent ).withArea ( 10, 20, 15, 110) 
     };
       
     Rectangle<int> bounds = getLocalBounds();

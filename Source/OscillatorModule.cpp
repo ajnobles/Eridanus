@@ -10,7 +10,8 @@
 
 #include "OscillatorModule.h"
 
-OscillatorModule::OscillatorModule ( ) 
+OscillatorModule::OscillatorModule ( String title ) 
+    : oscTitle (title)
 {
     // LEVEL
     addAndMakeVisible ( levelSlider );
@@ -20,31 +21,9 @@ OscillatorModule::OscillatorModule ( )
     levelSlider.setSliderStyle ( Slider::LinearBarVertical );
             
     addAndMakeVisible(levelLabel);
-    levelLabel.setText("Osc Output", dontSendNotification);   
+    levelLabel.setText("Amp", dontSendNotification);   
+    levelLabel.setJustificationType( Justification::centred );
     
-/*
-    // FREQ
-    // frequency slider, slider display attributes
-    //addAndMakeVisible(freqSlider);
-    freqSlider.setRange(200.0, 1000.0);
-    freqSlider.setTextBoxStyle(Slider::TextBoxRight, false, 50, 20);
-    freqSlider.setValue(400);
-    freqSlider.setSliderStyle ( Slider::LinearHorizontal );
-    
-// <<<<<<< Integration_11_11_18
-    //addAndMakeVisible(freqLabel);
-    //freqLabel.setText("Osc Freq", dontSendNotification);
-    
-// =======
-    addAndMakeVisible(freqLabel);
-    freqLabel.setText("Osc Freq", dontSendNotification);
-     
-    //add frequency slider label and set text
-    addAndMakeVisible(freqLabel);
-    freqLabel.setText("Freq", dontSendNotification);
-*/
-// >>>>>>> Allen_Gui_Main
-
     // FINE TUNE
     addAndMakeVisible(fineTuneSlider);
     fineTuneSlider.setRange(-1.0, 1.0);
@@ -53,74 +32,42 @@ OscillatorModule::OscillatorModule ( )
     fineTuneSlider.setSliderStyle ( Slider::LinearBar );
     
     addAndMakeVisible(fineTune);
-    fineTune.setText("Fine Tune", dontSendNotification);
+    fineTune.setText("Tune", dontSendNotification);
+    fineTune.setJustificationType( Justification::centred );
 
     // LENGTH
     addAndMakeVisible( length4 );
     length4.setButtonText( "4'" );
-//    length4.onClick = [this] { 
-//        lengthButtonClicked( &length4 );
-//    };
-    
+   
     addAndMakeVisible( length8 );
     length8.setButtonText( "8'" );
-//    length8.onClick = [this] { 
-//        lengthButtonClicked( &length8 );
-//    };
-    
+   
     addAndMakeVisible( length16 );
     length16.setButtonText( "16'" );
-//    length16.onClick = [this] {
-//        lengthButtonClicked( &length16 );
-//    };
+
     changeLengthState( FOUR  );
     changeLengthState( EIGHT );
-
 
     // WAVE FORM
     addAndMakeVisible( sinButton );
     sinButton.setButtonText( "Sin" );
-    // sinButton.onClick = [this] { waveButtonClicked(&sinButton); };
  
     addAndMakeVisible( sawButton );
     sawButton.setButtonText( "Saw" );
-    // sawButton.onClick = [this] { waveButtonClicked(&sawButton); };
       
     addAndMakeVisible( triButton );
     triButton.setButtonText( "Tri" );
-    // triButton.onClick = [this] { waveButtonClicked(&triButton); };
     
     addAndMakeVisible( sqrButton );
     sqrButton.setButtonText( "Sqr" );
-    // sqrButton.onClick = [this] { waveButtonClicked(&sqrButton); };
 
     changeWaveState( SAW );
     changeWaveState( SIN );
-    
-    /*   	        
-// >>>>>>> Allen_Gui_Main
-    
-    // COMBO BOX
-    addAndMakeVisible(oscBox);
-    oscBox.addItem("Sine", 1);
-    oscBox.addItem("Saw", 2);
-    oscBox.addItem("Square", 3);
-    oscBox.addItem("Triangle", 4);
-    
-    addAndMakeVisible(oscTypeLabel);
-    oscTypeLabel.setText("Osc Type", dontSendNotification);
-    
-    // LENGTH COMBO BOX
-    addAndMakeVisible(lengthBox);
-    lengthBox.addItem("4", 1);
-    lengthBox.addItem("8", 2);
-    lengthBox.addItem("16", 3);
-        
-    addAndMakeVisible(oscLength);
-    oscLength.setText("Osc Length", dontSendNotification);
-    oscBox.setSelectedId( 1 );    
-    lengthBox.setSelectedId( 2 );
-*/
+
+    // TITLE
+    addAndMakeVisible( oscLabel );
+    oscLabel.setText( oscTitle, dontSendNotification );
+    oscLabel.setJustificationType( Justification::centred );
 }
 
 
@@ -129,10 +76,8 @@ OscillatorModule::~OscillatorModule() {}
 
 void OscillatorModule::paint (Graphics& g)
 {
-
     g.setColour ( BORDER_COLOR );
     buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
-
 }
 
 
@@ -153,30 +98,20 @@ void OscillatorModule::resized ()
     grid.autoRows = Track (1_fr);
     grid.autoColumns = Track (1_fr);
     
-/*
-    grid.items = {
-        GridItem ( oscTypeLabel ),
-        GridItem ( oscBox       ),
-        GridItem ( oscLength    ),
-        GridItem ( lengthBox    ),
-        GridItem ( fineTune     ),
-        GridItem ( fineTuneSlider),
-        GridItem ( levelLabel   ),
-        GridItem ( levelSlider  )
-        //GridItem ( freqLabel    )
-        //GridItem ( freqSlider   )
-    };
-*/
-
     grid.setGap( Px ( 3_px ) );
 
     grid.items = {
+        GridItem ( oscLabel ).withArea( 1, 1, 3, 7 ),
+
         GridItem ( length4  ).withArea( 3, 1, 5, 1 ),
         GridItem ( length8  ).withArea( 5, 1, 7, 1 ),
         GridItem ( length16 ).withArea( 7, 1, 9, 1 ),
 
         GridItem ( fineTuneSlider ).withArea( 7, 3, 9, 6 ),
+        GridItem ( fineTune       ).withArea( 6, 3, 6, 6 ),
+        
         GridItem ( levelSlider    ).withArea( 3, 6, 9, 6 ),
+        GridItem ( levelLabel     ).withArea( 2, 6, 2, 6 ),
         
         GridItem ( sinButton ).withArea( 3, 2 , 5, 3 ),
         GridItem ( sawButton ).withArea( 3, 3 , 5, 4 ),

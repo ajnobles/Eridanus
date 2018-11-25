@@ -21,11 +21,11 @@ MainComponent::MainComponent()
     modules.add ( LfoFreq );
     
     // OSCILLATORS
-    OSC_1 = new OscillatorModule ( );
+    OSC_1 = new OscillatorModule ( "OSC 1" );
     modules.add( OSC_1 );
     
      // OSCILLATORS
-    OSC_2 = new OscillatorModule ( );
+    OSC_2 = new OscillatorModule ( "OSC 2" );
     modules.add( OSC_2 );
     
     // LFO AMP

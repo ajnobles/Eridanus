@@ -33,7 +33,7 @@ class OscillatorModule : public CustomComponent// ,
                          // public ComboBox::Listener
 {
 public:
-	OscillatorModule ( );
+	OscillatorModule ( String title );
 	~OscillatorModule ();
 
     void paint (Graphics& g) override;
@@ -94,6 +94,7 @@ private:
     Label fineTune;
     Label oscTypeLabel;
     Label oscLength;
+    Label oscLabel;
 
     TextButton length4;
     TextButton length8;
@@ -112,4 +113,5 @@ private:
     float oscMult;
 
     String oscType;
+    String oscTitle;
 };

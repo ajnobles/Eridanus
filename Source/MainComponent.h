@@ -34,9 +34,8 @@ class MainComponent   : // public Component,
                         public AudioAppComponent,
                         public Slider::Listener,
                         public Button::Listener,
-                        private MidiInputCallback,
+                        // private MidiInputCallback,
                         private ComboBox::Listener
-
 {
 public:
     //==============================================================================
@@ -125,7 +124,7 @@ public:
     
     //handle amp envelope manipulation
     void ampEnvelope();
-    
+/*   
     //function receives incoming MIDI messages (Midi input device & Midi message argruments)
     void handleIncomingMidiMessage(MidiInput* source, const MidiMessage& message) override
     {
@@ -151,7 +150,7 @@ public:
             releaseAmpEnv = true;
         }
     };
-    
+*/    
     //select MIDI input device for listening
     void setMidiInputDevice (int index)
     {
@@ -190,6 +189,9 @@ private:
     ComboBox midiInputList;
     Label    midiInputListLabel;
     int lastInputIndex = 0;
+    
+    MidiKeyboardState& keyboardState;
+    MidiMessageCollector midiCollector;
     
     float ampEnvValue = 0.0f;
     float envTemp = 1.0f;

@@ -9,8 +9,8 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() 
-{        
+MainComponent::MainComponent() : keyboardState (keyboard->getKeyboardState())
+{    
     // INPUT
     Input = new InputModule( );
     modules.add ( Input );
@@ -59,6 +59,8 @@ MainComponent::MainComponent()
     // SCENES
     keyboard = new KeyboardScene();
     addAndMakeVisible ( keyboard );
+    
+    // keyboardState = keyboard->getKeyboardState();
 
     addAndMakeVisible ( midiInputListLabel );
     midiInputListLabel.setText ("MIDI Input:", dontSendNotification);
@@ -164,7 +166,10 @@ MainComponent::~MainComponent()
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate) 
 {        
     //grab sampleRate for filter settings
-    globalSampleRate = sampleRate;   
+    globalSampleRate = sampleRate; 
+    
+    // MIDI
+    midiCollector.reset (sampleRate);  
     
     //grab osc and lfo slider frequency values 
     oscOneFrequency = OSC_1->getFreqSliderValue(); 
@@ -624,6 +629,11 @@ void MainComponent::updateFilterSettings()
 //Handles user changes in osc frequency from slider
 void MainComponent::updateOscOneFrequency()
 {
+/*    
+    MidiBuffer incomingMidi;
+    midiCollector.removeNextBlockOfMessages (incomingMidi, bufferToFill.numSamples);
+    keyboardState.processNextMidiBuffer (incomingMidi, bufferToFill.startSample, bufferToFill.numSamples); 
+*/    
     //Determines even temperement tuning amount (one twelth movement based on octave below frequency) 
     auto fineTune = (((midiFrequency * OSC_1->getOscMult()) / 2) / 12) * OSC_1->getFineTuneSliderValue();
     

@@ -17,6 +17,7 @@ OutputModule::OutputModule ()
     OutputSlider.setRange ( 0.0, 1.0, 0 );
     OutputSlider.setSliderStyle (Slider::LinearVertical);
     OutputSlider.setTextBoxStyle (Slider::TextBoxBelow, true, 50, 20);
+    OutputSlider.setValue( 1.0f );
 /*
     addAndMakeVisible ( OutputFeedbackSlider );
     OutputFeedbackSlider.setRange ( 0.0, 100.0, 1.0 );

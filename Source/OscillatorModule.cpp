@@ -16,7 +16,7 @@ OscillatorModule::OscillatorModule ( )
     addAndMakeVisible ( levelSlider );
     levelSlider.setRange ( 0.0f, 0.3f );
     levelSlider.setTextBoxStyle ( Slider::TextBoxRight, false, 50, 20 );
-    levelSlider.setValue(0.0);
+    levelSlider.setValue(0.3);
     levelSlider.setSliderStyle ( Slider::LinearBarVertical );
             
     addAndMakeVisible(levelLabel);

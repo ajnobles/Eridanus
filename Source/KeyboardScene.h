@@ -21,11 +21,13 @@ struct SineWaveSound : public SynthesiserSound
 
     bool appliesToNote    (int) override
     {
+        cout << "SineWaveSound::appliesToNote" << endl;
         return true;
     }
 
     bool appliesToChannel (int) override
     {
+        cout << "SineWaveSound::appliesToChannel" << endl;
         return true;
     }
 };
@@ -125,7 +127,7 @@ public:
         : keyboardState (keyState)
     {
         for (auto i = 0; i < 4; ++i)                // [1]
-            // synth.addVoice (new SineWaveVoice());
+            synth.addVoice (new SineWaveVoice());
 
         synth.addSound (new SineWaveSound());       // [2]
     }
@@ -159,6 +161,11 @@ public:
     MidiMessageCollector* getMidiCollector()
     {
         return &midiCollector;
+    }
+    
+    MidiKeyboardState& getKeyboardState()
+    {
+        return keyboardState;
     }
 
 private:
@@ -221,6 +228,12 @@ class KeyboardScene : // public AudioAppComponent,
     MidiMessageCollector* getMidiCollector()
     {
         return synthAudioSource.getMidiCollector();
+    }
+    
+    MidiKeyboardState& getKeyboardState()
+    {
+        // return synthAudioSource.getKeyboardState();
+        return keyboardState;
     }
 
 

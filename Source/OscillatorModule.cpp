@@ -45,6 +45,7 @@ OscillatorModule::OscillatorModule ( String title )
     addAndMakeVisible( length16 );
     length16.setButtonText( "16'" );
 
+    // HACK TO FORCE EIGHT
     changeLengthState( FOUR  );
     changeLengthState( EIGHT );
 
@@ -61,6 +62,7 @@ OscillatorModule::OscillatorModule ( String title )
     addAndMakeVisible( sqrButton );
     sqrButton.setButtonText( "Sqr" );
 
+    // HACK TO FOR SIN WAVE
     changeWaveState( SAW );
     changeWaveState( SIN );
 
@@ -107,8 +109,8 @@ void OscillatorModule::resized ()
         GridItem ( length8  ).withArea( 5, 1, 7, 1 ),
         GridItem ( length16 ).withArea( 7, 1, 9, 1 ),
 
-        GridItem ( fineTuneSlider ).withArea( 7, 3, 9, 6 ),
-        GridItem ( fineTune       ).withArea( 6, 3, 6, 6 ),
+        GridItem ( fineTuneSlider ).withArea( 7, 2, 9, 6 ),
+        GridItem ( fineTune       ).withArea( 6, 2, 6, 6 ),
         
         GridItem ( levelSlider    ).withArea( 3, 6, 9, 6 ),
         GridItem ( levelLabel     ).withArea( 2, 6, 2, 6 ),

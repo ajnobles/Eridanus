@@ -433,16 +433,16 @@ void MainComponent::resized()
     };
     
     grid.items = {
-        GridItem ( LfoFreq       ).withArea( 1 , 1  ,  10, 10 ),
-        GridItem ( OSC_1         ).withArea( 1 , 10 ,  5 , 30 ),
-        GridItem ( OSC_2         ).withArea( 5 , 10 ,  10, 30 ),
-        GridItem ( LfoAmp        ).withArea( 1 , 30 ,  10, 40 ),
-        GridItem ( ampFilter     ).withArea( 1 , 40 ,  10, 60 ),
-        GridItem ( envFilter     ).withArea( 1 , 60 ,  10, 90 ),
-        GridItem ( saturation    ).withArea( 1 , 90 ,  10, 100 ),
-        GridItem ( output        ).withArea( 1 , 100,  10, 110 ),
-        GridItem ( midiInputList ).withArea( 11, 1  ,  11, 19 ),
-        GridItem ( keyboardComponent ).withArea ( 10, 20, 15, 110) 
+        GridItem ( LfoFreq           ).withArea( 1 , 1  , 9 , 10  ),
+        GridItem ( OSC_1             ).withArea( 1 , 10 , 5 , 30  ),
+        GridItem ( OSC_2             ).withArea( 5 , 10 , 9 , 30  ),
+        GridItem ( LfoAmp            ).withArea( 1 , 30 , 9 , 40  ),
+        GridItem ( ampFilter         ).withArea( 1 , 40 , 9 , 60  ),
+        GridItem ( envFilter         ).withArea( 1 , 60 , 9 , 90  ),
+        GridItem ( saturation        ).withArea( 1 , 90 , 9 , 100 ),
+        GridItem ( output            ).withArea( 1 , 100, 9 , 110 ),
+        GridItem ( midiInputList     ).withArea( 10, 1  , 10, 19  ),
+        GridItem ( keyboardComponent ).withArea( 9 , 20 , 15, 110 ) 
     };
       
     Rectangle<int> bounds = getLocalBounds();

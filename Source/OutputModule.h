@@ -34,5 +34,7 @@ private:
 
     Slider OutputFeedbackSlider;
     Label OutputFeedbackLabel;
-
+    
+	Label TitleLabel;	
+	String Title;
 };

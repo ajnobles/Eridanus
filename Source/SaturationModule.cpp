@@ -10,7 +10,7 @@
 
 #include "SaturationModule.h"
 
-SaturationModule::SaturationModule ( )
+SaturationModule::SaturationModule ( ) : Title ("SATURATION")
 {
     //
     addAndMakeVisible ( DriveKnob );
@@ -20,12 +20,18 @@ SaturationModule::SaturationModule ( )
 
     addAndMakeVisible( DriveLabel );
     DriveLabel.setText( "Drive", dontSendNotification );
+    DriveLabel.setJustificationType( Justification::centred );
     
     addAndMakeVisible ( TapeButton );
     TapeButton.setButtonText ( "TP" );
 
     addAndMakeVisible ( TubeButton );
     TubeButton.setButtonText ( "TB" );
+    
+    // TITLE
+    addAndMakeVisible( TitleLabel );
+    TitleLabel.setText( Title, dontSendNotification );
+    TitleLabel.setJustificationType( Justification::centred );
 }
 
 SaturationModule::~SaturationModule ( )
@@ -35,11 +41,7 @@ SaturationModule::~SaturationModule ( )
 void SaturationModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR);
-
     buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
-    // TEMP IDENTIFICATION TEXT
-    g.drawText ("SATURATION", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
-
 }
 
 void SaturationModule::resized ()
@@ -48,22 +50,30 @@ void SaturationModule::resized ()
     Grid grid;
 
     using Track = Grid::TrackInfo;
-
-    grid.templateRows = {
-        Track (1_fr),
-        Track (1_fr),
-        Track (1_fr),
-        Track (2_fr),
+    using Px    = Grid::Px;
+    
+    grid.templateRows = { 
+        Track (1_fr)
     };
+    grid.templateColumns = { 
+        Track (1_fr) 
+    };
+    
+    grid.setGap( Px ( 3_px ) );
+  
+    grid.autoRows = Track (1_fr);
+    grid.autoColumns = Track (1_fr);
+
     
     grid.templateColumns = { Track (1_fr) };
 
     grid.items = {
-        GridItem (nullptr),
-        GridItem ( TapeButton ),
-        GridItem ( TubeButton ),
-        GridItem ( DriveKnob ),
-        GridItem ( DriveLabel )
+        GridItem ( TitleLabel ).withArea( 1 , 1, 1 , 10 ),
+        GridItem ( TapeButton ).withArea( 2 , 3, 3 , 8 ),
+        GridItem ( TubeButton ).withArea( 3 , 3, 4 , 8 ),
+
+        GridItem ( DriveLabel ).withArea( 5 , 2, 5 , 9 ),
+        GridItem ( DriveKnob  ).withArea( 5 , 2, 8 , 9 )
     };
 
     Rectangle <int> bounds = getLocalBounds();

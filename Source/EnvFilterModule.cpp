@@ -10,7 +10,7 @@
 
 #include "EnvFilterModule.h"
 
-EnvFilterModule::EnvFilterModule ( )
+EnvFilterModule::EnvFilterModule ( ) : Title ("FILTER ENVELOPE")
 {
     //
     addAndMakeVisible ( AttackSlider );
@@ -35,18 +35,27 @@ EnvFilterModule::EnvFilterModule ( )
 
     addAndMakeVisible ( AttackSliderLabel );
     AttackSliderLabel.setText("A", dontSendNotification);
+    AttackSliderLabel.setJustificationType( Justification::centred );
 
     addAndMakeVisible ( DecaySliderLabel );
     DecaySliderLabel.setText("D", dontSendNotification);
+    DecaySliderLabel.setJustificationType( Justification::centred );
 
     addAndMakeVisible ( SustainSliderLabel );
     SustainSliderLabel.setText("S", dontSendNotification);
+    SustainSliderLabel.setJustificationType( Justification::centred );
             
     addAndMakeVisible ( ReleaseSliderLabel );
     ReleaseSliderLabel.setText("R", dontSendNotification);
+    ReleaseSliderLabel.setJustificationType( Justification::centred );
     
     LeftPanel = new LeftSide ( );
     addAndMakeVisible ( LeftPanel );
+    
+    // TITLE
+    addAndMakeVisible( TitleLabel );
+    TitleLabel.setText( Title, dontSendNotification );
+    TitleLabel.setJustificationType( Justification::centred );
     
 }
 
@@ -59,10 +68,6 @@ void EnvFilterModule::paint (Graphics& g)
 {
     g.setColour (BORDER_COLOR); 
     buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
-
-    // TEMP IDENTIFICATION TEXT
-    g.drawText ("FILTER ENVELOPE", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
-
 }
 
 void EnvFilterModule::resized ()
@@ -72,35 +77,29 @@ void EnvFilterModule::resized ()
     using Track = Grid::TrackInfo;
 
     grid.templateRows = { 
-        Track (1_fr) , 
-        Track (10_fr) ,
         Track (1_fr)
     };
-    
     grid.templateColumns = { 
-        Track (3_fr),
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr)
+        Track (1_fr) 
     };
+  
+    grid.autoRows = Track (1_fr);
+    grid.autoColumns = Track (1_fr);
 
     grid.items = {
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( nullptr ),
-        GridItem ( LeftPanel ),
-        GridItem ( AttackSlider ),
-        GridItem ( DecaySlider ),
-        GridItem ( SustainSlider ),
-        GridItem ( ReleaseSlider ),
-        GridItem ( nullptr ),
-        GridItem ( AttackSliderLabel ),
-        GridItem ( DecaySliderLabel ),
-        GridItem ( SustainSliderLabel ),
-        GridItem ( ReleaseSliderLabel )
+        GridItem ( TitleLabel         ).withArea( 1, 1, 1, 7 ),
+        
+        GridItem ( LeftPanel          ).withArea( 2, 1, 10, 3 ),
+        
+        GridItem ( AttackSlider       ).withArea( 2, 3, 10, 4 ),
+        GridItem ( DecaySlider        ).withArea( 2, 4, 10, 5 ),
+        GridItem ( SustainSlider      ).withArea( 2, 5, 10, 6 ),
+        GridItem ( ReleaseSlider      ).withArea( 2, 6, 10, 7 ),
+	    
+	    GridItem ( AttackSliderLabel  ).withArea( 10 , 3, 10, 4 ),
+        GridItem ( DecaySliderLabel   ).withArea( 10 , 4, 10, 5 ),
+        GridItem ( SustainSliderLabel ).withArea( 10 , 5, 10, 6 ),
+        GridItem ( ReleaseSliderLabel ).withArea( 10 , 6, 10, 7 )
     };
 
     Rectangle <int> bounds = getLocalBounds();

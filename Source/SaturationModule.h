@@ -43,4 +43,8 @@ private:
     
     TextButton TapeButton;
     TextButton TubeButton;
+    
+	Label TitleLabel;
+	
+	String Title;
 };

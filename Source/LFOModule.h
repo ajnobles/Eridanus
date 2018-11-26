@@ -41,10 +41,10 @@ private:
     Slider RateSlider;
     Slider DepthSlider;
     
-    String lfoType;
+    String lfoTitle;
     
-    Label  RateLabel;
-    Label  DepthLabel;
-
+    Label RateLabel;
+    Label DepthLabel;
+    Label TitleLabel;
 };
  

@@ -37,4 +37,7 @@ private:
 	Label DecaySliderLabel;
 	Label SustainSliderLabel;
 	Label ReleaseSliderLabel;
+	Label TitleLabel;
+	
+	String Title;
 };

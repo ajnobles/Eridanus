@@ -11,7 +11,7 @@
 #include "AmpFilterModule.h"
 
 
-AmpFilterModule::AmpFilterModule ( )
+AmpFilterModule::AmpFilterModule ( ) : Title ( "AMP ENVELOPE" )
 {
 	addAndMakeVisible ( AttackSlider );
 	AttackSlider.setRange ( 0.0f, 5.0f );
@@ -49,6 +49,11 @@ AmpFilterModule::AmpFilterModule ( )
     addAndMakeVisible ( ReleaseSliderLabel );
     ReleaseSliderLabel.setText("R", dontSendNotification);
     ReleaseSliderLabel.setJustificationType ( Justification::centred );
+    
+    // TITLE
+    addAndMakeVisible( TitleLabel );
+    TitleLabel.setText( Title, dontSendNotification );
+    TitleLabel.setJustificationType( Justification::centred );
 
 }
 
@@ -60,9 +65,6 @@ void AmpFilterModule::paint (Graphics& g)
 {
 	g.setColour (BORDER_COLOR);
 	buildModuleBorder (g, CORNERSIZE, THICKNESS, OFFSET);
-
-	// TEMP IDENTIFICATION TEXT
-	g.drawText ("AMP ENVELOPE", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
 }
 
 void AmpFilterModule::resized () 
@@ -72,32 +74,29 @@ void AmpFilterModule::resized ()
 
 	using Track = Grid::TrackInfo;
 
-	grid.templateRows = { 
-        Track (1_fr),
-        Track (10_fr),  
+    grid.templateRows = { 
+        Track (1_fr)
+    };
+    grid.templateColumns = { 
         Track (1_fr) 
     };
+  
+    grid.autoRows = Track (1_fr);
+    grid.autoColumns = Track (1_fr);
 
-	grid.templateColumns = { 
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr), 
-        Track (1_fr) 
-    };
 
 	grid.items = {
-	    GridItem ( nullptr  ),
-	    GridItem ( nullptr  ),
-	    GridItem ( nullptr  ),
-	    GridItem ( nullptr  ),
-	    GridItem ( AttackSlider  ),
-	    GridItem ( DecaySlider   ),
-	    GridItem ( SustainSlider ),
-	    GridItem ( ReleaseSlider ),
-	    GridItem ( AttackSliderLabel ),
-        GridItem ( DecaySliderLabel ),
-        GridItem ( SustainSliderLabel ),
-        GridItem ( ReleaseSliderLabel )
+	    GridItem ( TitleLabel         ).withArea( 1 , 1, 1, 5 ),
+	    
+	    GridItem ( AttackSlider       ).withArea( 2 , 1, 10, 2 ),
+	    GridItem ( DecaySlider        ).withArea( 2 , 2, 10, 3 ),
+	    GridItem ( SustainSlider      ).withArea( 2 , 3, 10, 4 ),
+	    GridItem ( ReleaseSlider      ).withArea( 2 , 4, 10, 5 ),
+	    
+	    GridItem ( AttackSliderLabel  ).withArea( 10 , 1, 10, 2 ),
+        GridItem ( DecaySliderLabel   ).withArea( 10 , 2, 10, 3 ),
+        GridItem ( SustainSliderLabel ).withArea( 10 , 3, 10, 4 ),
+        GridItem ( ReleaseSliderLabel ).withArea( 10 , 4, 10, 5 )
 	};
 
 	Rectangle <int> bounds = getLocalBounds();

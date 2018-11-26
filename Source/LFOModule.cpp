@@ -10,10 +10,8 @@
 
 #include "LFOModule.h"
 
-LfoModule::LfoModule ( String type )
+LfoModule::LfoModule ( String title ) : lfoTitle (title)
 {
-    lfoType = type;
-  
     addAndMakeVisible ( RateSlider );
     RateSlider.setRange ( 0, 10.0 );
     RateSlider.setSliderStyle ( Slider::LinearVertical );
@@ -22,6 +20,7 @@ LfoModule::LfoModule ( String type )
 
     addAndMakeVisible( RateLabel );
     RateLabel.setText( "Rate", dontSendNotification );
+    RateLabel.setJustificationType( Justification::centred );
     
     addAndMakeVisible ( DepthSlider );
     DepthSlider.setRange ( 0, 1.0 );
@@ -31,6 +30,12 @@ LfoModule::LfoModule ( String type )
 
     addAndMakeVisible( DepthLabel );
     DepthLabel.setText( "Depth", dontSendNotification );
+    DepthLabel.setJustificationType( Justification::centred );
+    
+    // TITLE
+    addAndMakeVisible( TitleLabel );
+    TitleLabel.setText( lfoTitle, dontSendNotification );
+    TitleLabel.setJustificationType( Justification::centred );
 }    
     
 void LfoModule::paint (Graphics& g)
@@ -38,10 +43,6 @@ void LfoModule::paint (Graphics& g)
     g.setColour (BORDER_COLOR);
 
     CustomComponent::buildModuleBorder ( g, CORNERSIZE, THICKNESS, OFFSET );
-
-    // TEMP IDENTIFICATION TEXT
-    g.drawText (lfoType, 0, 25, getWidth(), getHeight(), Justification::centredTop); 
-
 }
 
 void LfoModule::resized ()
@@ -51,16 +52,22 @@ void LfoModule::resized ()
 
     using Track = Grid::TrackInfo;
 
-    grid.templateRows    = { Track (1_fr), Track (10_fr), Track (1_fr) };
-    grid.templateColumns = { Track (1_fr), Track (1_fr) };
+    grid.templateRows = { 
+        Track (1_fr)
+    };
+    grid.templateColumns = { 
+        Track (1_fr) 
+    };
+  
+    grid.autoRows = Track (1_fr);
+    grid.autoColumns = Track (1_fr);
 
     grid.items = {
-        GridItem ( nullptr ), 
-        GridItem ( nullptr ), 
-        GridItem ( RateSlider ),
-        GridItem ( DepthSlider ),
-        GridItem ( RateLabel ),
-        GridItem ( DepthLabel )
+        GridItem ( TitleLabel  ).withArea( 1 , 1, 1 , 3 ),
+        GridItem ( RateSlider  ).withArea( 2 , 1, 10, 2 ),
+        GridItem ( DepthSlider ).withArea( 2 , 2, 10, 3 ),
+        GridItem ( RateLabel   ).withArea( 10, 1, 10, 2 ),
+        GridItem ( DepthLabel  ).withArea( 10, 2, 10, 3 )
     };
 
     Rectangle <int> bounds = getLocalBounds();

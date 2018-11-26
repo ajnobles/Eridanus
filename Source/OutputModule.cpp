@@ -10,7 +10,7 @@
 
 #include "OutputModule.h"
 
-OutputModule::OutputModule ()
+OutputModule::OutputModule () : Title ("OUTPUT")
 {
     
     addAndMakeVisible ( OutputSlider );
@@ -25,6 +25,11 @@ OutputModule::OutputModule ()
     OutputFeedbackSlider.setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
     OutputFeedbackSlider.setValue (50.0f);
 */
+    
+    // TITLE
+    addAndMakeVisible( TitleLabel );
+    TitleLabel.setText( Title, dontSendNotification );
+    TitleLabel.setJustificationType( Justification::centred );
 }
 
 OutputModule::~OutputModule ()
@@ -35,9 +40,6 @@ void OutputModule::paint (Graphics& g)
     g.setColour (BORDER_COLOR);
 
     CustomComponent::buildModuleBorder( g, CORNERSIZE, THICKNESS, OFFSET );
-    // TEMP IDENTIFICATION TEXT
-    g.drawText ("OUTPUT", 0, 25, getWidth(), getHeight(), Justification::centredTop); 
-
 }
 
 void OutputModule::resized ()
@@ -47,12 +49,19 @@ void OutputModule::resized ()
 
     using Track = Grid::TrackInfo;
 
-    grid.templateRows = { Track (1_fr), Track (10_fr) };
-    grid.templateColumns = { Track (1_fr) };
-
+    grid.templateRows = { 
+        Track (1_fr)
+    };
+    grid.templateColumns = { 
+        Track (1_fr) 
+    };
+  
+    grid.autoRows = Track (1_fr);
+    grid.autoColumns = Track (1_fr);
+    
     grid.items = {
-        GridItem ( nullptr ),
-        GridItem ( OutputSlider )
+        GridItem ( TitleLabel   ).withArea( 1, 1, 1 , 2 ),
+        GridItem ( OutputSlider ).withArea( 2, 1, 10, 2 )
     };
 
     Rectangle<int> bounds = getLocalBounds();

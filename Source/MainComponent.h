@@ -11,7 +11,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CustomComponent.h"
 
-#include "KeyboardScene.h"
+// #include "KeyboardScene.h"
 
 #include "InputModule.h"
 #include "OscillatorModule.h"

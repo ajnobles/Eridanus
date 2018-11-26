@@ -66,10 +66,8 @@ MainComponent::MainComponent()
 
     addAndMakeVisible ( keyboardComponent );
     keyboardComponent.setKeyWidth( 75.0f );
-    int octave = 6,
-        low    = octave * 12,
-        high   = low + 24;
-    // keyboardComponent.setAvailableRange( low, high );
+    keyboardComponent.setScrollButtonWidth( 30.0f );
+    
     keyboardState.addListener ( this );
 
     addAndMakeVisible ( midiInputListLabel );
@@ -98,7 +96,10 @@ MainComponent::MainComponent()
     }
     
     // COMPONENT LISTENERS
-    envFilter->getFilterBox().addListener( this );
+//    envFilter->getFilterBox().addListener( this );
+    envFilter->getFilterButton( LOWPASS  ).addListener( this );
+    envFilter->getFilterButton( HIGHPASS ).addListener( this );
+    envFilter->getFilterButton( BANDPASS ).addListener( this );
 
 //    OSC_1->getOscBox().addListener( this );
 //    OSC_1->getLengthBox().addListener( this );
@@ -456,12 +457,12 @@ void MainComponent::comboBoxChanged(ComboBox* box)
 {
     String text = box->getText();
 
+/*
     //handles changes to filter type
     if (text  == "Low Pass" || text == "Band Pass" || text == "High Pass")
     {
         envFilter->comboBoxUpdate( text );
     }
-/*
     //handles osc one combo box oscillator type
     //set wavetable
     if (box == &OSC_1->getOscBox())
@@ -566,6 +567,12 @@ void MainComponent::buttonClicked(Button* button)
     //set saturation type via text
     if ( text == "TB" || text == "TP" )
         saturation->buttonUpdate( text );
+
+    //handles changes to filter type
+    if (text  == "LP" || text == "BP" || text == "HP")
+    {
+        envFilter->setFilter( text );
+    }
 }
 
 

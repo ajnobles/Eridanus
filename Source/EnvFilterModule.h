@@ -12,6 +12,7 @@
 
 #include "CustomComponent.h"
 
+enum FILTER { HIGHPASS, LOWPASS, BANDPASS };
 
 // ENV FILTER
 class EnvFilterModule : public CustomComponent
@@ -24,12 +25,16 @@ public:
     void paint (Graphics& g) override;
     void resized () override;
     
-    void comboBoxUpdate( String text );
+//    void comboBoxUpdate( String text );
     
     float getCutoffKnobValue();
     float getResonanceKnobValue();
-    ComboBox& getFilterBox();
+//    ComboBox& getFilterBox();
     String getFilterType();
+    // void filterButtonClicked( String text );
+    TextButton& getFilterButton( FILTER type );
+    void setFilter( String type );
+    // void setFilter( FILTER type );
     
     void setCutoffKnobValue( float v );
     void setResonanceKnobValue( float v );
@@ -48,17 +53,26 @@ public:
         
         float getCutoffKnobValue();
         float getResonanceKnobValue();
-        ComboBox& getFilterBox();
+//        ComboBox& getFilterBox();
         String getFilterType();
+
+        TextButton& getLPButton();
+        TextButton& getHPButton();
+        TextButton& getBPButton();
+
+        void setFilterButton( FILTER type );
         
         void setCutoffKnobValue( float v );
         void setResonanceKnobValue( float v );
-        
 
     private:
         Slider CutoffKnob;
         Slider ResonanceKnob;
-        ComboBox FilterBox;
+//        ComboBox FilterBox;
+
+        TextButton HP;
+        TextButton LP;
+        TextButton BP;
         
         Label FilterTypeLabel;
         Label CutoffLabel;

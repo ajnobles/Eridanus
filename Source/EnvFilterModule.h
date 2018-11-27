@@ -38,6 +38,11 @@ public:
     
     void setCutoffKnobValue( float v );
     void setResonanceKnobValue( float v );
+    
+    float getAttackSliderValue();
+    float getDecaySliderValue();
+    float getSustainSliderValue();
+    float getReleaseSliderValue();
 
     
     class LeftSide : public CustomComponent

@@ -17,12 +17,14 @@ AmpFilterModule::AmpFilterModule ( ) : Title ( "AMP ENVELOPE" )
 	AttackSlider.setRange ( 0.0f, 5.0f );
 	AttackSlider.setSliderStyle ( Slider::LinearVertical );
 	AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+	AttackSlider.setValue(2.0);
 
     addAndMakeVisible ( DecaySlider );
 	DecaySlider.setRange ( 0.0f, 3.0f );
 	DecaySlider.setSliderStyle ( Slider::LinearVertical );
 	DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-
+	DecaySlider.setValue(0.0);
+	
 	addAndMakeVisible ( SustainSlider );
 	SustainSlider.setRange ( 0.0f, 1.0f );
 	SustainSlider.setSliderStyle ( Slider::LinearVertical );
@@ -33,6 +35,7 @@ AmpFilterModule::AmpFilterModule ( ) : Title ( "AMP ENVELOPE" )
 	ReleaseSlider.setRange ( 0.0f, 5.0f );
 	ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
 	ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    ReleaseSlider.setValue(2.0);
 	
 	addAndMakeVisible ( AttackSliderLabel );
     AttackSliderLabel.setText("A", dontSendNotification);

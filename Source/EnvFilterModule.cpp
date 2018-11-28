@@ -14,25 +14,29 @@ EnvFilterModule::EnvFilterModule ( ) : Title ("FILTER ENVELOPE")
 {
     //
     addAndMakeVisible ( AttackSlider );
-    AttackSlider.setRange ( 0 , 100 );
+    AttackSlider.setRange ( 0.0f , 5.0f );
     AttackSlider.setSliderStyle ( Slider::LinearVertical );
     AttackSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    AttackSlider.setValue(1.0);
 
     addAndMakeVisible ( DecaySlider );
-    DecaySlider.setRange ( 0 , 100 );
+    DecaySlider.setRange ( 0.0f , 3.0f );
     DecaySlider.setSliderStyle ( Slider::LinearVertical );
     DecaySlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
+    DecaySlider.setValue(0.0);
 
     addAndMakeVisible ( SustainSlider );
-    SustainSlider.setRange ( 0 , 100 );
+    SustainSlider.setRange ( 0.0f , 1.0f );
     SustainSlider.setSliderStyle ( Slider::LinearVertical );
     SustainSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-
+    SustainSlider.setValue(1.0);
+    
     addAndMakeVisible ( ReleaseSlider );
-    ReleaseSlider.setRange ( 0 , 100 );
+    ReleaseSlider.setRange ( 0.0f , 5.0f );
     ReleaseSlider.setSliderStyle ( Slider::LinearVertical );
     ReleaseSlider.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-
+    ReleaseSlider.setValue(2.0);
+    
     addAndMakeVisible ( AttackSliderLabel );
     AttackSliderLabel.setText("A", dontSendNotification);
     AttackSliderLabel.setJustificationType( Justification::centred );
@@ -202,17 +206,18 @@ void EnvFilterModule::setFilter( String text )
 EnvFilterModule::LeftSide::LeftSide( )
 {
     addAndMakeVisible ( CutoffKnob );
-    CutoffKnob.setRange ( 20.0, 2000.0 );
+    CutoffKnob.setRange ( 20.0, 10000.0 );
+    CutoffKnob.setSkewFactorFromMidPoint (1000.0);
     CutoffKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
     CutoffKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
-    CutoffKnob.setValue(1000);
+    CutoffKnob.setValue(1000.0f);
     
     addAndMakeVisible(CutoffLabel);
     CutoffLabel.setText("Cutoff", dontSendNotification);
     CutoffLabel.setJustificationType( Justification::centredBottom );
 
     addAndMakeVisible ( ResonanceKnob );
-    ResonanceKnob.setRange ( 1.0, 5.0 );
+    ResonanceKnob.setRange ( 1.0, 4.0 );
     ResonanceKnob.setSliderStyle ( Slider::RotaryVerticalDrag );
     ResonanceKnob.setTextBoxStyle ( Slider::TextBoxBelow, true, 50, 20 );
     ResonanceKnob.setValue(1);
@@ -240,7 +245,7 @@ EnvFilterModule::LeftSide::LeftSide( )
     addAndMakeVisible( BP );
     BP.setButtonText( "BP" );
 
-    setFilterButton( HIGHPASS );
+    setFilterButton( LOWPASS );
 }
 
 EnvFilterModule::LeftSide::~LeftSide() {}
@@ -371,7 +376,25 @@ TextButton& EnvFilterModule::LeftSide::getBPButton()
     return BP;
 }
 
+float EnvFilterModule::getAttackSliderValue ()
+{
+    return AttackSlider.getValue();
+}
 
+float EnvFilterModule::getDecaySliderValue ()
+{
+    return DecaySlider.getValue();
+}
+
+float EnvFilterModule::getSustainSliderValue ()
+{
+    return SustainSlider.getValue();
+}
+
+float EnvFilterModule::getReleaseSliderValue ()
+{
+    return ReleaseSlider.getValue();
+}
 
 
 
